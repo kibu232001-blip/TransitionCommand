@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<!--
+  TransitionCommand v1.0
+  © 2026 KIBU Global Ventures LLC. All Rights Reserved.
+  Unauthorized reproduction, reverse engineering, or distribution is prohibited.
+  First published: 2026 | kibu.global
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>TransitionCommand</title>
+<meta name="description" content="Military-to-civilian transition command center — all branches, all paths">
+<meta name="author" content="KIBU Global Ventures LLC">
+<meta name="copyright" content="© 2026 KIBU Global Ventures LLC. All Rights Reserved.">
+<meta name="application-name" content="TransitionCommand">
+<meta property="og:site_name" content="TransitionCommand by KIBU Global Ventures LLC">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1B2B4B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TransitionCommand">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F3EE;--bg2:#EDE8E0;--surf:#FFFFFF;--surf2:#F2EDE5;--surf3:#E8E2D8;
+  --nav:#1B2B4B;--nav2:#142040;--navt:#F5EFE0;
+  --tx:#1B2B4B;--tx2:#5A6A7A;--tx3:#94A3B8;
+  --ac:#C8881A;--ac2:#D9960F;--acl:#FEF3E0;
+  --gr:#4A7C59;--gr2:#3D6849;--grl:#EBF4EF;
+  --re:#B83232;--rel:#FDEEEE;
+  --am:#C47810;--aml:#FEF6E4;
+  --bl:#1A5FA8;--bll:#EBF4FD;
+  --b1:rgba(27,43,75,.09);--b2:rgba(27,43,75,.16);--b3:rgba(27,43,75,.28);
+  --sh:0 2px 8px rgba(27,43,75,.08),0 1px 3px rgba(27,43,75,.05);
+  --shl:0 4px 20px rgba(27,43,75,.10),0 2px 6px rgba(27,43,75,.06);
+  --r:8px;--rl:12px;--rxl:16px;
+  --fd:'Barlow Condensed',system-ui,sans-serif;
+  --fb:'Plus Jakarta Sans',system-ui,sans-serif;
+  --fm:'JetBrains Mono','Courier New',monospace;
+  --tr:.15s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg2);color:var(--tx);font-family:var(--fb);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;background:var(--nav);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease,visibility .5s ease}
+#splash.out{opacity:0;visibility:hidden;pointer-events:none}
+.sp-star{opacity:0;animation:starIn .8s cubic-bezier(.34,1.4,.64,1) .2s forwards;margin-bottom:20px}
+.sp-title{font-family:var(--fd);font-size:clamp(34px,8vw,56px);font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navt);opacity:0;animation:fadeUp .5s ease .65s forwards}
+.sp-title em{color:var(--ac);font-style:normal}
+.sp-tag{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(245,239,224,.42);margin-top:8px;opacity:0;animation:fadeUp .5s ease .9s forwards}
+.sp-bar{width:180px;height:2px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:36px;overflow:hidden;opacity:0;animation:fadeIn .3s ease 1.1s forwards}
+.sp-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gr),var(--ac));border-radius:2px;animation:load 2s ease 1.2s forwards}
+.sp-ver{position:absolute;bottom:22px;font-size:11px;letter-spacing:.12em;color:rgba(245,239,224,.28)}
+@keyframes starIn{from{opacity:0;transform:scale(.4) rotate(-20deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes load{0%{width:0}60%{width:72%}100%{width:100%}}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+/* ONBOARDING */
+#onboard{display:none;min-height:100vh;background:var(--bg2);padding:20px 16px 40px;flex-direction:column;align-items:center}
+#onboard.on{display:flex}
+.wh{text-align:center;padding:22px 0 26px}
+.wlogo{font-family:var(--fd);font-size:22px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nav)}
+.wlogo em{color:var(--ac);font-style:normal}
+.wstep{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin-top:5px}
+.wprog{display:flex;align-items:center;gap:6px;justify-content:center;margin-top:16px}
+.wd{height:6px;border-radius:3px;background:var(--b3);transition:all .25s ease;width:6px}
+.wd.a{width:24px;background:var(--ac)}
+.wd.d{background:var(--gr)}
+.wcard{background:var(--surf);border:1px solid var(--b1);border-radius:var(--rxl);padding:28px 24px;width:100%;max-width:540px;box-shadow:var(--shl);animation:popIn .3s ease}
+.wt{font-family:var(--fd);font-size:26px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--nav);margin-bottom:3px}
+.ws{font-size:13px;color:var(--tx2);margin-bottom:20px}
+.fg{margin-bottom:15px}
+label.lb{display:block;font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2);margin-bottom:5px;font-weight:600}
+input[type=text],input[type=email],input[type=number],input[type=date],select,textarea{width:100%;padding:9px 12px;background:var(--bg);border:1.5px solid var(--b2);border-radius:var(--r);color:var(--tx);font-family:var(--fb);font-size:14px;outline:none;transition:var(--tr);-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--ac);background:var(--surf);box-shadow:0 0 0 3px rgba(200,136,26,.12)}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235A6A7A' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+textarea{min-height:76px;resize:vertical;line-height:1.5}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bb{background:var(--bg);border:1.5px solid var(--b2);border-radius:var(--r);padding:12px 6px;text-align:center;cursor:pointer;transition:var(--tr);font-family:var(--fb);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tx2)}
+.bb:hover,.bb.s{background:var(--acl);border-color:var(--ac);color:var(--ac)}
+.bi{font-size:24px;display:block;margin-bottom:5px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{background:var(--bg);border:1.5px solid var(--b2);border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;transition:var(--tr);color:var(--tx2);font-family:var(--fb);user-select:none}
+.chip:hover,.chip.s{background:var(--acl);border-color:var(--ac);color:var(--ac);font-weight:600}
+.wnav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--b1)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--r);font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:var(--tr);border:none;outline:none;text-decoration:none;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-n{background:var(--nav);color:var(--navt)}.btn-n:hover{background:var(--nav2)}
+.btn-a{background:var(--ac);color:#fff}.btn-a:hover{background:var(--ac2)}
+.btn-g{background:var(--gr);color:#fff}.btn-g:hover{background:var(--gr2)}
+.btn-o{background:transparent;border:1.5px solid var(--b2);color:var(--tx2)}.btn-o:hover{border-color:var(--tx2);color:var(--tx);background:var(--surf2)}
+.btn-gh{background:transparent;color:var(--tx3);padding-left:0;padding-right:0}.btn-gh:hover{color:var(--tx)}
+.btn-d{background:var(--re);color:#fff}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-xs{padding:4px 10px;font-size:11px}
+.btn-fw{width:100%;justify-content:center}
+
+/* APP SHELL */
+#app{display:none;flex-direction:column;min-height:100vh}
+#app.on{display:flex}
+.topbar{background:var(--nav);height:52px;display:flex;align-items:center;padding:0 16px;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 1px 0 rgba(255,255,255,.06)}
+.tbl{font-family:var(--fd);font-size:20px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--navt)}
+.tbl em{color:var(--ac);font-style:normal}
+.tbr{display:flex;align-items:center;gap:10px}
+.tbn{font-size:13px;font-weight:600;color:var(--navt);text-align:right}
+.tbr2{font-size:11px;color:rgba(245,239,224,.52);text-align:right}
+.tbav{width:34px;height:34px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:14px;font-weight:700;cursor:pointer}
+.tabnav{background:var(--surf);border-bottom:1.5px solid var(--b1);display:flex;overflow-x:auto;padding:0 8px;position:sticky;top:52px;z-index:100;scrollbar-width:none;-ms-overflow-style:none;box-shadow:0 1px 4px rgba(27,43,75,.06)}
+.tabnav::-webkit-scrollbar{display:none}
+.tb{flex-shrink:0;padding:0 13px;height:44px;display:flex;align-items:center;gap:5px;font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tx3);background:none;border:none;border-bottom:2.5px solid transparent;cursor:pointer;transition:var(--tr);white-space:nowrap}
+.tb:hover{color:var(--tx2)}
+.tb.a{color:var(--ac);border-bottom-color:var(--ac)}
+.content{flex:1;padding:20px 16px 48px;max-width:880px;margin:0 auto;width:100%}
+.panel{display:none;animation:popIn .2s ease}
+.panel.a{display:block}
+
+/* SHARED COMPONENTS */
+.ph{font-family:var(--fd);font-size:28px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--nav);margin-bottom:3px}
+.psub{font-size:13px;color:var(--tx2);margin-bottom:18px}
+.card{background:var(--surf);border:1px solid var(--b1);border-radius:var(--rl);padding:18px 20px;margin-bottom:14px;box-shadow:var(--sh)}
+.ch{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cd{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:14px}
+.sb{background:var(--surf2);border:1px solid var(--b1);border-radius:var(--r);padding:14px 10px;text-align:center}
+.sv{font-family:var(--fd);font-size:28px;font-weight:700;color:var(--ac);line-height:1.1}
+.sl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-top:3px}
+.pt{height:6px;background:var(--surf2);border-radius:3px;overflow:hidden;margin:8px 0}
+.pf{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1);background:var(--gr)}
+.pfa{background:var(--ac)}.pfr{background:var(--re)}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.06em;text-transform:uppercase}
+.bg{background:var(--grl);color:var(--gr)}.ba{background:var(--acl);color:var(--ac)}.br{background:var(--rel);color:var(--re)}.bam{background:var(--aml);color:var(--am)}.bbl{background:var(--bll);color:var(--bl)}.bm{background:var(--surf2);color:var(--tx3)}
+.alert{display:flex;gap:10px;padding:12px 14px;border-radius:var(--r);font-size:13px;line-height:1.5;margin-bottom:14px}
+.ai{font-size:16px;flex-shrink:0;margin-top:1px}
+.al-i{background:var(--bll);border-left:3px solid var(--bl);color:var(--tx);border-radius:0 var(--r) var(--r) 0}
+.al-w{background:var(--aml);border-left:3px solid var(--am);color:var(--tx);border-radius:0 var(--r) var(--r) 0}
+.al-s{background:var(--grl);border-left:3px solid var(--gr);color:var(--tx);border-radius:0 var(--r) var(--r) 0}
+.al-d{background:var(--rel);border-left:3px solid var(--re);color:var(--tx);border-radius:0 var(--r) var(--r) 0}
+.cl{list-style:none}
+.cr{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--b1);cursor:pointer;transition:var(--tr)}
+.cr:last-child{border-bottom:none}
+.cr:hover{background:var(--surf2);margin:0 -8px;padding-left:8px;padding-right:8px;border-radius:var(--r)}
+.cb{width:18px;height:18px;min-width:18px;border:1.5px solid var(--b3);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:var(--tr);margin-top:2px;flex-shrink:0}
+.cr.dn .cb{background:var(--gr);border-color:var(--gr)}
+.cr.dn .cb::after{content:'';width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,0)}
+.cc{flex:1;min-width:0}
+.cm{font-size:14px}
+.cme{font-size:12px;color:var(--tx3);margin-top:2px}
+.cr.dn .cm{color:var(--tx3);text-decoration:line-through}
+.crr{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.tl{position:relative;padding-left:24px}
+.tl::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:1.5px;background:var(--b2)}
+.tli{position:relative;padding-bottom:22px}
+.tli::before{content:'';position:absolute;left:-20px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--gr);border:2px solid var(--surf);box-shadow:0 0 0 2px var(--gr)}
+.tli.fut::before{background:var(--tx3);box-shadow:0 0 0 2px var(--tx3)}
+.tli.urg::before{background:var(--am);box-shadow:0 0 0 2px var(--am)}
+.tli.sp::before{background:var(--ac);box-shadow:0 0 0 2px var(--ac);width:14px;height:14px;left:-22px;top:3px}
+.tld{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:3px}
+.tlt{font-size:14px;font-weight:600;color:var(--tx)}
+.tldesc{font-size:12px;color:var(--tx2);margin-top:2px}
+.cal-h{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+.cal-dn{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);text-align:center;padding:4px}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:6px;cursor:pointer;transition:var(--tr);position:relative;color:var(--tx)}
+.cal-d:hover{background:var(--surf2)}
+.cal-d.td{background:var(--nav);color:var(--navt);font-weight:700}
+.cal-d.ot{color:var(--tx3)}
+.cal-d.ev::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--ac)}
+.rp{background:#fff;border-radius:var(--r);padding:26px 22px;color:#111;font-family:Georgia,serif;font-size:12px;line-height:1.55;box-shadow:var(--shl);border:1px solid var(--b2)}
+.rpn{font-size:18px;font-weight:bold;color:#1B2B4B;letter-spacing:.04em;text-transform:uppercase}
+.rpc{font-size:10px;color:#555;border-bottom:2px solid #1B2B4B;padding-bottom:7px;margin-bottom:8px}
+.rps{font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.08em;color:#1B2B4B;border-bottom:1px solid #ccc;padding-bottom:2px;margin:10px 0 5px}
+.rpjt{font-size:12px;font-weight:bold}
+.rpjo{font-size:10px;color:#666}
+.rpb{font-size:11px;padding-left:14px;position:relative;margin-top:2px}
+.rpb::before{content:'•';position:absolute;left:3px}
+.tpb{background:var(--surf2);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px;font-family:var(--fm);font-size:12px;line---height:1.7;color:var(--tx);white-space:pre-wrap;word-break:break-word;margin-bottom:8px;max-height:320px;overflow-y:auto}
+.sig{background:var(--surf2);border-left:3px solid var(--ac);border-radius:0 var(--r) var(--r) 0;padding:14px 16px;font-family:var(--fm);font-size:12px;line-height:1.9;color:var(--tx)}
+.res-i{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--b1)}
+.res-i:last-child{border-bottom:none}
+.res-ic{width:36px;height:36px;border-radius:var(--r);background:var(--acl);color:var(--ac);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.res-n{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:2px}
+.res-d{font-size:12px;color:var(--tx2)}
+.ptab{flex:1;padding:10px;text-align:center;background:var(--surf2);border:1.5px solid var(--b1);border-radius:var(--r);cursor:pointer;font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tx2);transition:var(--tr)}
+.ptab:hover{border-color:var(--ac);color:var(--ac)}
+.ptab.a{background:var(--nav);color:var(--navt);border-color:var(--nav)}
+.div-lbl{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin:16px 0 10px}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--b1)}
+.flex{display:flex}.fxc{display:flex;align-items:center}.fxb{display:flex;align-items:center;justify-content:space-between}
+.g8{gap:8px}.g12{gap:12px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}
+.txs{font-size:13px}.txxs{font-size:11px}.txm{color:var(--tx2)}.txf{color:var(--tx3)}.txa{color:var(--ac)}.txg{color:var(--gr)}.txr{color:var(--re)}
+.fw6{font-weight:600}.fmono{font-family:var(--fm)}
+.ar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.fab{position:fixed;bottom:20px;right:20px;width:46px;height:46px;border-radius:50%;background:var(--nav);color:var(--navt);border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shl);z-index:50;opacity:0;pointer-events:none;transition:var(--tr)}
+.fab.on{opacity:1;pointer-events:all}
+.fab:hover{background:var(--nav2);transform:translateY(-2px)}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;animation:fadeIn .2s ease;pointer-events:none}
+@media(max-width:600px){.r2{grid-template-columns:1fr}.bgrid{grid-template-columns:repeat(2,1fr)}.sg{grid-template-columns:repeat(2,1fr)}.rsplit{grid-template-columns:1fr!important}.wcard{padding:22px 18px}}
+@media print{body>*:not(#pt){display:none!important}#pt{display:block!important;padding:0}}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-star">
+    <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="44" cy="44" r="41" stroke="rgba(200,136,26,.18)" stroke-width="1"/>
+      <circle cx="44" cy="44" r="34" stroke="rgba(200,136,26,.1)" stroke-width="1"/>
+      <polygon points="44,7 54,33 82,33 60,50 68,77 44,60 20,77 28,50 6,33 34,33" fill="none" stroke="#C8881A" stroke-width="1.5" stroke-linejoin="round"/>
+      <polygon points="44,21 51,36 68,36 55,46 60,61 44,51 28,61 33,46 20,36 37,36" fill="rgba(200,136,26,.16)"/>
+      <circle cx="44" cy="44" r="5" fill="#C8881A" opacity=".65"/>
+    </svg>
+  </div>
+  <div class="sp-title">Transition<em>Command</em></div>
+  <div class="sp-tag">All Branches · All Paths · All Ranks</div>
+  <div class="sp-bar"><div class="sp-fill"></div></div>
+  <div class="sp-ver">v1.0 · © 2026 KIBU Global Ventures LLC · All Rights Reserved</div>
+</div>
+
+<!-- ONBOARDING -->
+<div id="onboard">
+  <div class="wh">
+    <div class="wlogo">Transition<em>Command</em></div>
+    <div class="wstep" id="wsl">Mission Briefing</div>
+    <div class="wprog" id="wp"></div>
+  </div>
+  <div class="wcard" id="wc"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="tbl">Transition<em>Command</em></div>
+    <div class="tbr">
+      <div><div class="tbn" id="tbn">—</div><div class="tbr2" id="tbr2">—</div></div>
+      <div style="position:relative">
+        <div class="tbav" id="tbav" onclick="toggleMenu()">TC</div>
+        <div id="tb-menu" style="display:none;position:absolute;right:0;top:42px;background:var(--surf);border:1px solid var(--b2);border-radius:var(--rl);min-width:200px;box-shadow:var(--shl);z-index:999;overflow:hidden">
+          <div style="padding:12px 16px;border-bottom:1px solid var(--b1)">
+            <div style="font-size:13px;font-weight:600;color:var(--tx)" id="menu-name">—</div>
+            <div style="font-size:11px;color:var(--tx3)" id="menu-branch">—</div>
+          </div>
+          <div style="padding:6px">
+            <button onclick="toggleMenu();goProfile()" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fb);font-size:13px;color:var(--tx);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--surf2)'" onmouseout="this.style.background='none'">✏️ Edit Profile</button>
+            <button onclick="toggleMenu();exportData()" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fb);font-size:13px;color:var(--tx);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--surf2)'" onmouseout="this.style.background='none'">💾 Export My Data</button>
+            <div style="height:1px;background:var(--b1);margin:4px 0"></div>
+            <button onclick="toggleMenu();resetApp()" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fb);font-size:13px;color:var(--re);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--rel)'" onmouseout="this.style.background='none'">🗑️ Reset & Start Over</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tabnav">
+    <button class="tb a" data-t="ov" onclick="ot('ov')">📊 Overview</button>
+    <button class="tb" data-t="tk" onclick="ot('tk')">✅ Tasks</button>
+    <button class="tb" data-t="pl" onclick="ot('pl')">🗺️ Plans</button>
+    <button class="tb" data-t="va" onclick="ot('va')">🏥 VA & Medical</button>
+    <button class="tb" data-t="fi" onclick="ot('fi')">💰 Finance</button>
+    <button class="tb" data-t="fa" onclick="ot('fa')">👨‍👩‍👧 Family</button>
+    <button class="tb" data-t="tl" onclick="ot('tl')">📅 Timeline</button>
+    <button class="tb" data-t="go" onclick="ot('go')">🎯 Goals</button>
+    <button class="tb" data-t="ca" onclick="ot('ca')">🗓 Calendar</button>
+    <button class="tb" data-t="co" onclick="ot('co')">📨 Comms</button>
+    <button class="tb" data-t="re" onclick="ot('re')">📄 Resume</button>
+    <button class="tb" data-t="rs" onclick="ot('rs')">🔗 Resources</button>
+  </div>
+  <div class="content">
+    <div class="panel a" id="p-ov"></div>
+    <div class="panel" id="p-tk"></div>
+    <div class="panel" id="p-pl"></div>
+    <div class="panel" id="p-va"></div>
+    <div class="panel" id="p-fi"></div>
+    <div class="panel" id="p-fa"></div>
+    <div class="panel" id="p-tl"></div>
+    <div class="panel" id="p-go"></div>
+    <div class="panel" id="p-ca"></div>
+    <div class="panel" id="p-co"></div>
+    <div class="panel" id="p-re"></div>
+    <div class="panel" id="p-rs"></div>
+  </div>
+</div>
+<button class="fab" id="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div id="pt" style="display:none"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const BRANCHES=[
+  {id:'army',label:'Army',icon:'⭐'},
+  {id:'navy',label:'Navy',icon:'⚓'},
+  {id:'af',label:'Air Force',icon:'✈️'},
+  {id:'marines',label:'Marines',icon:'🦅'},
+  {id:'cg',label:'Coast Guard',icon:'🛡️'},
+  {id:'sf',label:'Space Force',icon:'🚀'}
+];
+const SEP_TYPES=['Retirement (20+ yrs)','ETS / End of Enlistment','Officer Separation (REFRAD)','Medical Separation','Early Release / RIF','Hardship Discharge','Other Honorable'];
+const CAREER_TRACKS=['Federal Civilian (GS/GG)','Defense Contractor','Private Sector / Corporate','Law Enforcement / Federal Agent','Technology / Cybersecurity','Healthcare','Education / Teaching','Entrepreneurship','Using GI Bill (School First)','Still Exploring'];
+const FAM_STATUS=['Single','Married / Partner','Married with Children','Single Parent','Dual Military'];
+const GI_OPTS=['Post-9/11 GI Bill (Ch.33)','Montgomery GI Bill (Ch.30)','Transferring to Dependent','Not Planning to Use','Undecided'];
+
+const MOS_DB={
+  '11b':{t:'Infantry → Security Manager / Operations Leader',k:'team leadership, security management, tactical operations, risk assessment, crisis response, physical security, force protection, personnel management'},
+  '11c':{t:'Indirect Fire → Systems Analyst / Fire Control Specialist',k:'precision targeting, ballistics data analysis, fire control systems, team coordination, safety protocols, technical operations'},
+  '12b':{t:'Combat Engineer → Construction / Project Manager',k:'construction management, project planning, explosive ordnance disposal, infrastructure assessment, OSHA safety compliance, blueprint reading'},
+  '13b':{t:'Cannon Crewmember → Heavy Equipment / Systems Operator',k:'heavy machinery operation, precision systems, safety protocols, team coordination, logistics management, technical maintenance'},
+  '13f':{t:'Fire Support Specialist → Intelligence / Operations Analyst',k:'geospatial intelligence, target analysis, joint operations coordination, fire support, JTAC, GIS, analytical reporting'},
+  '18z':{t:'Special Forces → Director of Operations / Security Consultant',k:'strategic leadership, special operations, cross-cultural communication, program management, unconventional warfare, executive leadership, high-stakes decision-making'},
+  '25b':{t:'IT Specialist → Systems Administrator / Network Engineer',k:'network administration, Windows Server, Active Directory, cybersecurity, CompTIA A+/Network+/Security+, help desk management, IT infrastructure, troubleshooting'},
+  '25u':{t:'Signal Support → Telecom / IT Field Engineer',k:'telecommunications, satellite systems, radio communications, network infrastructure, IT field support, signal operations, technical maintenance'},
+  '31b':{t:'Military Police → Law Enforcement / Corporate Security Manager',k:'law enforcement, criminal investigations, security management, loss prevention, emergency response, use of force, report writing, federal law enforcement'},
+  '35l':{t:'Counterintelligence → Intelligence / Security Investigator',k:'counterintelligence, HUMINT collection, threat assessment, security investigations, TS/SCI clearance, analytical reporting, foreign liaison'},
+  '35f':{t:'Intelligence Analyst → All-Source Analyst / GovCon IC',k:'all-source intelligence, OSINT, HUMINT, SIGINT, analytical products, threat assessments, DoD contractor, IC community'},
+  '42a':{t:'Human Resources Specialist → HR Manager / Talent Acquisition',k:'human resources, talent acquisition, personnel management, benefits administration, employee relations, HRIS, HR compliance, onboarding'},
+  '56m':{t:'Religious Affairs NCO → Counselor / HR / Wellness Coordinator',k:'counseling, crisis intervention, organizational culture, employee wellness, community relations, conflict resolution, pastoral care'},
+  '68w':{t:'Combat Medic → EMT / Paramedic / Healthcare Professional',k:'emergency medical care, trauma response, patient assessment, triage, EMT-B certification, clinical procedures, HIPAA, pre-hospital care'},
+  '74d':{t:'CBRN Specialist → Environmental Health & Safety Manager',k:'hazardous materials, OSHA compliance, emergency management, risk assessment, HAZMAT technician, environmental health, safety training'},
+  '88m':{t:'Motor Transport → Logistics / Transportation Supervisor',k:'logistics coordination, transportation management, CDL Class A, supply chain management, fleet management, DOT compliance, route planning'},
+  '91b':{t:'Wheeled Vehicle Mechanic → Diesel / Fleet Maintenance Supervisor',k:'diesel mechanics, preventive maintenance, vehicle diagnostics, fleet management, ASE certification, heavy equipment repair, technical manuals'},
+  '92a':{t:'Automated Logistical → Supply Chain / Inventory Manager',k:'supply chain management, inventory control, SAP ERP, logistics, warehouse management, procurement, property accountability'},
+  '92y':{t:'Unit Supply → Procurement / Inventory Specialist',k:'inventory management, supply chain, purchasing, logistics, asset management, property accountability, supply room operations'},
+  '94e':{t:'Radio/Comms Repairer → Electronics / Communications Technician',k:'electronics systems repair, communications systems, radio frequency, technical troubleshooting, field service, maintenance management'},
+  // Navy
+  'bm':{t:'Boatswain\'s Mate → Maritime / Port Operations Manager',k:'maritime operations, seamanship, navigation, deck operations, safety management, port operations, vessel operations, USCG regulations'},
+  'it':{t:'Information Systems Tech → Systems Admin / Cybersecurity',k:'network administration, cybersecurity, information assurance, systems administration, CompTIA Security+, network security, SIEM tools'},
+  'hm':{t:'Hospital Corpsman → EMT / Medical Assistant / Healthcare Admin',k:'emergency medical care, patient care, clinical procedures, pharmacy technician, dental assistant, medical records, patient assessment'},
+  'et':{t:'Electronics Technician → Systems / Electronics Engineer',k:'electronics systems, radar, sonar, electronic warfare systems, troubleshooting, systems engineering, field service engineering'},
+  'gm':{t:'Gunner\'s Mate → Ordnance / Quality Assurance Specialist',k:'ordnance management, precision mechanics, quality control, technical procedures, weapons safety systems, logistics'},
+  'ls':{t:'Logistics Specialist → Supply Chain / Procurement Manager',k:'supply chain management, logistics, inventory control, procurement, ERP systems, purchasing, material management'},
+  'ma':{t:'Master-at-Arms → Law Enforcement / Security Manager',k:'law enforcement, physical security, investigations, force protection, K-9 operations, federal security, access control'},
+  'yn':{t:'Yeoman → Administrative / HR Professional',k:'administrative management, records management, correspondence management, HR coordination, office management, executive support'},
+  'sk':{t:'Storekeeper → Supply Chain / Logistics Coordinator',k:'inventory control, supply chain, purchasing, logistics, materials management, vendor relations'},
+  'ae':{t:'Aviation Electrician → Avionics / Electrical Systems Technician',k:'avionics systems, electrical troubleshooting, FAA A&P certification, aircraft maintenance, wiring systems, technical documentation'},
+  // Air Force
+  '3d0x2':{t:'Cyber Systems → Cybersecurity Analyst / SOC Analyst',k:'cybersecurity, network security, SIEM tools, intrusion detection, CompTIA Security+/CISSP, DoD 8570/8140, information assurance, threat hunting'},
+  '3d1x2':{t:'Cyber Transport Systems → Network Engineer',k:'network engineering, Cisco routing/switching, TCP/IP, network infrastructure, CCNA/CCNP, LAN/WAN, network documentation'},
+  '1n0x1':{t:'Operations Intelligence → All-Source Intelligence Analyst',k:'intelligence analysis, OSINT, HUMINT, GEOINT, threat assessment, analytical reporting, IC contractor, security clearance'},
+  '4n0x1':{t:'Aerospace Medical → Medical Technician / Flight Medic',k:'emergency medical, aerospace medicine, patient care, clinical procedures, healthcare administration, EMT certification'},
+  '6f0x1':{t:'Financial Management → Budget Analyst / Financial Officer',k:'budget management, financial analysis, accounting, GAAP principles, federal budget process, financial reporting, Excel, cost analysis'},
+  '3e3x1':{t:'Structural → Construction Project Manager',k:'construction management, facilities maintenance, blueprint reading, OSHA compliance, project planning, contract management, estimating'},
+  '8a100':{t:'Acquisition Manager → Federal Contracting / Program Manager',k:'federal acquisition, FAR/DFARS, contracting, program management, procurement, cost/price analysis, PMP certification, source selection'},
+  // Marines
+  '0311':{t:'Rifleman → Security / Operations Team Leader',k:'team leadership, security operations, physical fitness, discipline, tactical operations, force protection, threat assessment, situational awareness'},
+  '0651':{t:'Cyber Network Operator → Cybersecurity / IT Professional',k:'cyber operations, network security, information assurance, cybersecurity analysis, network administration, system hardening'},
+  '3531':{t:'Motor Vehicle Operator → Transportation / Logistics Supervisor',k:'transportation management, logistics coordination, CDL, fleet operations, supply chain, DOT compliance, route planning'},
+  '4421':{t:'Legal Services Specialist → Paralegal / Legal Administrator',k:'legal research, case management, legal documents, court procedures, administrative law, paralegal certificate'},
+  '0621':{t:'Field Radio Operator → Telecom / IT Field Engineer',k:'radio communications, satellite communications, IT support, network infrastructure, telecommunications, field operations'},
+  '6531':{t:'Aviation Ordnance → Ordnance / Logistics Technician',k:'ordnance management, aviation logistics, quality assurance, safety systems, technical inspection, explosives safety'},
+  // Coast Guard
+  'me':{t:'Maritime Enforcement → Federal Law Enforcement / CBP',k:'maritime law enforcement, boarding operations, federal investigations, search and rescue, port security, use of force, federal agent'},
+  'mk':{t:'Machinery Technician → Marine Diesel / Plant Engineer',k:'diesel mechanics, marine engineering, preventive maintenance, troubleshooting, power plant operations, USCG licensing'},
+  'is':{t:'Intelligence Specialist → Intelligence / Security Analyst',k:'intelligence analysis, OSINT, maritime intelligence, threat assessment, analytical reports, port security intelligence'},
+  // Space Force
+  '1c6x1':{t:'Space Systems Ops → Satellite Operations Specialist',k:'satellite operations, space systems engineering, orbital mechanics, telemetry, command and control, defense contractor, cleared professional'},
+  '17sx':{t:'Cyberspace Operations → Cybersecurity Manager / CISO',k:'cyber operations, information security, CISSP, network defense, cyber policy, security architecture, cleared leadership'},
+  '13sx':{t:'Space Operations → Space Systems Analyst / Aerospace Engineer',k:'space systems, orbital mechanics, launch operations, satellite ground control, aerospace engineering, defense contractor'}
+};
+
+const TCATS=[
+  {id:'adm',label:'Administrative & Legal',icon:'📋',tasks:[
+    {id:'a1',text:'Request and verify DD-214 draft',detail:'Review every field before signing — errors require DD-215 amendments and cause VA claim delays',urg:'critical'},
+    {id:'a2',text:'Complete TAP/ACAP mandatory program',detail:'All workshops required before separation — register at least 6 months out',urg:'critical'},
+    {id:'a3',text:'Update will and power of attorney (JAG)',detail:'Free on base — do this at minimum 90 days before separation',urg:'high'},
+    {id:'a4',text:'Update SGLI life insurance beneficiaries',detail:'Review and update Servicemembers Group Life Insurance now',urg:'high'},
+    {id:'a5',text:'Obtain certified copies of all records',detail:'Medical, dental, training, award citations, and evaluation reports',urg:'high'},
+    {id:'a6',text:'Apply for Veterans ID card',detail:'VHIC from VA or veteran designation on state driver\'s license',urg:'medium'},
+    {id:'a7',text:'Clear base — CIF, housing, equipment',detail:'Start the clearing process no later than 30 days before separation',urg:'high'},
+    {id:'a8',text:'Verify final pay routing in MyPay/DFAS',detail:'Confirm your civilian bank account is set up before final day',urg:'high'},
+  ]},
+  {id:'va',label:'VA & Healthcare',icon:'🏥',tasks:[
+    {id:'v1',text:'File VA disability claim — BDD (180-90 days out)',detail:'Benefits Delivery at Discharge: file before separation for fastest processing. File EVERYTHING.',urg:'critical'},
+    {id:'v2',text:'Obtain complete Service Treatment Records (STR)',detail:'Request from your MTF — this is the single most important document for VA claims',urg:'critical'},
+    {id:'v3',text:'Enroll in VA healthcare (Form 10-10EZ)',detail:'Critical if you will not have TRICARE coverage post-separation',urg:'high'},
+    {id:'v4',text:'Complete all dental work before separation',detail:'VA dental coverage is extremely limited after separation',urg:'high'},
+    {id:'v5',text:'Get 90-day supply of all prescriptions',detail:'Bridge the coverage gap while VA or civilian pharmacy is established',urg:'high'},
+    {id:'v6',text:'Finalize TRICARE transition plan',detail:'TRICARE Transitional Reserve, spouse plan, or ACA marketplace',urg:'high'},
+    {id:'v7',text:'Document all service-connected conditions',detail:'Even minor issues — hearing loss, knee pain, back problems, sleep apnea, TBI',urg:'high'},
+    {id:'v8',text:'Connect with a VSO for free claims help',detail:'DAV, VFW, American Legion — they do this for free and are better than doing it alone',urg:'medium'},
+    {id:'v9',text:'Schedule C&P exam — attend all appointments',detail:'Missing a C&P exam is the fastest way to get a 0% rating',urg:'critical'},
+  ]},
+  {id:'fin',label:'Finance & TSP',icon:'💰',tasks:[
+    {id:'f1',text:'Elect Survivor Benefit Plan (SBP) — retirees',detail:'IRREVOCABLE decision — protects family income if you die. Default is NO coverage.',urg:'critical'},
+    {id:'f2',text:'Decide TSP rollover strategy before separation',detail:'Penalty-free options: keep in TSP, roll to IRA, or roll to new employer plan',urg:'high'},
+    {id:'f3',text:'Build 6-month emergency fund',detail:'Target 3-6 months of living expenses saved before separation day',urg:'high'},
+    {id:'f4',text:'Verify retirement pay amounts with DFAS',detail:'Call DFAS: 1-800-321-1080. Confirm monthly amount, start date, tax withholding',urg:'high'},
+    {id:'f5',text:'Review credit score and reduce debt',detail:'Free check: annualcreditreport.com — VA loan requires solid credit',urg:'medium'},
+    {id:'f6',text:'Open civilian bank accounts',detail:'USAA and Navy Federal Credit Union are military-friendly with no fees',urg:'medium'},
+    {id:'f7',text:'Budget for 3-6 month benefits gap',detail:'Map TRICARE costs, housing, food for transition period',urg:'high'},
+    {id:'f8',text:'Research state income tax on retirement pay',detail:'Many states exempt military retirement — research your destination state',urg:'medium'},
+  ]},
+  {id:'hou',label:'Housing & Relocation',icon:'🏠',tasks:[
+    {id:'h1',text:'Notify housing office of planned move-out date',detail:'BAH termination must be coordinated carefully',urg:'high'},
+    {id:'h2',text:'Research VA Home Loan benefit',detail:'Zero down payment for eligible veterans — get Certificate of Eligibility at VA.gov',urg:'medium'},
+    {id:'h3',text:'Book household goods shipment (PPM or GTC)',detail:'Schedule early — peak summer dates fill months in advance',urg:'high'},
+    {id:'h4',text:'Research schools if relocating with children',detail:'Contact the School Liaison Officer (SLO) on your installation for help',urg:'medium'},
+    {id:'h5',text:'Update all addresses — DFAS, VA, banks, USPS',detail:'Official forward + every institution that mails you anything',urg:'high'},
+    {id:'h6',text:'Finalize buy vs. rent decision',detail:'VA loan, timeline, job location certainty all factor in',urg:'medium'},
+  ]},
+  {id:'car',label:'Career & Education',icon:'💼',tasks:[
+    {id:'c1',text:'Build civilian resume — translate MOS language',detail:'Use the Resume Builder tab. Lead with numbers and impact, not job descriptions.',urg:'critical'},
+    {id:'c2',text:'Create and optimize LinkedIn profile',detail:'Professional photo, keyword-rich summary, connect with 50+ veterans in your field',urg:'high'},
+    {id:'c3',text:'Apply for GI Bill (Form 22-1990) if using',detail:'Allow 4-6 weeks processing — apply early if starting school right after separation',urg:'high'},
+    {id:'c4',text:'Research and apply to target positions',detail:'USAJobs for federal, Hire Heroes USA for corporate, 10+ apps per week',urg:'high'},
+    {id:'c5',text:'Research professional license reciprocity',detail:'CDL, EMT, FAA, HAZMAT, real estate — many military certifications convert',urg:'medium'},
+    {id:'c6',text:'Join veterans professional networks',detail:'Hire Heroes USA, American Corporate Partners, LinkedIn Veterans community',urg:'medium'},
+    {id:'c7',text:'Schedule informational interviews',detail:'Use LinkedIn to find veterans in your target field — most will help',urg:'medium'},
+  ]},
+  {id:'fam2',label:'Family & Support',icon:'👨‍👩‍👧',tasks:[
+    {id:'fm1',text:'Hold family transition planning meeting',detail:'Brief your family on the timeline — their buy-in is mission-critical',urg:'high'},
+    {id:'fm2',text:'Update DEERS dependent coverage',detail:'Dependent TRICARE and benefits change at separation — coordinate timing',urg:'high'},
+    {id:'fm3',text:'Connect spouse with employment resources',detail:'MySECO.com, Hiring Our Heroes, My Career Advancement Account (MyCAA)',urg:'medium'},
+    {id:'fm4',text:'Identify childcare options at new location',detail:'CDCs won\'t be available post-separation — plan civilian daycare/schools early',urg:'medium'},
+    {id:'fm5',text:'Research community and veteran support nearby',detail:'Local Vet Centers, American Legion, community networks near new home',urg:'low'},
+  ]}
+];
+
+const EMAIL_TPLS=[
+  {id:'intro',name:'Professional Introduction',subj:'Veteran Seeking [Position] Opportunity — [Your Name]',
+body:`Dear [Hiring Manager's Name],
+
+I am writing to express strong interest in the [Position Title] role at [Company Name]. After [X] years of service in the [Branch], I am transitioning to the civilian sector and believe my experience in [key skill area] aligns directly with your team's mission.
+
+During my service, I:
+  • Led a team of [X] personnel, achieving [measurable result]
+  • Managed [resources/budget] valued at $[X], delivering [outcome]
+  • Earned [award/recognition] for [reason]
+
+I am particularly drawn to [Company] because [specific reason — research them]. I would welcome the opportunity to discuss how my background can contribute.
+
+Respectfully,
+[Your Name]
+[Phone] | [Email] | [LinkedIn]
+[Branch] Veteran | Clearance: [Level]`},
+  {id:'followup',name:'Post-Interview Thank You',subj:'Thank You — [Position] Interview | [Date]',
+body:`Dear [Name],
+
+Thank you for meeting with me on [date] regarding the [Position] role. I especially enjoyed our discussion about [specific topic from interview].
+
+That conversation strengthened my confidence that my experience in [skill/area] would allow me to contribute immediately to [their team goal or challenge].
+
+I remain enthusiastic and look forward to next steps.
+
+Best regards,
+[Your Name]
+[Phone] | [Email]`},
+  {id:'network',name:'Veteran Network Outreach',subj:'Fellow Veteran — Requesting Career Guidance',
+body:`Hello [Name],
+
+My name is [Your Name], a [Rank] veteran of the [Branch] with [X] years of service, currently transitioning to civilian life. I came across your profile through [LinkedIn / veterans group / mutual connection].
+
+Your career path from [their military background] to [their civilian role] is the trajectory I'm pursuing. I would be grateful for 20-30 minutes of your time to hear your experience — by phone or video, at your convenience.
+
+Specifically, I'd like to learn:
+  • How you translated [military skill] to the civilian world
+  • What you'd do differently in your transition
+  • Any resources that made a real difference
+
+I respect your time and any guidance you can share.
+
+V/R,
+[Your Name]
+[Branch] | [Rank] | Separating [Month Year]
+[LinkedIn URL]`},
+  {id:'fed',name:'Federal Job Cover Letter',subj:'Application — [Job Title] | Announcement [XXXXXXXX]',
+body:`Dear Hiring Official,
+
+I am applying for [Job Title], Announcement [XXXXXXXX], at [Agency]. As a [Rank] veteran of the [Branch] with [X] years of service, I offer specialized experience directly aligned with this position.
+
+SPECIALIZED EXPERIENCE:
+
+[Requirement 1]: As [position], I [specific accomplishment with metric], demonstrating [competency].
+
+[Requirement 2]: I led a [X]-person team through [challenge], achieving [measurable outcome] and exceeding all performance standards.
+
+[Requirement 3]: I [accomplishment], resulting in [impact], recognized by [award/commendation].
+
+VETERANS' PREFERENCE: I am a [10-point / 5-point] preference eligible veteran. DD-214 and supporting documents are attached.
+
+Respectfully submitted,
+[Your Name]
+[Phone] | [Email]
+[Branch] [Rank] | [X] Yrs Service | Clearance: [Level]`},
+  {id:'va_ltr',name:'VA Claim Follow-Up Letter',subj:'VA Claim Follow-Up — Claim #[XXXXXXXXX]',
+body:`Department of Veterans Affairs
+[Regional Office Address]
+
+RE: Disability Compensation Claim — Status Inquiry
+Veteran: [Full Legal Name]
+Date of Birth: [DOB]
+VA File / SSN Last 4: [XXXX]
+Claim Number: [XXXXXXXXX]
+Date Originally Filed: [Date]
+
+Dear Claims Examiner,
+
+I am following up on my disability compensation claim filed on [date]. As of [today's date], [X] days have passed without a rating decision.
+
+Evidence previously submitted:
+  • Service Treatment Records — submitted [date]
+  • Nexus Letter from Dr. [Name] — submitted [date]
+  • Buddy Statements from [Name(s)] — submitted [date]
+  • VA Form 21-4142 — submitted [date]
+
+Please advise on current status or any additional requirements:
+Phone: [Your Phone]
+Email: [Your Email]
+Address: [Current Address]
+
+Respectfully,
+[Your Name]
+[Branch] [Rank] | Service: [Dates]`}
+];
+
+const RESOURCES=[
+  {cat:'Benefits & Claims',items:[
+    {ic:'🏛️',n:'VA.gov',u:'https://www.va.gov',d:'Official portal — disability claims, healthcare enrollment, education benefits'},
+    {ic:'💊',n:'VA Healthcare Enrollment (10-10EZ)',u:'https://www.va.gov/health-care/apply/',d:'Enroll in VA healthcare before separation'},
+    {ic:'🎓',n:'GI Bill Comparison Tool',u:'https://www.va.gov/education/gi-bill-comparison-tool/',d:'Compare schools and calculate GI Bill housing allowance'},
+    {ic:'💵',n:'DFAS — Defense Finance',u:'https://www.dfas.mil',d:'Retirement pay, myPay, W-2s, tax documents'},
+    {ic:'🏥',n:'TRICARE',u:'https://www.tricare.mil',d:'Healthcare coverage options and enrollment for transitioning members'},
+  ]},
+  {cat:'Career & Employment',items:[
+    {ic:'🏢',n:'USAJOBS.gov',u:'https://www.usajobs.gov',d:'All federal jobs — apply veterans\' preference to every application'},
+    {ic:'🦅',n:'Hire Heroes USA',u:'https://www.hireheroesusa.org',d:'Free career coaching, resume writing, and job placement for veterans'},
+    {ic:'🤝',n:'American Corporate Partners (ACP)',u:'https://www.acp-usa.org',d:'Free 1-year mentorship from corporate professionals for veterans'},
+    {ic:'🎪',n:'Hiring Our Heroes',u:'https://www.hiringourheroes.org',d:'Career fairs, fellowships, and corporate connections'},
+    {ic:'🔗',n:'LinkedIn for Veterans',u:'https://socialimpact.linkedin.com/programs/veterans',d:'1 year free LinkedIn Premium for transitioning veterans'},
+    {ic:'🎖️',n:'RecruitMilitary',u:'https://recruitmilitary.com',d:'Veteran-focused job board and career fairs nationwide'},
+  ]},
+  {cat:'Finance & Home',items:[
+    {ic:'📈',n:'TSP — Thrift Savings Plan',u:'https://www.tsp.gov',d:'Manage your TSP, review rollover options, investment allocations'},
+    {ic:'🏦',n:'USAA',u:'https://www.usaa.com',d:'Military-focused banking, insurance, and financial planning'},
+    {ic:'⚓',n:'Navy Federal Credit Union',u:'https://www.navyfcu.org',d:'Best rates on auto loans and mortgages for military members'},
+    {ic:'🏡',n:'VA Home Loans',u:'https://www.va.gov/housing-assistance/home-loans/',d:'No down payment, no PMI — Certificate of Eligibility and lender directory'},
+    {ic:'📊',n:'Military OneSource — Finance',u:'https://www.militaryonesource.mil/financial-legal/',d:'Free financial counseling for 365 days post-separation'},
+  ]},
+  {cat:'Mental Health & Support',items:[
+    {ic:'🆘',n:'Veterans Crisis Line',u:'https://www.veteranscrisisline.net',d:'Dial 988 then Press 1 · Text 838255 · 24/7 confidential support'},
+    {ic:'🏠',n:'VA Vet Centers',u:'https://www.va.gov/find-locations/?facilityType=vet_center',d:'Readjustment counseling — combat vets, MST, family support, free'},
+    {ic:'💙',n:'Make the Connection',u:'https://maketheconnection.net',d:'Veterans supporting veterans — real stories, mental health resources'},
+    {ic:'🎗️',n:'Give an Hour',u:'https://giveanhour.org',d:'Free mental health care from licensed clinicians for veterans'},
+    {ic:'⚡',n:'Military OneSource',u:'https://www.militaryonesource.mil',d:'Counseling, relocation, financial help — free for 365 days post-sep'},
+  ]},
+  {cat:'Legal & VSOs',items:[
+    {ic:'⚖️',n:'Disabled American Veterans (DAV)',u:'https://www.dav.org',d:'Free VSO claims representation — the gold standard, 1.3M members'},
+    {ic:'🎖️',n:'Veterans of Foreign Wars (VFW)',u:'https://www.vfw.org',d:'Free claims help, community posts, advocacy in Congress'},
+    {ic:'🦅',n:'American Legion',u:'https://www.legion.org',d:'VSO claims services, scholarships, community support'},
+    {ic:'📜',n:'Student Veterans of America',u:'https://studentveterans.org',d:'GI Bill support, campus veteran chapters, scholarships'},
+  ]}
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let S={user:{},tasks:{},plans:{A:{steps:[]},B:{steps:[]},C:{steps:[]}},goals:[],cal:[],calOff:0,resume:{exp:[],summary:'',edu:'',certs:'',skills:''},va:{},fin:{},fam:{},notes:{}};
+
+function loadS(){try{const d=localStorage.getItem('tc2');if(d){const p=JSON.parse(d);S={...S,...p};if(!S.plans)S.plans={A:{steps:[]},B:{steps:[]},C:{steps:[]}};['A','B','C'].forEach(k=>{if(!S.plans[k])S.plans[k]={steps:[]};if(!S.plans[k].steps)S.plans[k].steps=[];});if(!S.resume)S.resume={exp:[],summary:'',edu:'',certs:'',skills:''};if(!S.resume.exp)S.resume.exp=[];if(!S.goals)S.goals=[];if(!S.cal)S.cal=[];}}catch(e){}}
+function saveS(){try{localStorage.setItem('tc2',JSON.stringify(S));}catch(e){}}
+
+// ============================================================
+// HELPERS
+// ============================================================
+const G=id=>document.getElementById(id);
+const BL=id=>(BRANCHES.find(b=>b.id===id)||{label:'Service'}).label;
+const DU=d=>d?Math.ceil((new Date(d+'T12:00:00')-new Date())/86400000):null;
+function initials(n){if(!n)return'TC';return n.split(' ').filter(Boolean).map(w=>w[0].toUpperCase()).join('').slice(0,2);}
+function toast(msg,clr){const t=document.createElement('div');t.className='toast';t.style.background=clr||'var(--gr)';t.style.color='#fff';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);}
+function autoFill(tmpl){const u=S.user;return tmpl.replace(/\[Your Name\]/g,u.name||'[Your Name]').replace(/\[Branch.*?\]/g,BL(u.branch)).replace(/\[Rank\]/g,u.rank||'[Rank]').replace(/\[Phone\]/g,u.phone||'[Phone]').replace(/\[Email\]/g,u.email||'[Email]').replace(/\[X\] years/g,(u.yos||'X')+' years').replace(/\[LinkedIn.*?\]/g,u.linkedin||'[LinkedIn URL]');}
+function cpTxt(t){navigator.clipboard.writeText(t).then(()=>toast('✓ Copied to clipboard'));}
+
+// ============================================================
+// SPLASH & INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded',()=>{
+  loadS();
+  setTimeout(()=>{
+    G('splash').classList.add('out');
+    setTimeout(()=>{G('splash').style.display='none';S.user&&S.user.name?launchApp():startWiz();},520);
+  },3400);
+});
+
+// ============================================================
+// WIZARD
+// ============================================================
+let wSt=0;const WT=6;
+function startWiz(){G('onboard').classList.add('on');renderWiz();}
+function wpRender(){
+  const lbls=['Identity','Separation','Family','Career','Benefits','Priorities'];
+  G('wsl').textContent=lbls[wSt]+' — Step '+(wSt+1)+' of '+WT;
+  G('wp').innerHTML='';
+  for(let i=0;i<WT;i++){const d=document.createElement('div');d.className='wd'+(i===wSt?' a':i<wSt?' d':'');G('wp').appendChild(d);}
+}
+function renderWiz(){wpRender();const c=G('wc');c.innerHTML='';([w0,w1,w2,w3,w4,w5])[wSt](c);}
+function wNav(card,lbl='Continue →'){
+  const n=document.createElement('div');n.className='wnav';
+  const b=document.createElement('button');b.className='btn btn-gh';
+  if(wSt>0){b.textContent='← Back';b.onclick=()=>{wSt--;renderWiz();};}
+  const nx=document.createElement('button');nx.className='btn btn-n';nx.textContent=wSt===WT-1?'Launch My Command Center ▶':lbl;nx.onclick=()=>wAdv();
+  n.appendChild(b);n.appendChild(nx);card.appendChild(n);
+}
+function sSel(gId,el){document.querySelectorAll('#'+gId+' .chip').forEach(c=>c.classList.remove('s'));el.classList.add('s');}
+function sPri(el){const sel=document.querySelectorAll('#pc .chip.s');if(!el.classList.contains('s')&&sel.length>=3)return;el.classList.toggle('s');}
+
+function w0(c){
+  c.innerHTML=`<div class="wt">Who are you?</div><div class="ws">We'll build your personalized command center from this</div>
+  <div class="fg"><label class="lb">Full Name (include rank if desired)</label><input type="text" id="wn" value="${S.user.name||''}" placeholder="SFC Jane Smith"></div>
+  <div class="fg"><label class="lb">Branch of Service</label><div class="bgrid">${BRANCHES.map(b=>`<div class="bb${S.user.branch===b.id?' s':''}" onclick="document.querySelectorAll('.bb').forEach(x=>x.classList.remove('s'));this.classList.add('s');"><span class="bi">${b.icon}</span>${b.label}</div>`).join('')}</div></div>
+  <div class="r2"><div class="fg"><label class="lb">Pay Grade / Rank</label><input type="text" id="wrk" value="${S.user.rank||''}" placeholder="E-7, O-3, W-2..."></div><div class="fg"><label class="lb">MOS / Rate / AFSC</label><input type="text" id="wmos" value="${S.user.mos||''}" placeholder="25U, BM, 3D0X2..."></div></div>
+  <div class="r2"><div class="fg"><label class="lb">Component</label><select id="wcomp"><option value="active"${S.user.comp==='active'?' selected':''}>Active Duty</option><option value="reserve"${S.user.comp==='reserve'?' selected':''}>Reserve</option><option value="guard"${S.user.comp==='guard'?' selected':''}>National Guard</option></select></div><div class="fg"><label class="lb">Security Clearance</label><select id="wclr"><option value="">None / N/A</option><option value="Secret"${S.user.clr==='Secret'?' selected':''}>Secret</option><option value="Top Secret"${S.user.clr==='Top Secret'?' selected':''}>Top Secret</option><option value="TS/SCI"${S.user.clr==='TS/SCI'?' selected':''}>TS/SCI</option></select></div></div>`;
+  wNav(c);
+}
+function w1(c){
+  c.innerHTML=`<div class="wt">Separation Details</div><div class="ws">When, how, and the nature of your transition</div>
+  <div class="fg"><label class="lb">Separation / ETS / Retirement Date</label><input type="date" id="wsd" value="${S.user.sepDate||''}"></div>
+  <div class="fg"><label class="lb">Separation Type</label><div class="chips" id="stc">${SEP_TYPES.map(s=>`<div class="chip${S.user.sepType===s?' s':''}" onclick="sSel('stc',this)">${s}</div>`).join('')}</div></div>
+  <div class="r2"><div class="fg"><label class="lb">Years of Service</label><input type="number" id="wyos" value="${S.user.yos||''}" min="1" max="42" placeholder="0"></div><div class="fg"><label class="lb">Current Installation</label><input type="text" id="wbase" value="${S.user.base||''}" placeholder="Fort Liberty, NC"></div></div>
+  <div class="r2"><div class="fg"><label class="lb">Phone</label><input type="text" id="wph" value="${S.user.phone||''}" placeholder="(555) 000-0000"></div><div class="fg"><label class="lb">Email</label><input type="text" id="wem" value="${S.user.email||''}" placeholder="name@email.com"></div></div>`;
+  wNav(c);
+}
+function w2(c){
+  c.innerHTML=`<div class="wt">Family Situation</div><div class="ws">Who else does this transition affect?</div>
+  <div class="fg"><label class="lb">Family Status</label><div class="chips" id="fsc">${FAM_STATUS.map(s=>`<div class="chip${S.user.famStatus===s?' s':''}" onclick="sSel('fsc',this)">${s}</div>`).join('')}</div></div>
+  <div class="r2"><div class="fg"><label class="lb">Number of Dependents</label><input type="number" id="wdeps" value="${S.user.deps||0}" min="0" max="20"></div><div class="fg"><label class="lb">Youngest Child Age</label><input type="number" id="wyng" value="${S.user.youngest||''}" min="0" max="25" placeholder="N/A"></div></div>
+  <div class="fg"><label class="lb">Spouse / Partner Employment</label><select id="wspe"><option value="na"${S.user.spEmp==='na'?' selected':''}>Not Applicable</option><option value="employed"${S.user.spEmp==='employed'?' selected':''}>Currently Employed</option><option value="mil"${S.user.spEmp==='mil'?' selected':''}>Also Active Military</option><option value="seeking"${S.user.spEmp==='seeking'?' selected':''}>Seeking Employment</option><option value="stay"${S.user.spEmp==='stay'?' selected':''}>Stay-at-Home</option></select></div>
+  <div class="fg"><label class="lb">Housing Plan Post-Separation</label><select id="whou"><option value="buy"${S.user.housing==='buy'?' selected':''}>Purchase (VA Loan)</option><option value="rent"${S.user.housing==='rent'?' selected':''}>Rent / Lease</option><option value="stay"${S.user.housing==='stay'?' selected':''}>Staying Current Home</option><option value="fam"${S.user.housing==='fam'?' selected':''}>Moving with Family</option><option value="tbd"${S.user.housing==='tbd'?' selected':''}>Undecided</option></select></div>`;
+  wNav(c);
+}
+function w3(c){
+  c.innerHTML=`<div class="wt">Career Track</div><div class="ws">Where are you headed? This shapes your task list.</div>
+  <div class="fg"><label class="lb">Primary Post-Service Goal</label><div class="chips" id="ctc">${CAREER_TRACKS.map(s=>`<div class="chip${S.user.careerTrack===s?' s':''}" onclick="sSel('ctc',this)">${s}</div>`).join('')}</div></div>
+  <div class="fg"><label class="lb">Target Industry / Field</label><input type="text" id="wind" value="${S.user.industry||''}" placeholder="Cybersecurity, Healthcare, Logistics, Law Enforcement..."></div>
+  <div class="r2"><div class="fg"><label class="lb">Target Location</label><input type="text" id="wloc" value="${S.user.loc||''}" placeholder="State / City / Remote"></div><div class="fg"><label class="lb">Target Salary</label><input type="text" id="wsal" value="${S.user.salary||''}" placeholder="$65,000"></div></div>
+  <div class="fg"><label class="lb">GI Bill Plans</label><div class="chips" id="gic">${GI_OPTS.map(s=>`<div class="chip${S.user.giBill===s?' s':''}" onclick="sSel('gic',this)">${s}</div>`).join('')}</div></div>
+  <div class="fg"><label class="lb">LinkedIn Profile URL (optional)</label><input type="text" id="wli" value="${S.user.linkedin||''}" placeholder="linkedin.com/in/yourname"></div>`;
+  wNav(c);
+}
+function w4(c){
+  c.innerHTML=`<div class="wt">Benefits & Claims</div><div class="ws">What you've earned — don't leave anything behind</div>
+  <div class="fg"><label class="lb">VA Disability Claim Status</label><div class="chips" id="vcc">${['Already Filed','Planning to File — BDD','Considering It','Not Planning to File','Unsure'].map(s=>`<div class="chip${S.user.vaClaim===s?' s':''}" onclick="sSel('vcc',this)">${s}</div>`).join('')}</div></div>
+  <div class="r2"><div class="fg"><label class="lb">Current / Estimated VA Rating</label><select id="wvar"><option value="">Unknown / Not Filed</option>${[0,10,20,30,40,50,60,70,80,90,100].map(r=>`<option value="${r}"${S.user.vaRate==r?' selected':''}>${r}%</option>`).join('')}</select></div><div class="fg"><label class="lb">Retirement Pay Type</label><select id="wpay"><option value="na"${S.user.payType==='na'?' selected':''}>N/A (ETS)</option><option value="final"${S.user.payType==='final'?' selected':''}>Final Pay</option><option value="high3"${S.user.payType==='high3'?' selected':''}>High-3 (HYCSA)</option><option value="blended"${S.user.payType==='blended'?' selected':''}>Blended Retirement</option></select></div></div>
+  <div class="fg"><label class="lb">Healthcare Plan After Separation</label><div class="chips" id="tcc">${['TRICARE Retired (20yr)','TRICARE Transitional (TRS)','Spouse Employer Plan','VA Healthcare Only','ACA Marketplace','Undecided'].map(s=>`<div class="chip${S.user.tricare===s?' s':''}" onclick="sSel('tcc',this)">${s}</div>`).join('')}</div></div>
+  <div class="fg"><label class="lb">TSP / Retirement Savings</label><div class="chips" id="tspc">${['Traditional TSP','Roth TSP','Both TSP Types','Minimal/None','Planning IRA Rollover'].map(s=>`<div class="chip${S.user.tsp===s?' s':''}" onclick="sSel('tspc',this)">${s}</div>`).join('')}</div></div>`;
+  wNav(c);
+}
+function w5(c){
+  c.innerHTML=`<div class="wt">Priorities</div><div class="ws">Final step — what matters most? (Choose up to 3)</div>
+  <div class="fg"><label class="lb">Top Transition Priorities</label><div class="chips" id="pc">${['Find employment quickly','Maximize VA disability rating','Use GI Bill for education','Relocate my family','Start a business','Keep healthcare coverage','Build financial security','Mental health & wellness','Spend time with family','Career advancement'].map(s=>`<div class="chip${(S.user.priorities||[]).includes(s)?' s':''}" onclick="sPri(this)">${s}</div>`).join('')}</div></div>
+  <div class="fg"><label class="lb">Notes / Special Circumstances</label><textarea id="wnotes" rows="3" placeholder="Anything else — medical history, family challenges, specific goals, deployment history...">${S.user.notes||''}</textarea></div>
+  <div class="alert al-s" style="margin-top:16px"><span class="ai">✅</span><span>You're ready! Your personalized TransitionCommand dashboard is about to be built. All information can be edited anytime.</span></div>`;
+  wNav(c,'Launch My Command Center ▶');
+}
+
+function wAdv(){
+  if(wSt===0){
+    const n=G('wn')?.value.trim();if(!n){alert('Please enter your name.');return;}
+    const br=document.querySelector('.bb.s');if(!br){alert('Please select your branch of service.');return;}
+    S.user.name=n;S.user.branch=br.dataset.id||BRANCHES.find(b=>br.textContent.includes(b.label))?.id||'army';
+    document.querySelectorAll('.bb').forEach((b,i)=>{if(b.classList.contains('s'))S.user.branch=BRANCHES[i]?.id||'army';});
+    S.user.rank=G('wrk')?.value.trim();S.user.mos=G('wmos')?.value.trim();S.user.comp=G('wcomp')?.value;S.user.clr=G('wclr')?.value;
+  }
+  if(wSt===1){S.user.sepDate=G('wsd')?.value;S.user.sepType=document.querySelector('#stc .chip.s')?.textContent||'';S.user.yos=G('wyos')?.value;S.user.base=G('wbase')?.value.trim();S.user.phone=G('wph')?.value.trim();S.user.email=G('wem')?.value.trim();}
+  if(wSt===2){S.user.famStatus=document.querySelector('#fsc .chip.s')?.textContent||'';S.user.deps=G('wdeps')?.value||0;S.user.youngest=G('wyng')?.value;S.user.spEmp=G('wspe')?.value;S.user.housing=G('whou')?.value;}
+  if(wSt===3){S.user.careerTrack=document.querySelector('#ctc .chip.s')?.textContent||'';S.user.industry=G('wind')?.value.trim();S.user.loc=G('wloc')?.value.trim();S.user.salary=G('wsal')?.value.trim();S.user.giBill=document.querySelector('#gic .chip.s')?.textContent||'';S.user.linkedin=G('wli')?.value.trim();}
+  if(wSt===4){S.user.vaClaim=document.querySelector('#vcc .chip.s')?.textContent||'';S.user.vaRate=G('wvar')?.value;S.user.payType=G('wpay')?.value;S.user.tricare=document.querySelector('#tcc .chip.s')?.textContent||'';S.user.tsp=document.querySelector('#tspc .chip.s')?.textContent||'';}
+  if(wSt===5){S.user.priorities=Array.from(document.querySelectorAll('#pc .chip.s')).map(c=>c.textContent);S.user.notes=G('wnotes')?.value.trim();saveS();launchApp();return;}
+  saveS();wSt++;renderWiz();
+}
+
+// ============================================================
+// LAUNCH
+// ============================================================
+function launchApp(){
+  G('onboard').classList.remove('on');G('app').classList.add('on');
+  const u=S.user;
+  G('tbn').textContent=u.name||'Service Member';
+  G('tbr2').textContent=[u.rank,BL(u.branch)].filter(Boolean).join(' · ');
+  G('tbav').textContent=initials(u.name);
+  G('menu-name').textContent=u.name||'—';
+  G('menu-branch').textContent=[u.rank,BL(u.branch)].filter(Boolean).join(' · ')||'—';
+  bOv();bTk();bPl('A');bVA();bFi();bFa();bTl();bGo();bCal();bCo();bRe();bRs();
+  window.addEventListener('scroll',()=>G('fab').classList.toggle('on',window.scrollY>180));
+}
+function goProfile(){wSt=0;G('onboard').classList.add('on');G('app').classList.remove('on');renderWiz();}
+
+function toggleMenu(){
+  const m=G('tb-menu');
+  const open=m.style.display==='none';
+  m.style.display=open?'block':'none';
+  if(open){
+    G('menu-name').textContent=S.user.name||'—';
+    G('menu-branch').textContent=[S.user.rank,BL(S.user.branch)].filter(Boolean).join(' · ')||'—';
+    setTimeout(()=>document.addEventListener('click',closeMenuOnClick,{once:true}),10);
+  }
+}
+function closeMenuOnClick(e){if(!G('tb-menu')?.contains(e.target))G('tb-menu').style.display='none';}
+
+function resetApp(){
+  if(!confirm('⚠️ Reset TransitionCommand?\n\nThis will permanently delete ALL your data:\n• Profile and onboarding answers\n• Task progress\n• Resume data\n• Plans, goals, and notes\n• Calendar events\n\nThis cannot be undone. Are you sure?'))return;
+  if(!confirm('Last chance — delete everything and start from the beginning?'))return;
+  localStorage.removeItem('tc2');
+  S={user:{},tasks:{},plans:{A:{steps:[]},B:{steps:[]},C:{steps:[]}},goals:[],cal:[],calOff:0,resume:{exp:[],summary:'',edu:'',certs:'',skills:''},va:{},fin:{},fam:{},notes:{}};
+  G('app').classList.remove('on');
+  G('tb-menu').style.display='none';
+  toast('✓ All data cleared — restarting','#5A6A7A');
+  setTimeout(()=>startWiz(),400);
+}
+
+function exportData(){
+  const data=JSON.stringify(S,null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='TransitionCommand-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  toast('✓ Data exported as JSON backup');
+}
+
+function ot(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('a'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('a'));
+  G('p-'+id).classList.add('a');
+  document.querySelector('[data-t="'+id+'"]').classList.add('a');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='ca')renderCal();
+}
+
+// ============================================================
+// OVERVIEW
+// ============================================================
+function bOv(){
+  const u=S.user,days=DU(u.sepDate);
+  const isR=(u.sepType||'').toLowerCase().includes('retirement');
+  const fn=(u.name||'').split(' ').find(w=>!/^(sfc|sgt|cpl|pfc|pvt|spc|ssgt|msgt|csm|col|maj|cpt|ltc|cwo|wo|gen|adm|cdr|capt|ens|gny|lcpl|sp4|e-[0-9]|o-[0-9]|w-[0-9])/i.test(w))||u.name||'Service Member';
+  const tTot=TCATS.reduce((n,c)=>n+c.tasks.length,0);
+  const tDone=Object.keys(S.tasks||{}).filter(k=>S.tasks[k]).length;
+  const tPct=tTot>0?Math.round(tDone/tTot*100):0;
+  const dStr=days===null?'—':days<0?Math.abs(days)+'':days+'';
+  const dLbl=days===null?'Days to Sep':days<0?'Days Post-Sep':'Days to Sep';
+  const urgent=days!==null&&days>0&&days<=90;
+  G('p-ov').innerHTML=`
+    <div class="ph">Welcome, ${fn}</div>
+    <div class="psub">${isR?'Retirement Transition — '+( u.yos||'?')+' Years of Distinguished Service':'ETS/Separation Command Center — '+BL(u.branch)+(u.yos?' · '+u.yos+' Years':'')}</div>
+    <div class="sg">
+      <div class="sb"><div class="sv">${dStr}</div><div class="sl">${dLbl}</div></div>
+      <div class="sb"><div class="sv">${tPct}%</div><div class="sl">Tasks Done</div></div>
+      <div class="sb"><div class="sv">${u.yos||'—'}</div><div class="sl">Yrs Service</div></div>
+      <div class="sb"><div class="sv">${u.vaRate?u.vaRate+'%':'—'}</div><div class="sl">VA Rating</div></div>
+    </div>
+    ${urgent?`<div class="alert al-w"><span class="ai">⚠️</span><span><strong>${days} days remaining.</strong> Critical window: VA BDD claim filing, TRICARE enrollment decision, and final out-processing cannot wait. Take action this week.</span></div>`:''}
+    <div class="card"><div class="ch"><div class="cd"></div>Priority Actions This Week</div><ul class="cl" id="ov-tl"></ul></div>
+    <div class="card"><div class="ch"><div class="cd"></div>Mission Snapshot</div><div id="ov-snap"></div></div>
+  `;
+  const all=TCATS.flatMap(c=>c.tasks.filter(t=>t.urg==='critical'||t.urg==='high'));
+  const pend=all.filter(t=>!S.tasks[t.id]).slice(0,5);
+  G('ov-tl').innerHTML=pend.length?pend.map(t=>`<li class="cr${S.tasks[t.id]?' dn':''}" onclick="qToggle('${t.id}',this)"><div class="cb"></div><div class="cc"><div class="cm">${t.text}</div><div class="cme">${t.detail}</div></div><div class="crr"><span class="badge ${t.urg==='critical'?'br':'bam'}">${t.urg}</span></div></li>`).join(''):'<li style="padding:12px 0;color:var(--gr);font-weight:600;font-size:14px">✅ All priority tasks complete — outstanding work!</li>';
+  G('ov-snap').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;font-size:13px">
+    <span class="txf">Separation:</span><span>${u.sepType||'Not set'}</span>
+    <span class="txf">Branch:</span><span>${BL(u.branch)}</span>
+    <span class="txf">Career goal:</span><span>${u.careerTrack||'Not set'}</span>
+    <span class="txf">Target field:</span><span>${u.industry||'Not set'}</span>
+    <span class="txf">Location:</span><span>${u.loc||'Not set'}</span>
+    <span class="txf">Housing:</span><span>${({buy:'VA Home Purchase',rent:'Renting',stay:'Current Home',fam:'With Family',tbd:'Undecided'}[u.housing])||'Not set'}</span>
+    <span class="txf">Healthcare:</span><span>${u.tricare||'Not set'}</span>
+    <span class="txf">Clearance:</span><span>${u.clr||'None'}</span>
+  </div>
+  <div class="ar"><button class="btn btn-xs btn-o" onclick="goProfile()">✏️ Edit Profile</button></div>`;
+}
+function qToggle(id,row){S.tasks[id]=!S.tasks[id];row.classList.toggle('dn',S.tasks[id]);saveS();upTkProg();}
+
+// ============================================================
+// TASKS
+// ============================================================
+function bTk(){
+  let html='';
+  TCATS.forEach(cat=>{
+    const cd=cat.tasks.filter(t=>S.tasks[t.id]).length;
+    const cp=Math.round(cd/cat.tasks.length*100);
+    html+=`<div class="card">
+      <div class="ch" style="cursor:pointer;justify-content:space-between" onclick="toggleCat('tcat-${cat.id}',this)">
+        <span><div class="cd" style="display:inline-block;margin-right:8px"></div>${cat.icon} ${cat.label}</span>
+        <span style="display:flex;align-items:center;gap:8px"><span class="badge ${cp===100?'bg':'bm'}">${cd}/${cat.tasks.length}</span><span id="tarr-${cat.id}" style="color:var(--tx3)">▾</span></span>
+      </div>
+      <div class="pt"><div class="pf" style="width:${cp}%"></div></div>
+      <ul class="cl" id="tcat-${cat.id}">
+        ${cat.tasks.map(t=>`<li class="cr${S.tasks[t.id]?' dn':''}" onclick="togTk('${t.id}',this)"><div class="cb"></div><div class="cc"><div class="cm">${t.text}</div><div class="cme">${t.detail}</div></div><div class="crr"><span class="badge ${t.urg==='critical'?'br':t.urg==='high'?'bam':t.urg==='medium'?'bbl':'bm'}">${t.urg}</span></div></li>`).join('')}
+      </ul>
+    </div>`;
+  });
+  G('p-tk').innerHTML=`<div class="ph">Universal Tasks</div><div class="psub">Your complete separation checklist — tap any item to mark complete</div>
+    <div class="fxb mb12"><div class="txs txm" id="tk-pct"></div><div class="flex g8"><button class="btn btn-xs btn-o" onclick="TCATS.forEach(c=>{const e=G('tcat-'+c.id);if(e)e.style.display='block';const a=G('tarr-'+c.id);if(a)a.textContent='▾';})">Expand All</button><button class="btn btn-xs btn-o" onclick="if(confirm('Reset all task progress?')){S.tasks={};saveS();bTk();bOv();}">Reset</button></div></div>
+    <div class="pt mb16"><div class="pf" id="tk-bar" style="width:0"></div></div>${html}`;
+  upTkProg();
+}
+function togTk(id,row){S.tasks[id]=!S.tasks[id];row.classList.toggle('dn',S.tasks[id]);saveS();upTkProg();bOv();}
+function toggleCat(lid,hdr){const l=G(lid);const id=lid.replace('tcat-','');const a=G('tarr-'+id);if(!l)return;const h=l.style.display==='none';l.style.display=h?'block':'none';if(a)a.textContent=h?'▾':'▸';}
+function upTkProg(){
+  const tot=TCATS.reduce((n,c)=>n+c.tasks.length,0);
+  const done=TCATS.reduce((n,c)=>n+c.tasks.filter(t=>S.tasks[t.id]).length,0);
+  const pct=Math.round(done/tot*100);
+  const b=G('tk-bar');if(b)b.style.width=pct+'%';
+  const l=G('tk-pct');if(l)l.textContent=done+' of '+tot+' tasks complete ('+pct+'%)';
+}
+
+// ============================================================
+// PLANS
+// ============================================================
+let cPlan='A';
+function bPl(pl){
+  cPlan=pl||cPlan;const p=S.plans[cPlan]||{steps:[]};
+  G('p-pl').innerHTML=`<div class="ph">Career Plans</div><div class="psub">Develop three contingency career tracks — Alpha is primary, Bravo and Charlie are backup plans</div>
+    <div style="display:flex;gap:6px;margin-bottom:16px" id="plan-tabs">
+      ${['A','B','C'].map((l,i)=>`<div class="ptab${cPlan===l?' a':''}" onclick="openPlan('${l}',this)">Plan ${['Alpha','Bravo','Charlie'][i]}</div>`).join('')}
+    </div>
+    <div id="plan-body2"></div>`;
+  renderPlanBody();
+}
+function openPlan(pl,el){cPlan=pl;document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('a'));el.classList.add('a');renderPlanBody();}
+function renderPlanBody(){
+  const p=S.plans[cPlan]||{steps:[]};
+  G('plan-body2').innerHTML=`
+    <div class="card"><div class="ch"><div class="cd"></div>Plan ${cPlan==='A'?'Alpha':cPlan==='B'?'Bravo':'Charlie'} Details</div>
+      <div class="fg"><label class="lb">Plan Title</label><input type="text" id="pt1" value="${p.title||''}" placeholder="e.g. Federal IT Manager — GS-12"></div>
+      <div class="fg"><label class="lb">Career Track</label><input type="text" id="pt2" value="${p.track||''}" placeholder="e.g. DoD Contractor → Federal GS position in 2 years"></div>
+      <div class="r2"><div class="fg"><label class="lb">Target Employer</label><input type="text" id="pt3" value="${p.employer||''}" placeholder="CISA, Northrop Grumman, VA System..."></div><div class="fg"><label class="lb">Target Salary</label><input type="text" id="pt4" value="${p.salary||''}" placeholder="$75,000/yr"></div></div>
+      <div class="fg"><label class="lb">Execution Timeline</label><input type="text" id="pt5" value="${p.timeline||''}" placeholder="e.g. Employed within 90 days of separation"></div>
+    </div>
+    <div class="card"><div class="ch"><div class="cd"></div>Execution Steps</div><div id="pl-steps"></div><button class="btn btn-sm btn-o mt8" onclick="addPlSt()">+ Add Step</button></div>
+    <div class="card"><div class="ch"><div class="cd"></div>Analysis</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><div class="txxs txm mb8" style="letter-spacing:.08em;text-transform:uppercase">Advantages</div><textarea rows="3" id="pt6" placeholder="Pros of this plan...">${p.pros||''}</textarea></div>
+        <div><div class="txxs txm mb8" style="letter-spacing:.08em;text-transform:uppercase">Risks</div><textarea rows="3" id="pt7" placeholder="Risks / challenges...">${p.cons||''}</textarea></div>
+      </div>
+      <div class="fg mt12"><label class="lb">Notes</label><textarea rows="3" id="pt8" placeholder="Additional notes, contacts, action items...">${p.notes||''}</textarea></div>
+    </div>
+    <div class="ar"><button class="btn btn-g btn-sm" onclick="savePlan()">💾 Save Plan ${cPlan==='A'?'Alpha':cPlan==='B'?'Bravo':'Charlie'}</button></div>`;
+  renderPlSteps();
+}
+function renderPlSteps(){
+  const steps=(S.plans[cPlan]||{}).steps||[];
+  const el=G('pl-steps');if(!el)return;
+  el.innerHTML=steps.length?steps.map((s,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:var(--ac);font-weight:700;font-size:13px;min-width:20px">${i+1}.</span><input type="text" value="${s}" oninput="S.plans['${cPlan}'].steps[${i}]=this.value;saveS();" style="flex:1"><button class="btn btn-xs btn-gh" onclick="S.plans['${cPlan}'].steps.splice(${i},1);saveS();renderPlSteps()">✕</button></div>`).join(''):'<div class="txs txm">No steps yet — add key actions to execute this plan.</div>';
+}
+function addPlSt(){if(!S.plans[cPlan].steps)S.plans[cPlan].steps=[];S.plans[cPlan].steps.push('');saveS();renderPlSteps();}
+function savePlan(){
+  const p=S.plans[cPlan];
+  p.title=G('pt1')?.value||'';p.track=G('pt2')?.value||'';p.employer=G('pt3')?.value||'';p.salary=G('pt4')?.value||'';p.timeline=G('pt5')?.value||'';p.pros=G('pt6')?.value||'';p.cons=G('pt7')?.value||'';p.notes=G('pt8')?.value||'';
+  saveS();toast('✓ Plan saved');
+}
+
+// ============================================================
+// VA & MEDICAL
+// ============================================================
+function bVA(){
+  const u=S.user,isR=(u.sepType||'').toLowerCase().includes('retirement');
+  G('p-va').innerHTML=`<div class="ph">VA & Medical</div><div class="psub">Benefits claims, healthcare transition, and medical records strategy</div>
+    <div class="alert al-w"><span class="ai">⚠️</span><span><strong>File your VA claim before separation.</strong> Your active-duty records are fully accessible now. Every undocumented condition is compensation you may lose permanently. File everything — even minor issues.</span></div>
+    <div class="card"><div class="ch"><div class="cd"></div>Your VA Status</div>
+      <div class="sg" style="margin-bottom:14px">
+        <div class="sb"><div class="sv">${u.vaRate?u.vaRate+'%':'—'}</div><div class="sl">Rating</div></div>
+        <div class="sb"><div class="sv" style="font-size:14px">${(u.vaClaim||'Not Set').split(' ').slice(0,2).join(' ')}</div><div class="sl">Claim Status</div></div>
+      </div>
+      <div class="alert al-i" style="margin-bottom:12px"><span class="ai">ℹ️</span><span>At <strong>30%</strong>: TRICARE restored + free VA healthcare. At <strong>70%</strong>: Individual Unemployability eligible. At <strong>100%</strong>: Ch.35 dependents education benefit.</span></div>
+      <div class="fg"><label class="lb">Service-Connected Conditions to Document</label>
+        <textarea rows="5" id="va-cond" placeholder="List EVERY condition — even minor ones:&#10;• Hearing loss (gunfire, aircraft, equipment)&#10;• Knee / back / joint pain&#10;• TBI symptoms (any blast exposure or head injury)&#10;• PTSD / anxiety / sleep disorders&#10;• Skin conditions, respiratory issues&#10;• Dental damage from service">${(S.va||{}).cond||''}</textarea>
+      </div>
+      <div class="ar"><button class="btn btn-sm btn-a" onclick="S.va.cond=G('va-cond').value;saveS();toast('✓ Saved')">💾 Save</button></div>
+    </div>
+    <div class="card"><div class="ch"><div class="cd"></div>VA Claims Checklist</div><ul class="cl">
+      ${[
+        ['File VA Form 21-526EZ online at VA.gov','The core disability claim form — file electronically for fastest processing','critical'],
+        ['Request Service Treatment Records (STR) from MTF','Critical supporting evidence — get them before separation, it\'s harder after','critical'],
+        ['Attend all C&P (Compensation & Pension) exams','Missing a C&P exam results in automatic 0% rating for that condition','critical'],
+        ['Obtain Nexus letters from treating physicians','Doctor statement linking conditions to service is the most powerful evidence','high'],
+        ['Submit Buddy Statements from fellow service members','Witnesses to incidents and conditions significantly strengthen claims','medium'],
+        ['Apply for TBI/MST screening if applicable','Any blast exposure, vehicle accident, or military sexual trauma qualifies','medium'],
+        ['Enroll in VA healthcare (Form 10-10EZ)','Especially critical without TRICARE — gives priority access to VA system','high'],
+        ['Connect with DAV, VFW, or American Legion VSO','Free, expert claims representation — don\'t navigate this alone','high'],
+      ].map(([t,d,u])=>`<li class="cr${S.tasks['va_'+t.slice(0,12).replace(/\W/g,'')]?' dn':''}" onclick="togTk('va_${t.slice(0,12).replace(/\W/g,'')}',this)"><div class="cb"></div><div class="cc"><div class="cm">${t}</div><div class="cme">${d}</div></div><div class="crr"><span class="badge ${u==='critical'?'br':u==='high'?'bam':'bbl'}">${u}</span></div></li>`).join('')}
+    </ul></div>
+    <div class="card"><div class="ch"><div class="cd"></div>Healthcare Transition Options</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        ${[['TRICARE Retired','Full coverage at retiree rates. Requires 20+ yr retirement.',isR],['TRICARE TRS','180-day bridge at active-duty rates for separating members.',!isR],['VA Healthcare','Free/low-cost for SC conditions. Apply with 10-10EZ.',true],['Spouse Plan','Enroll in spouse\'s employer plan — often the best non-military option.',(u.famStatus||'').includes('Married')]].map(([n,d,rec])=>`<div class="card" style="border:${rec?'1.5px solid var(--ac)':'1px solid var(--b1)'}"><div>${rec?'<span class="badge ba" style="margin-bottom:8px">Recommended for You</span><br>':''}<div style="font-weight:600;font-size:13px;margin-bottom:4px">${n}</div><div class="txs txm">${d}</div></div></div>`).join('')}
+      </div>
+    </div>
+    <div class="card"><div class="ch"><div class="cd"></div>VA Notes & Appointments</div>
+      <textarea rows="4" id="va-notes" placeholder="Claim numbers, appointment dates, contact names, decisions received, C&P results...">${(S.va||{}).notes||''}</textarea>
+      <div class="ar"><button class="btn btn-sm btn-a" onclick="S.va.notes=G('va-notes').value;saveS();toast('✓ Saved')">💾 Save Notes</button></div>
+    </div>`;
+}
+
+// ============================================================
+// FINANCE
+// ============================================================
+function bFi(){
+  const u=S.user,isR=(u.sepType||'').toLowerCase().includes('retirement');
+  G('p-fi').innerHTML=`<div class="ph">Finance</div><div class="psub">Pay, entitlements, TSP strategy, and your civilian financial plan</div>
+    <div class="alert al-d"><span class="ai">🚨</span><span>The <strong>Survivor Benefit Plan (SBP)</strong> election at retirement is <strong>irrevocable</strong>. Declining SBP leaves your family with zero monthly income if you die first. This is a one-time, permanent decision.</span></div>
+    ${isR?`<div class="card"><div class="ch"><div class="cd"></div>Retirement Pay Calculator</div>
+      <div class="r2"><div class="fg"><label class="lb">Base Pay at Separation ($)</label><input type="number" id="fi-bp" value="${(S.fin||{}).bp||''}" placeholder="5500" oninput="calcRet()"></div><div class="fg"><label class="lb">Years of Service</label><input type="number" id="fi-yos" value="${u.yos||''}" placeholder="20" oninput="calcRet()"></div></div>
+      <div id="fi-res" style="display:none;background:var(--acl);border-radius:var(--r);padding:14px;margin-top:4px"><div class="txxs txm mb8" style="letter-spacing:.08em;text-transform:uppercase">Estimated Monthly Gross Retirement Pay (High-3)</div><div style="font-size:28px;font-weight:700;color:var(--ac)" id="fi-resv">$0</div><div class="txxs txm mt8">High-3 formula: 2.5% × YOS × base pay. Consult DFAS for exact figure.</div></div>
+    </div>`:''}
+    <div class="card"><div class="ch"><div class="cd"></div>TSP Strategy Guide</div>
+      <div class="txs txm mb12">Your TSP is portable. Understand all options before you separate.</div>
+      ${[['✅','Keep TSP as-is','Best option for most. Lowest fees (.04%), excellent fund options, G-Fund principal guarantee.'],['⚖️','Roll to Traditional IRA','More investment options at major brokers. Watch for higher expense ratios.'],['💡','Roll to Roth IRA','Pay taxes now — ideal if you expect higher income/tax bracket in retirement.'],['🏢','Roll to New 401(k)','Only worthwhile if new employer has significantly better match or options.']].map(([ic,opt,d])=>`<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--b1)"><span style="font-size:18px">${ic}</span><div><div style="font-size:14px;font-weight:600;margin-bottom:2px">${opt}</div><div class="txs txm">${d}</div></div></div>`).join('')}
+      <div class="fg mt12"><label class="lb">TSP Notes</label><textarea rows="2" id="fi-tsp" placeholder="Balance, allocation, rollover decision...">${(S.fin||{}).tsp||''}</textarea></div>
+    </div>
+    <div class="card"><div class="ch"><div class="cd"></div>Transition Budget</div>
+      <textarea rows="7" id="fi-bud" placeholder="Monthly income after separation:&#10;  Retirement pay:      $________&#10;  VA disability:       $________&#10;  Employment:          $________&#10;  Total income:        $________&#10;&#10;Monthly expenses:&#10;  Housing:             $________&#10;  Healthcare:          $________&#10;  Food / household:    $________&#10;  Transportation:      $________&#10;  Other:               $________&#10;  Total expenses:      $________&#10;&#10;Monthly surplus/gap:   $________">${(S.fin||{}).bud||''}</textarea>
+    </div>
+    <div class="card"><div class="ch"><div class="cd"></div>Financial Checklist</div><ul class="cl">
+      ${[['Set up SBP at retirement — irrevocable decision','Default is NO coverage — actively elect coverage for your family','critical'],['Verify DFAS retirement pay amount and start date','Call 1-800-321-1080 to confirm','high'],['Decide TSP strategy before separation day','Withdrawing early = 10% penalty + income tax','high'],['Build 6-month emergency fund before separation','Job search can take longer than expected','high'],['Update all beneficiaries (TSP, SGLI, accounts)','Review every financial account beneficiary','high'],['Research state income tax on retirement pay','Many states fully exempt — check your destination state','medium'],['Open civilian banking before separation','USAA and Navy Federal have no fees for veterans','medium'],].map(([t,d,u])=>`<li class="cr${S.tasks['fi_'+t.slice(0,10).replace(/\W/g,'')]?' dn':''}" onclick="togTk('fi_${t.slice(0,10).replace(/\W/g,'')}',this)"><div class="cb"></div><div class="cc"><div class="cm">${t}</div><div class="cme">${d}</div></div><div class="crr"><span class="badge ${u==='critical'?'br':u==='high'?'bam':'bbl'}">${u}</span></div></li>`).join('')}
+    </ul></div>
+    <div class="ar"><button class="btn btn-sm btn-a" onclick="S.fin={bp:G('fi-bp')?.value||'',tsp:G('fi-tsp')?.value||'',bud:G('fi-bud')?.value||''};saveS();toast('✓ Finance notes saved')">💾 Save Notes</button></div>`;
+}
+function calcRet(){const bp=parseFloat(G('fi-bp')?.value)||0,yos=parseFloat(G('fi-yos')?.value)||0;if(bp>0&&yos>0){G('fi-resv').textContent='$'+Math.round(bp*(yos*0.025)).toLocaleString();G('fi-res').style.display='block';}}
+
+// ============================================================
+// FAMILY
+// ============================================================
+function bFa(){
+  const u=S.user;
+  const hasDeps=parseInt(u.deps||0)>0;
+  const isM=(u.famStatus||'').toLowerCase().includes('married')||(u.famStatus||'').toLowerCase().includes('partner');
+  G('p-fa').innerHTML=`<div class="ph">Family</div><div class="psub">Relocation, schools, spouse career, and family support resources</div>
+    <div class="card"><div class="ch"><div class="cd"></div>Family Overview</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;font-size:13px">
+        <span class="txf">Status:</span><span>${u.famStatus||'Not set'}</span>
+        <span class="txf">Dependents:</span><span>${u.deps||0}</span>
+        <span class="txf">Spouse employment:</span><span>${({na:'N/A',employed:'Currently Employed',mil:'Also Military',seeking:'Seeking Work',stay:'Stay-at-Home'}[u.spEmp])||'Not set'}</span>
+        <span class="txf">Housing plan:</span><span>${({buy:'VA Loan Purchase',rent:'Renting',stay:'Current Home',fam:'Family Home',tbd:'Undecided'}[u.housing])||'Not set'}</span>
+      </div>
+    </div>
+    ${isM?`<div class="card"><div class="ch"><div class="cd"></div>Spouse Employment Resources</div>
+      ${[['👩‍💼','MySECO','https://myseco.com','Career coaching, resume help, scholarships specifically for military spouses'],['💰','My Career Advancement Account (MyCAA)','https://aiportal.acc.af.mil/mycaa','Up to $4,000 tuition assistance for eligible military spouses'],['🤝','Hiring Our Heroes — Spouse Fellowship','https://www.hiringourheroes.org','Fellowship program placing mil spouses in corporate roles'],['⚖️','Military Spouse JD Network','https://msjdn.org','Legal career resources for attorney spouses']].map(([ic,n,u,d])=>`<div class="res-i"><div class="res-ic">${ic}</div><div><div class="res-n">${n}</div><div class="res-d">${d}</div><a href="${u}" target="_blank" class="txxs txa mt8" style="text-decoration:none">🔗 ${u.replace('https://','')}</a></div></div>`).join('')}
+    </div>`:''}
+    ${hasDeps?`<div class="card"><div class="ch"><div class="cd"></div>Children & Relocation Checklist</div><ul class="cl">
+      ${[['Contact School Liaison Officer (SLO) for school transfer','SLOs on every installation — free guidance for school transfers','high'],['Research Interstate Compact for Military Children (MIC3)','Protects educational rights during moves and transitions','medium'],['Identify civilian childcare near new area (CDCs won\'t be available)','Post-separation: no access to CDCs — plan civilian care early','medium'],['Review children\'s DEERS/TRICARE coverage change at separation','Dependent benefits change the day you separate','high']].map(([t,d,u])=>`<li class="cr${S.tasks['fm2_'+t.slice(0,10).replace(/\W/g,'')]?' dn':''}" onclick="togTk('fm2_${t.slice(0,10).replace(/\W/g,'')}',this)"><div class="cb"></div><div class="cc"><div class="cm">${t}</div><div class="cme">${d}</div></div></li>`).join('')}
+    </ul></div>`:''}
+    <div class="card"><div class="ch"><div class="cd"></div>Family Planning Notes</div>
+      <textarea rows="5" id="fa-notes" placeholder="Family meeting notes, agreed decisions, concerns:&#10;&#10;Housing decision: ___&#10;School plan: ___&#10;Income plan: ___&#10;Healthcare plan: ___&#10;Childcare: ___">${(S.fam||{}).notes||''}</textarea>
+    </div>
+    <div class="ar"><button class="btn btn-sm btn-a" onclick="S.fam.notes=G('fa-notes').value;saveS();toast('✓ Saved')">💾 Save Notes</button></div>`;
+}
+
+// ============================================================
+// TIMELINE
+// ============================================================
+function bTl(){
+  const sep=S.user.sepDate;
+  if(!sep){G('p-tl').innerHTML='<div class="ph">Timeline</div><div class="psub">Auto-generated milestones based on your separation date</div><div class="alert al-i"><span class="ai">📅</span><span>Set your separation date in your profile to generate a personalized milestone timeline.</span></div>';return;}
+  const sepD=new Date(sep+'T12:00:00'),today=new Date();
+  const ms=[
+    {d:365,t:'Register for TAP/ACAP Program',desc:'Register immediately — sessions fill up. All workshops are mandatory before separation.',cat:'adm'},
+    {d:365,t:'Begin compiling medical records (STR)',desc:'Request Service Treatment Records from your Military Treatment Facility now.',cat:'va'},
+    {d:300,t:'Schedule JAG legal assistance appointment',desc:'Update will, power of attorney, and review any outstanding legal matters.',cat:'adm'},
+    {d:270,t:'Financial assessment — build emergency fund',desc:'Target 3-6 months of living expenses saved before your separation date.',cat:'fin'},
+    {d:240,t:'Career research and informational interviews',desc:'Research target employers, LinkedIn, veterans networks, informational meetings.',cat:'car'},
+    {d:180,t:'FILE VA DISABILITY CLAIM — BDD Window Opens',desc:'Benefits Delivery at Discharge: 180-90 day window is optimal. File EVERYTHING now.',cat:'va'},
+    {d:180,t:'Housing decision and research',desc:'Buy vs. rent, VA loan eligibility, COE, target location school research.',cat:'hou'},
+    {d:150,t:'Attend all TAP/ACAP workshops',desc:'Complete mandatory curriculum. Attend job assistance and financial workshops.',cat:'car'},
+    {d:120,t:'Civilian resume complete — begin applications',desc:'Use the Resume Builder tab. Target 10-15 quality applications per week.',cat:'car'},
+    {d:120,t:'Apply for GI Bill if planning to use (22-1990)',desc:'Allow 4-6 weeks processing. Apply before school enrollment deadlines.',cat:'car'},
+    {d:90,t:'Finalize TRICARE transition enrollment',desc:'TRS, retired TRICARE, or spouse plan — decision required before separation.',cat:'va'},
+    {d:90,t:'Notify housing office of departure date',desc:'Coordinate BAH termination and move-out date carefully.',cat:'hou'},
+    {d:60,t:'Book household goods shipment (PPM or GTC)',desc:'Schedule early — summer dates fill up months in advance.',cat:'hou'},
+    {d:60,t:'SBP decision deadline (retirees)',desc:'CRITICAL AND IRREVOCABLE. Survivor Benefit Plan must be elected at retirement.',cat:'fin'},
+    {d:45,t:'Complete all dental and elective medical care',desc:'VA dental is limited after separation — do everything possible now.',cat:'va'},
+    {d:30,t:'Begin final out-processing / clearing',desc:'CIF, housing, finance, medical, legal clearances. Start the checklist early.',cat:'adm'},
+    {d:14,t:'Verify final pay and civilian bank routing',desc:'Confirm DFAS and civilian account are set up before final day on post.',cat:'fin'},
+    {d:7,t:'Review and sign DD-214 final draft',desc:'This document defines your veteran benefits for life. Verify every field.',cat:'adm'},
+    {d:0,t:'🎖️ SEPARATION / RETIREMENT DAY',desc:'Mission complete. Your service defines who you are. The next mission begins.',cat:'special'},
+    {d:-14,t:'First civilian paycheck or retirement pay',desc:'Verify correct amounts. Contact DFAS immediately if any discrepancy.',cat:'fin'},
+    {d:-30,t:'First VA healthcare appointment (if enrolled)',desc:'Establish care with your VA primary care provider.',cat:'va'},
+    {d:-90,t:'VA disability rating decision expected',desc:'Average 90-120 days from BDD filing. Contact VSO if no decision received.',cat:'va'},
+  ];
+  const evs=ms.map(m=>{const d=new Date(sepD);d.setDate(d.getDate()-m.d);const df=Math.ceil((d-today)/86400000);let st=d<today?'done':df<=30?'urg':'fut';if(m.cat==='special')st='sp';return{...m,date:d,df,st};}).sort((a,b)=>a.date-b.date);
+  G('p-tl').innerHTML=`<div class="ph">Timeline</div><div class="psub">Auto-generated milestones based on your separation date of ${new Date(sep+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+    <div class="ar mb16"><button class="btn btn-sm btn-a" onclick="exportICS()">📅 Export to Calendar (.ics)</button></div>
+    <div class="tl">${evs.map(e=>{
+      const ds=e.date.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      const cd=e.st==='done'?'Past':e.df===0?'TODAY':e.df>0?'In '+e.df+' days':Math.abs(e.df)+' days ago';
+      const cc=e.st==='urg'?'var(--am)':e.st==='done'?'var(--gr)':e.st==='sp'?'var(--ac)':'var(--tx3)';
+      return`<div class="tli ${e.st}"><div class="tld">${ds} · <span style="color:${cc}">${cd}</span></div><div class="tlt" style="${e.cat==='special'?'font-size:16px;color:var(--ac);font-family:var(--fd);letter-spacing:.04em;text-transform:uppercase':''}">${e.t}</div><div class="tldesc">${e.desc}</div></div>`;
+    }).join('')}</div>`;
+}
+
+// ============================================================
+// GOALS
+// ============================================================
+function bGo(){
+  G('p-go').innerHTML=`<div class="ph">Goals & Future</div><div class="psub">Long-term goals, vision, and priorities</div>
+    <div class="card"><div class="ch"><div class="cd"></div>Your Top Priorities</div><div style="display:flex;flex-wrap:wrap;gap:8px">${(S.user.priorities||['Not set yet']).map(p=>`<span class="badge ba" style="font-size:12px;padding:4px 12px">${p}</span>`).join('')}</div></div>
+    <div class="card"><div class="ch fxb"><span><div class="cd" style="display:inline-block;margin-right:8px"></div>Goals Tracker</span><button class="btn btn-xs btn-o" onclick="addGoal()">+ Add Goal</button></div><div id="gl-list"></div></div>
+    <div class="card"><div class="ch"><div class="cd"></div>12-Month Vision</div>
+      <textarea rows="4" id="go-vis" placeholder="Write in present tense, as if it has already happened:&#10;&#10;'It is [month/year]. I am employed as a [role] at [company]. My family is settled in [location]. I earn $[X] and my VA rating is [X]%...'">${(S.notes||{}).vision||''}</textarea>
+      <div class="fg mt12"><label class="lb">5-Year Goal</label><textarea rows="2" id="go-5yr" placeholder="Where do you want to be in 5 years?">${(S.notes||{}).fiveYear||''}</textarea></div>
+      <div class="ar"><button class="btn btn-sm btn-a" onclick="saveGoalVis()">💾 Save Vision</button></div>
+    </div>`;
+  renderGoals();
+}
+function renderGoals(){
+  const l=G('gl-list');if(!l)return;
+  const gs=S.goals||[];
+  l.innerHTML=gs.length?gs.map((g,i)=>`<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--b1)">
+    <div style="cursor:pointer;margin-top:2px" onclick="S.goals[${i}].done=!S.goals[${i}].done;saveS();renderGoals()"><div class="cb" style="${g.done?'background:var(--gr);border-color:var(--gr)':''}"></div></div>
+    <div style="flex:1"><div style="font-size:14px;font-weight:500;${g.done?'text-decoration:line-through;color:var(--tx3)':''}">${g.text}</div>${g.deadline?`<div class="txxs txf mt8">Target: ${g.deadline}</div>`:''}</div>
+    <span class="badge ${g.cat==='career'?'bbl':g.cat==='finance'?'ba':g.cat==='health'?'bg':'bm'}">${g.cat||'personal'}</span>
+    <button class="btn btn-xs btn-gh" onclick="S.goals.splice(${i},1);saveS();renderGoals()">✕</button>
+  </div>`).join(''):'<div class="txs txm">No goals yet — add your first.</div>';
+}
+function addGoal(){const t=prompt('Goal:');if(!t)return;const d=prompt('Target date (optional):');const c=prompt('Category (career/finance/health/family/personal):');S.goals.push({text:t,deadline:d||'',cat:['career','finance','health','family','personal'].includes(c)?c:'personal',done:false});saveS();renderGoals();}
+function saveGoalVis(){if(!S.notes)S.notes={};S.notes.vision=G('go-vis')?.value||'';S.notes.fiveYear=G('go-5yr')?.value||'';saveS();toast('✓ Vision saved');}
+
+// ============================================================
+// CALENDAR
+// ============================================================
+function bCal(){G('p-ca').innerHTML=`<div class="ph">Calendar</div><div class="psub">Key dates and milestones for your transition</div>
+  <div class="card"><div class="fxb mb12"><button class="btn btn-gh" onclick="S.calOff--;renderCal()">◀</button><div class="ch" style="margin:0" id="cal-mo">—</div><button class="btn btn-gh" onclick="S.calOff++;renderCal()">▶</button></div><div class="cal-h" id="cal-hd"></div><div class="cal-g" id="cal-gr"></div></div>
+  <div class="card"><div class="ch"><div class="cd"></div>Upcoming Events</div><div id="cal-ev"></div></div>
+  <div class="ar"><button class="btn btn-sm btn-a" onclick="exportICS()">📅 Export ICS</button><button class="btn btn-sm btn-o" onclick="addCalEv()">＋ Add Event</button></div>`;}
+
+function getTlEvs(){
+  if(!S.user.sepDate)return[];
+  const s=new Date(S.user.sepDate+'T12:00:00');
+  return[{d:180,t:'VA BDD Claim Window'},{d:120,t:'Begin Job Applications'},{d:90,t:'TRICARE Enrollment Deadline'},{d:60,t:'Book Moving Company'},{d:30,t:'Begin Out-Processing'},{d:0,t:'🎖️ Separation Day'},{d:-90,t:'VA Rating Decision Expected'}].map(m=>{const dt=new Date(s);dt.setDate(dt.getDate()-m.d);return{title:m.t,date:dt};});
+}
+function renderCal(){
+  const now=new Date(),tgt=new Date(now.getFullYear(),now.getMonth()+S.calOff,1);
+  const yr=tgt.getFullYear(),mo=tgt.getMonth();
+  const moEl=G('cal-mo');if(moEl)moEl.textContent=tgt.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const hd=G('cal-hd');if(hd)hd.innerHTML=['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div class="cal-dn">${d}</div>`).join('');
+  const gr=G('cal-gr');if(!gr)return;gr.innerHTML='';
+  const fd=new Date(yr,mo,1).getDay(),dim=new Date(yr,mo+1,0).getDate(),pm=new Date(yr,mo,0).getDate();
+  const allEvs=[...getTlEvs(),...(S.cal||[]).map(e=>({title:e.title,date:new Date(e.date+'T12:00:00')}))];
+  const evDs=new Set(allEvs.map(e=>e.date.toDateString()));
+  for(let i=fd-1;i>=0;i--){const d=document.createElement('div');d.className='cal-d ot';d.textContent=pm-i;gr.appendChild(d);}
+  for(let d=1;d<=dim;d++){const dt=new Date(yr,mo,d);const el=document.createElement('div');el.className='cal-d'+(dt.toDateString()===now.toDateString()?' td':'')+(evDs.has(dt.toDateString())?' ev':'');el.textContent=d;el.onclick=()=>{const day=allEvs.filter(e=>e.date.toDateString()===dt.toDateString());if(day.length)alert(dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+'\n\n'+day.map(e=>'• '+e.title).join('\n'));};gr.appendChild(el);}
+  const rem=(7-(fd+dim)%7)%7;for(let d=1;d<=rem;d++){const el=document.createElement('div');el.className='cal-d ot';el.textContent=d;gr.appendChild(el);}
+  const ev=G('cal-ev');if(!ev)return;
+  const up=allEvs.filter(e=>e.date>=now).sort((a,b)=>a.date-b.date).slice(0,8);
+  ev.innerHTML=up.length?up.map(e=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1)"><div style="background:var(--acl);color:var(--ac);border-radius:var(--r);padding:6px 8px;text-align:center;min-width:44px"><div style="font-size:16px;font-weight:700;line-height:1">${e.date.getDate()}</div><div style="font-size:9px;text-transform:uppercase;letter-spacing:.08em">${e.date.toLocaleDateString('en-US',{month:'short'})}</div></div><div style="font-size:13px;font-weight:500">${e.title}</div></div>`).join(''):'<div class="txs txm">No upcoming events. Set your separation date to auto-populate key dates.</div>';
+}
+function addCalEv(){const t=prompt('Event title:');if(!t)return;const d=prompt('Date (YYYY-MM-DD):');if(!d)return;if(!S.cal)S.cal=[];S.cal.push({title:t,date:d});saveS();renderCal();}
+function exportICS(){
+  const all=[...getTlEvs(),...(S.cal||[]).map(e=>({title:e.title,date:new Date(e.date+'T12:00:00')}))];
+  if(!all.length){alert('No events to export. Set your separation date first.');return;}
+  let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//TransitionCommand//EN\r\nCALSCALE:GREGORIAN\r\n';
+  all.forEach(e=>{const d=new Date(e.date);const ds=d.toISOString().replace(/[-:.]/g,'').slice(0,15)+'Z';ics+=`BEGIN:VEVENT\r\nDTSTART:${ds}\r\nDTEND:${ds}\r\nSUMMARY:${e.title}\r\nEND:VEVENT\r\n`;});
+  ics+='END:VCALENDAR';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='TransitionCommand.ics';a.click();
+}
+
+// ============================================================
+// COMMS
+// ============================================================
+function bCo(){
+  G('p-co').innerHTML=`<div class="ph">Communications</div><div class="psub">Signature block, email templates, and professional scripts</div>
+    <div class="card"><div class="ch"><div class="cd"></div>Professional Signature Block</div>
+      <div class="sig" id="co-sig">${buildSig()}</div>
+      <div class="ar"><button class="btn btn-sm btn-a" onclick="cpTxt(buildSig())">📋 Copy Signature</button><button class="btn btn-sm btn-o" onclick="editSig()">✏️ Edit</button></div>
+    </div>
+    <div class="card"><div class="ch"><div class="cd"></div>Email Templates</div>
+      <div class="txs txm mb12">Auto-filled with your profile information. Fields in [brackets] require manual update.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">
+        ${EMAIL_TPLS.map(t=>`<button class="btn btn-o" style="text-align:left;justify-content:flex-start;padding:12px 14px;flex-direction:column;align-items:flex-start" onclick="showTpl('${t.id}')"><div style="font-size:13px;font-weight:700;color:var(--tx)">${t.name}</div><div class="txxs txm mt8">${t.subj.slice(0,42)}...</div></button>`).join('')}
+      </div>
+    </div>
+    <div id="tpl-display"></div>
+    <div class="card"><div class="ch"><div class="cd"></div>Contact Notes</div>
+      <textarea rows="4" id="co-notes" placeholder="Recruiter names, HR contacts, networking contacts, phone numbers, follow-up dates...">${(S.notes||{}).comms||''}</textarea>
+      <div class="ar"><button class="btn btn-sm btn-a" onclick="if(!S.notes)S.notes={};S.notes.comms=G('co-notes').value;saveS();toast('✓ Saved')">💾 Save</button></div>
+    </div>`;
+}
+function buildSig(){const u=S.user;return[u.name||'[Your Name]',[u.rank,BL(u.branch),u.yos?u.yos+' Yrs Service':''].filter(Boolean).join(' | '),u.clr?'Clearance: '+u.clr:'',u.phone||'[Phone]',u.email||'[Email]',u.linkedin||'[LinkedIn]'].filter(Boolean).join('\n');}
+function showTpl(id){const t=EMAIL_TPLS.find(e=>e.id===id);if(!t)return;const body=autoFill(t.body);G('tpl-display').innerHTML=`<div class="card"><div class="fxb mb8"><div class="ch" style="margin:0"><div class="cd"></div>${t.name}</div><div class="flex g8"><button class="btn btn-xs btn-a" onclick="cpTxt(G('tpl-b').textContent)">📋 Copy</button><button class="btn btn-xs btn-gh" onclick="G('tpl-display').innerHTML=''">✕ Close</button></div></div><div class="txxs txm mb8">Subject: <strong>${t.subj}</strong></div><div class="tpb" id="tpl-b">${body}</div></div>`;}
+function editSig(){const u=S.user;['name','phone','email','linkedin'].forEach(k=>{const v=prompt(k.charAt(0).toUpperCase()+k.slice(1)+':',u[k]||'');if(v!==null)u[k]=v;});saveS();const s=G('co-sig');if(s)s.textContent=buildSig();}
+
+// ============================================================
+// RESUME BUILDER
+// ============================================================
+let rExp=[];
+function bRe(){
+  const u=S.user;rExp=S.resume?.exp||[];
+  G('p-re').innerHTML=`<div class="ph">Resume Builder</div><div class="psub">Translate your service into a civilian-ready resume with live preview</div>
+    <div class="alert al-w"><span class="ai">⚡</span><span>Recruiters spend 6 seconds per resume. Lead every bullet with a number. Replace military jargon with the civilian equivalent using the MOS Translator below.</span></div>
+    <div class="rsplit" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+      <div>
+        <div class="card"><div class="ch"><div class="cd"></div>Contact Information</div>
+          <div class="fg"><label class="lb">Full Name</label><input type="text" id="rn" value="${u.name||''}" placeholder="First Last" oninput="updRp()"></div>
+          <div class="r2"><div class="fg"><label class="lb">Phone</label><input type="text" id="rph" value="${u.phone||''}" placeholder="(555) 000-0000" oninput="updRp()"></div><div class="fg"><label class="lb">Email</label><input type="text" id="rem" value="${u.email||''}" placeholder="name@email.com" oninput="updRp()"></div></div>
+          <div class="fg"><label class="lb">Location | LinkedIn</label><input type="text" id="rloc" value="${(u.loc||'')+(u.linkedin?' | '+u.linkedin:'')}" placeholder="City, ST | linkedin.com/in/name" oninput="updRp()"></div>
+        </div>
+        <div class="card"><div class="ch"><div class="cd"></div>Professional Summary</div>
+          <div class="txs txm mb8">3-5 sentences. Years of experience + top skill + biggest achievement + target role.</div>
+          <textarea rows="3" id="rs" oninput="updRp()" placeholder="${BL(u.branch)} veteran with ${u.yos||'X'} years leading teams in high-stakes environments...">${S.resume?.summary||''}</textarea>
+        </div>
+        <div class="card"><div class="ch"><div class="cd"></div>MOS / Rate Translator</div>
+          <div class="txs txm mb8">Enter your MOS, Rate, or AFSC for civilian titles and resume keywords.</div>
+          <div style="display:flex;gap:8px"><input type="text" id="mos-in" placeholder="25B, BM, 3D0X2, 0311..." style="flex:1" value="${u.mos||''}"><button class="btn btn-a btn-sm" onclick="doMOS()">Translate</button></div>
+          <div id="mos-res" style="display:none;background:var(--grl);border:1px solid var(--gr);border-radius:var(--r);padding:12px;margin-top:10px;font-size:13px;color:var(--gr)"></div>
+        </div>
+        <div class="card"><div class="ch fxb"><span><div class="cd" style="display:inline-block;margin-right:8px"></div>Military Experience</span><button class="btn btn-xs btn-o" onclick="addExp()">+ Add Position</button></div><div id="exp-list"></div></div>
+        <div class="card"><div class="ch"><div class="cd"></div>Education & Training</div>
+          <div class="fg"><label class="lb">Degree / Institution</label><input type="text" id="redu" value="${S.resume?.edu||''}" placeholder="B.S. Business Management — State University, 2019" oninput="updRp()"></div>
+          <div class="fg"><label class="lb">Military Schools & Certifications</label><textarea rows="2" id="rcrt" oninput="updRp()" placeholder="Air Assault, Airborne, Ranger School, PMP, CompTIA Security+, EMT-B...">${S.resume?.certs||''}</textarea></div>
+        </div>
+        <div class="card"><div class="ch"><div class="cd"></div>Skills</div>
+          <textarea rows="3" id="rsk" oninput="updRp()" placeholder="Leadership, Team Management, Risk Assessment, Microsoft Office, Project Management, Budget Management, Security Clearance (TS/SCI)...">${S.resume?.skills||''}</textarea>
+        </div>
+      </div>
+      <div>
+        <div class="txxs txf mb8" style="letter-spacing:.1em;text-transform:uppercase">Live Preview</div>
+        <div class="rp" id="rp-box">
+          <div class="rpn" id="rp-n">YOUR NAME</div>
+          <div class="rpc" id="rp-c">Phone · Email · Location</div>
+          <div class="rps">Professional Summary</div>
+          <div id="rp-s" style="font-size:11px;color:#333;margin-bottom:4px"></div>
+          <div class="rps">Experience</div>
+          <div id="rp-e"></div>
+          <div class="rps">Education & Training</div>
+          <div id="rp-edu" style="font-size:11px;color:#333;margin-bottom:4px"></div>
+          <div class="rps">Skills & Clearance</div>
+          <div id="rp-sk" style="font-size:11px;color:#333"></div>
+        </div>
+        <div class="ar mt12">
+          <button class="btn btn-sm btn-a" onclick="printRe()">🖨️ Print / Save PDF</button>
+          <button class="btn btn-sm btn-o" onclick="copyRe()">📋 Copy Text</button>
+        </div>
+      </div>
+    </div>`;
+  renderExpList();updRp();
+}
+function renderExpList(){
+  const l=G('exp-list');if(!l)return;
+  l.innerHTML=rExp.length?rExp.map((e,i)=>`<div class="card" style="background:var(--surf2);margin-bottom:10px"><div class="fxb mb8"><div class="txxs txm" style="letter-spacing:.08em;text-transform:uppercase">Position ${i+1}</div><button class="btn btn-xs btn-gh" onclick="rExp.splice(${i},1);S.resume.exp=rExp;saveS();renderExpList();updRp()">✕ Remove</button></div>
+    <div class="r2"><div class="fg"><label class="lb">Job Title (civilian-friendly)</label><input type="text" value="${e.title||''}" oninput="rExp[${i}].title=this.value;S.resume.exp=rExp;saveS();updRp()" placeholder="IT Manager, Operations Supervisor..."></div><div class="fg"><label class="lb">Organization</label><input type="text" value="${e.org||''}" oninput="rExp[${i}].org=this.value;S.resume.exp=rExp;saveS();updRp()" placeholder="U.S. Army, 1st Infantry Division"></div></div>
+    <div class="r2"><div class="fg"><label class="lb">Location</label><input type="text" value="${e.loc||''}" oninput="rExp[${i}].loc=this.value;S.resume.exp=rExp;saveS();updRp()" placeholder="Fort Liberty, NC"></div><div class="fg"><label class="lb">Dates</label><input type="text" value="${e.dates||''}" oninput="rExp[${i}].dates=this.value;S.resume.exp=rExp;saveS();updRp()" placeholder="Jan 2020 – Sep 2024"></div></div>
+    <div class="fg"><label class="lb">Accomplishments (one per line — lead with numbers)</label><textarea rows="3" oninput="rExp[${i}].bullets=this.value;S.resume.exp=rExp;saveS();updRp()" placeholder="Led 32-person platoon achieving 100% readiness during 9-month deployment&#10;Managed $2.4M inventory with zero loss or damage&#10;Reduced training accidents 40% through revised safety protocols">${e.bullets||''}</textarea></div>
+  </div>`).join(''):'<div class="txs txm">No positions yet — add your most recent roles above.</div>';
+}
+function addExp(){rExp.push({title:'',org:'',loc:'',dates:'',bullets:''});S.resume.exp=rExp;saveS();renderExpList();}
+function doMOS(){
+  const v=(G('mos-in')?.value||'').toLowerCase().trim().replace(/\s/g,'');
+  const r=MOS_DB[v];const el=G('mos-res');if(!el)return;
+  if(r){el.style.background='var(--grl)';el.style.borderColor='var(--gr)';el.style.color='var(--gr)';el.style.display='block';el.innerHTML=`<strong>✅ ${r.t}</strong><br><br><span style="color:var(--tx2)">Resume keywords to include:</span><br><em>${r.k}</em>`;}
+  else{el.style.background='var(--aml)';el.style.borderColor='var(--am)';el.style.color='var(--am)';el.style.display='block';el.innerHTML=`<strong>MOS "${v.toUpperCase()}" not in database.</strong><br>Try: <a href="https://www.onetonline.org/crosswalk/MOC/" target="_blank" style="color:var(--am)">O*NET Military Crosswalk</a> — the most comprehensive translator.`;}
+}
+function updRp(){
+  const n=G('rn')?.value||'YOUR NAME';
+  const ph=G('rph')?.value;const em=G('rem')?.value;const lc=G('rloc')?.value;
+  const sm=G('rs')?.value||'';const edu=G('redu')?.value||'';const crt=G('rcrt')?.value||'';const sk=G('rsk')?.value||'';
+  G('rp-n').textContent=n.toUpperCase();
+  G('rp-c').textContent=[ph,em,lc].filter(Boolean).join(' · ');
+  G('rp-s').textContent=sm;
+  const ee=G('rp-e');if(ee)ee.innerHTML=rExp.filter(e=>e.title||e.org).map(e=>`<div style="margin-bottom:8px"><div class="rpjt">${e.title||''}</div><div class="rpjo">${[e.org,e.loc,e.dates].filter(Boolean).join(' | ')}</div>${(e.bullets||'').split('\n').filter(Boolean).map(b=>`<div class="rpb">${b}</div>`).join('')}</div>`).join('');
+  G('rp-edu').innerHTML=[edu?`<div>${edu}</div>`:'',crt?`<div style="color:#555">${crt}</div>`:''].join('');
+  G('rp-sk').textContent=sk;
+  S.resume={...S.resume,summary:sm,edu,certs:crt,skills:sk,exp:rExp};saveS();
+}
+function printRe(){const p=G('pt');const b=G('rp-box');p.innerHTML=b.innerHTML;p.style.display='block';window.print();setTimeout(()=>{p.style.display='none';p.innerHTML='';},1000);}
+function copyRe(){
+  const n=G('rn')?.value||'';const ph=G('rph')?.value||'';const em=G('rem')?.value||'';const lc=G('rloc')?.value||'';const sm=G('rs')?.value||'';const edu=G('redu')?.value||'';const crt=G('rcrt')?.value||'';const sk=G('rsk')?.value||'';
+  let t=n.toUpperCase()+'\n'+[ph,em,lc].filter(Boolean).join(' | ')+'\n\nPROFESSIONAL SUMMARY\n'+sm+'\n\n';
+  if(rExp.filter(e=>e.title).length){t+='EXPERIENCE\n';rExp.filter(e=>e.title).forEach(e=>{t+=e.title+'\n'+[e.org,e.loc,e.dates].filter(Boolean).join(' | ')+'\n';(e.bullets||'').split('\n').filter(Boolean).forEach(b=>t+='• '+b+'\n');t+='\n';});}
+  if(edu||crt)t+='EDUCATION & TRAINING\n'+(edu?edu+'\n':'')+(crt?crt+'\n':'')+'\n';
+  if(sk)t+='SKILLS\n'+sk;
+  cpTxt(t);
+}
+
+// ============================================================
+// RESOURCES
+// ============================================================
+function bRs(){
+  G('p-rs').innerHTML=`<div class="ph">Resources</div><div class="psub">Curated links for transitioning service members — all branches, fully vetted</div>
+    ${RESOURCES.map(s=>`<div class="card"><div class="ch"><div class="cd"></div>${s.cat}</div>${s.items.map(i=>`<div class="res-i"><div class="res-ic">${i.ic}</div><div style="flex:1"><div class="res-n">${i.n}</div><div class="res-d">${i.d}</div><a href="${i.u}" target="_blank" class="txxs txa mt8" style="text-decoration:none">🔗 ${i.u.replace('https://','').replace('http://','')}</a></div></div>`).join('')}</div>`).join('')}`;
+}
+
+// ============================================================
+// PWA
+// ============================================================
+if('serviceWorker' in navigator){try{const sw=`self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))});`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});}catch(e){}}
+
+</script>
+</body>
+</html>
