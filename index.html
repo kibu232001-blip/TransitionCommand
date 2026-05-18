@@ -1748,6 +1748,61 @@ function closeTplOutside(e){
 // ============================================================
 // CERTIFICATIONS TAB
 // ============================================================
+
+// ============================================================
+// COOL FUNDING STEPS BY BRANCH
+// ============================================================
+const COOL_STEPS = {
+  army:[
+    'Log in to the ArmyIgnitED Portal at armyignited.army.mil',
+    'Navigate to Education Programs → Credentialing Assistance → Create New Goal',
+    'Select your desired credential, submit the goal, then click "Apply For Funding"',
+    'Select your vendor and testing window, then submit for review',
+    'Wait for approval email before scheduling or paying for the exam',
+  ],
+  navy:[
+    'Access Navy COOL at cool.osd.mil/usn and check your eligibility',
+    'Fill out the "Certification and Licensing Funding Request Form"',
+    'Have your Command Approving Official sign and submit the form',
+    'Email completed form to navycool@us.navy.mil or fax to (850) 452-6897',
+    'Wait for approval confirmation before scheduling the exam',
+  ],
+  airforce:[
+    'Log in to your AFVEC Account at afvec.us.af.mil',
+    'Go to Education Programs and select "AF COOL"',
+    'Find your desired credential and click "Create Education Goal"',
+    'Upload all required supporting documentation',
+    'Locate your goal and click "Apply for Funding" — await approval before testing',
+  ],
+  spacefore:[
+    'Log in to your AFVEC Account at afvec.us.af.mil (Space Force uses AF system)',
+    'Go to Education Programs and select "AF COOL"',
+    'Find your desired credential and click "Create Education Goal"',
+    'Upload all required supporting documentation',
+    'Locate your goal and click "Apply for Funding" — await approval before testing',
+  ],
+  marines:[
+    'Go to the Marine Corps COOL page at cool.osd.mil/usmc',
+    'Use the "Get Funding Request Form" Eligibility Tool',
+    'Fill out the form and verify you meet time-in-service requirements',
+    'Submit the form for your command approval',
+    'Do NOT schedule or pay for the exam until you receive formal written approval',
+  ],
+  coastguard:[
+    'Contact your ESO (Education Services Officer) on your unit',
+    'Go to cool.osd.mil/uscg to review eligible credentials for your rate',
+    'Work with your ESO to submit a tuition assistance/credentialing request',
+    'Await approval before scheduling the exam',
+    'Submit receipts and documentation after exam completion for reimbursement',
+  ],
+  allbranches:[
+    'Contact your installation Education Center or ESO for your specific branch process',
+    'Review your branch COOL portal to confirm credential eligibility',
+    'Submit your funding request through the appropriate portal (see branch tabs above)',
+    'Await written approval BEFORE scheduling or paying for the exam',
+  ],
+};
+
 const CERT_DB = {
   army: [
     {
@@ -1755,7 +1810,7 @@ const CERT_DB = {
       name:'CompTIA Security+',
       provider:'CompTIA',
       url:'https://www.comptia.org/certifications/security',
-      cool:'https://coolarmor.goarmy.com',
+      cool:'https://www.cool.osd.mil/army/credential_steps/index.html?step2',
       cost:'$370 exam (Army COOL covers it)',
       coolFunded:true,
       salary:'+$10,000–$20,000/yr (DoD 8570 baseline)',
@@ -1771,7 +1826,7 @@ const CERT_DB = {
       name:'AWS Cloud Practitioner',
       provider:'Amazon Web Services',
       url:'https://aws.amazon.com/certification/certified-cloud-practitioner/',
-      cool:'https://coolarmor.goarmy.com',
+      cool:'https://www.cool.osd.mil/army/credential_steps/index.html?step2',
       cost:'$100 exam',
       coolFunded:false,
       salary:'+$10,000–$15,000/yr entry boost',
@@ -1787,7 +1842,7 @@ const CERT_DB = {
       name:'EMT-Basic (NREMT)',
       provider:'NREMT',
       url:'https://www.nremt.org/rwd/public/document/emt',
-      cool:'https://coolarmor.goarmy.com',
+      cool:'https://www.cool.osd.mil/army/credential_steps/index.html?step2',
       cost:'$120 exam (COOL may cover)',
       coolFunded:true,
       salary:'$35,000–$55,000 base + benefits',
@@ -1803,7 +1858,7 @@ const CERT_DB = {
       name:'ASE Automotive Certification',
       provider:'ASE (National Institute for Auto Service)',
       url:'https://www.ase.com/tests-certifications/',
-      cool:'https://coolarmor.goarmy.com',
+      cool:'https://www.cool.osd.mil/army/credential_steps/index.html?step2',
       cost:'$36–$107 per test (COOL may cover)',
       coolFunded:true,
       salary:'$45,000–$75,000 as master tech',
@@ -1821,7 +1876,7 @@ const CERT_DB = {
       name:'CompTIA Security+',
       provider:'CompTIA',
       url:'https://www.comptia.org/certifications/security',
-      cool:'https://www.cool.navy.mil',
+      cool:'https://www.cool.osd.mil/usn/credential_steps/index.html?fundingform',
       cost:'$370 exam (Navy COOL covers it)',
       coolFunded:true,
       salary:'+$10,000–$20,000/yr (DoD 8570 baseline)',
@@ -1837,7 +1892,7 @@ const CERT_DB = {
       name:'EMT-Basic or Paramedic',
       provider:'NREMT',
       url:'https://www.nremt.org',
-      cool:'https://www.cool.navy.mil',
+      cool:'https://www.cool.osd.mil/usn/credential_steps/index.html?fundingform',
       cost:'$120–$240 (COOL may cover)',
       coolFunded:true,
       salary:'$35,000–$65,000 (Paramedic significantly higher)',
@@ -1855,7 +1910,7 @@ const CERT_DB = {
       name:'CompTIA Security+ / CySA+',
       provider:'CompTIA',
       url:'https://www.comptia.org/certifications/security',
-      cool:'https://www.cool.af.mil',
+      cool:'https://myairforcebenefits.us.af.mil/Benefit-Library/Federal-Benefits/Air-Force-Credentialing-Opportunities-On-Line-(AF-COOL)?serv=23',
       cost:'$370–$494 (AF COOL covers)',
       coolFunded:true,
       salary:'+$15,000–$30,000/yr cybersecurity premium',
@@ -1871,7 +1926,7 @@ const CERT_DB = {
       name:'FAA Airframe & Powerplant (A&P)',
       provider:'FAA',
       url:'https://www.faa.gov/mechanics/become',
-      cool:'https://www.cool.af.mil',
+      cool:'https://myairforcebenefits.us.af.mil/Benefit-Library/Federal-Benefits/Air-Force-Credentialing-Opportunities-On-Line-(AF-COOL)?serv=23',
       cost:'$150–$300 (COOL may cover)',
       coolFunded:true,
       salary:'$60,000–$100,000+ airline mechanics',
@@ -1889,7 +1944,7 @@ const CERT_DB = {
       name:'CompTIA Security+',
       provider:'CompTIA',
       url:'https://www.comptia.org/certifications/security',
-      cool:'https://www.cool.usmc.mil',
+      cool:'https://www.cool.osd.mil/usmc/costs_and_funding/index.html?ExamFunding',
       cost:'$370 (COOL covers for eligible MOSs)',
       coolFunded:true,
       salary:'+$10,000–$20,000/yr DoD baseline',
@@ -1905,7 +1960,7 @@ const CERT_DB = {
       name:'Project Management Professional (PMP)',
       provider:'Project Management Institute',
       url:'https://www.pmi.org/certifications/project-management-pmp',
-      cool:'https://www.cool.usmc.mil',
+      cool:'https://www.cool.osd.mil/usmc/costs_and_funding/index.html?ExamFunding',
       cost:'$555 members / $405 (TA may cover)',
       coolFunded:false,
       salary:'+$15,000–$30,000/yr average PMP premium',
@@ -1941,7 +1996,7 @@ const CERT_DB = {
       name:'AWS Solutions Architect',
       provider:'Amazon Web Services',
       url:'https://aws.amazon.com/certification/certified-solutions-architect-associate/',
-      cool:'https://www.cool.af.mil',
+      cool:'https://myairforcebenefits.us.af.mil/Benefit-Library/Federal-Benefits/Air-Force-Credentialing-Opportunities-On-Line-(AF-COOL)?serv=23',
       cost:'$150 exam',
       coolFunded:false,
       salary:'$110,000–$160,000 cloud architect',
@@ -1959,7 +2014,7 @@ const CERT_DB = {
       name:'Commercial Driver\'s License (CDL-A)',
       provider:'FMCSA / State DMV',
       url:'https://www.fmcsa.dot.gov/registration/commercial-drivers-license/what-cdl',
-      cool:'https://coolarmor.goarmy.com',
+      cool:'https://www.cool.osd.mil/army/credential_steps/index.html?step2',
       cost:'$3,000–$7,000 training (GI Bill covers)',
       coolFunded:false,
       salary:'$55,000–$95,000 OTR trucker',
@@ -2028,6 +2083,11 @@ function renderCertTab(){
           ${c.cool?`<a href="${c.cool}" target="_blank" class="cert-btn cert-btn-secondary">🎯 Apply for COOL Funding</a>`:''}
           ${c.coolFunded?`<span class="cert-tag ct-cool" style="align-self:center;margin-left:4px">Free — Apply Before Separation</span>`:''}
         </div>
+        ${c.cool?`<div style="background:rgba(74,124,89,.06);border:1px solid rgba(74,124,89,.15);border-radius:8px;padding:10px 12px;margin-top:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4A7C59;margin-bottom:6px">📋 How to Apply for COOL Funding</div>
+          ${(COOL_STEPS[certBranch]||COOL_STEPS.army).map((s,i)=>`<div style="display:flex;gap:8px;font-size:11px;color:rgba(27,43,75,.7);padding:3px 0;align-items:flex-start"><span style="background:#4A7C59;color:#fff;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;margin-top:1px">${i+1}</span><span>${s}</span></div>`).join('')}
+          <div style="font-size:10px;color:#B83232;font-weight:600;margin-top:6px;padding-top:6px;border-top:1px solid rgba(74,124,89,.15)">⚠️ Must receive funding approval BEFORE taking exam or purchasing materials.</div>
+        </div>`:''}
       </div>`).join('')}
   `;
 }
