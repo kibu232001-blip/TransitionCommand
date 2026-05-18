@@ -3,7 +3,7 @@
   TransitionCommand v1.0
   © 2026 KIBU Global Ventures LLC. All Rights Reserved.
   Unauthorized reproduction, reverse engineering, or distribution is prohibited.
-  First published: 2026 | kibu.global
+  First published: 2026 | kibuglobal.com
 -->
 <html lang="en">
 <head>
@@ -275,6 +275,7 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
     <button class="tb" data-t="co" onclick="ot('co')">📨 Comms</button>
     <button class="tb" data-t="re" onclick="ot('re')">📄 Resume</button>
     <button class="tb" data-t="rs" onclick="ot('rs')">🔗 Resources</button>
+    <button class="tb" data-t="cr" onclick="ot('cr')">🎓 Certifications</button>
   </div>
   <div class="content">
     <div class="panel a" id="p-ov"></div>
@@ -289,6 +290,7 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
     <div class="panel" id="p-co"></div>
     <div class="panel" id="p-re"></div>
     <div class="panel" id="p-rs"></div>
+    <div class="panel" id="p-cr"></div>
   </div>
 </div>
 <button class="fab" id="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
@@ -525,45 +527,647 @@ Respectfully,
 
 const RESOURCES=[
   {cat:'Benefits & Claims',items:[
-    {ic:'🏛️',n:'VA.gov',u:'https://www.va.gov',d:'Official portal — disability claims, healthcare enrollment, education benefits'},
-    {ic:'💊',n:'VA Healthcare Enrollment (10-10EZ)',u:'https://www.va.gov/health-care/apply/',d:'Enroll in VA healthcare before separation'},
-    {ic:'🎓',n:'GI Bill Comparison Tool',u:'https://www.va.gov/education/gi-bill-comparison-tool/',d:'Compare schools and calculate GI Bill housing allowance'},
-    {ic:'💵',n:'DFAS — Defense Finance',u:'https://www.dfas.mil',d:'Retirement pay, myPay, W-2s, tax documents'},
-    {ic:'🏥',n:'TRICARE',u:'https://www.tricare.mil',d:'Healthcare coverage options and enrollment for transitioning members'},
+    {ic:'🏛️',n:'VA.gov',u:'https://www.va.gov',d:'Official VA portal — start all claims, healthcare enrollment, and education benefits here'},
+    {ic:'📋',n:'VA Benefits Eligibility',u:'https://www.va.gov/benefits/',d:'Full list of all VA benefits you may have earned — compensation, pension, education, home loans'},
+    {ic:'💊',n:'VA Healthcare Enrollment (10-10EZ)',u:'https://www.va.gov/health-care/apply/',d:'Enroll in VA healthcare — submit before separation, especially if TRICARE will lapse'},
+    {ic:'🎓',n:'GI Bill Comparison Tool',u:'https://www.va.gov/education/gi-bill-comparison-tool/',d:'Compare every approved school, calculate MHA housing allowance, and verify Yellow Ribbon programs'},
+    {ic:'📚',n:'GI Bill Apply (22-1990)',u:'https://www.va.gov/education/apply-for-education-benefits/',d:'Apply for Post-9/11 or Montgomery GI Bill — allow 4–6 weeks processing before school start'},
+    {ic:'💵',n:'DFAS — Defense Finance',u:'https://www.dfas.mil',d:'Retirement pay setup, myPay, W-2s, SBP elections, and PCOLS — call 1-800-321-1080'},
+    {ic:'🏥',n:'TRICARE',u:'https://www.tricare.mil',d:'All TRICARE plans, enrollment windows, TRS (transitional), and TRICARE Retired options'},
+    {ic:'⚖️',n:'VA Claims Evidence Guide',u:'https://www.va.gov/disability/how-to-file-claim/',d:'Step-by-step: how to file 21-526EZ, what evidence to submit, BDD process (180–90 days out)'},
+    {ic:'🩺',n:'Benefits Delivery at Discharge (BDD)',u:'https://www.va.gov/disability/how-to-file-claim/when-to-file/pre-discharge-claim/',d:'File your disability claim 180–90 days before separation — fastest path to rating decision'},
+  ]},
+  {cat:'COOL & Certification Funding',items:[
+    {ic:'⭐',n:'Army COOL (Credentialing Assistance)',u:'https://coolarmor.com',d:'Army pays for certifications directly — CompTIA, PMI, ASE, SHRM, and more. Use before you separate.'},
+    {ic:'⚓',n:'Navy COOL',u:'https://www.cool.navy.mil',d:'Navy Credentialing Opportunities On-Line — free certifications for active duty sailors'},
+    {ic:'✈️',n:'Air Force COOL (AFVEC)',u:'https://www.afvec.us.af.mil',d:'Air Force credentialing and education program — courses and certifications funded on active duty'},
+    {ic:'🦅',n:'USMC COOL',u:'https://www.cool.osd.mil/usmc',d:'Marine Corps Credentialing Opportunities — funding available for active duty Marines'},
+    {ic:'🛡️',n:'Coast Guard COOL',u:'https://www.dcms.uscg.mil/cool',d:'Coast Guard credentialing program for enlisted and officer ratings'},
+    {ic:'🚀',n:'Space Force COOL',u:'https://www.cool.osd.mil/ussf',d:'USSF credentialing and education funding for Guardians'},
+    {ic:'📖',n:'Tuition Assistance (MyCAA for spouses)',u:'https://aiportal.acc.af.mil/mycaa',d:'Up to $4,000 tuition assistance for eligible military spouses — apply before separation'},
+    {ic:'🔑',n:'O*NET Military Crosswalk',u:'https://www.onetonline.org/crosswalk/MOC/',d:'Full MOS/Rate/AFSC to civilian occupation crosswalk — find your civilian job titles and required credentials'},
   ]},
   {cat:'Career & Employment',items:[
-    {ic:'🏢',n:'USAJOBS.gov',u:'https://www.usajobs.gov',d:'All federal jobs — apply veterans\' preference to every application'},
-    {ic:'🦅',n:'Hire Heroes USA',u:'https://www.hireheroesusa.org',d:'Free career coaching, resume writing, and job placement for veterans'},
-    {ic:'🤝',n:'American Corporate Partners (ACP)',u:'https://www.acp-usa.org',d:'Free 1-year mentorship from corporate professionals for veterans'},
-    {ic:'🎪',n:'Hiring Our Heroes',u:'https://www.hiringourheroes.org',d:'Career fairs, fellowships, and corporate connections'},
-    {ic:'🔗',n:'LinkedIn for Veterans',u:'https://socialimpact.linkedin.com/programs/veterans',d:'1 year free LinkedIn Premium for transitioning veterans'},
-    {ic:'🎖️',n:'RecruitMilitary',u:'https://recruitmilitary.com',d:'Veteran-focused job board and career fairs nationwide'},
+    {ic:'🏢',n:'USAJobs.gov',u:'https://www.usajobs.gov',d:'All federal jobs — apply veterans\' preference on every application, filter by Schedule A for disabled vets'},
+    {ic:'🦅',n:'Hire Heroes USA',u:'https://www.hireheroesusa.org',d:'Free career coaching, resume writing, and job placement — one of the best veteran employment orgs in the country'},
+    {ic:'🤝',n:'American Corporate Partners (ACP)',u:'https://www.acp-usa.org',d:'Free 1-year mentorship matching with corporate professionals in your target industry'},
+    {ic:'🎪',n:'Hiring Our Heroes',u:'https://www.hiringourheroes.org',d:'Corporate fellowship programs, career fairs, and spouse employment at installations worldwide'},
+    {ic:'🔗',n:'LinkedIn Premium for Veterans',u:'https://socialimpact.linkedin.com/programs/veterans',d:'1 year free LinkedIn Premium for transitioning veterans — use it, it\'s worth $480'},
+    {ic:'🎖️',n:'RecruitMilitary',u:'https://recruitmilitary.com',d:'Veteran-focused job board and career fairs in 40+ cities annually'},
+    {ic:'📊',n:'ClearanceJobs.com',u:'https://www.clearancejobs.com',d:'If you have any clearance level, this is your best job board — thousands of cleared positions'},
+    {ic:'🏛️',n:'Federal Jobs for Veterans (OPM)',u:'https://www.opm.gov/policy-data-oversight/veterans-services/',d:'Veterans preference rules, Schedule A, VRA, and VEOA hiring authorities explained'},
+    {ic:'🔍',n:'USSOCOM Partner Contractors',u:'https://www.socom.mil/sof-industry',d:'SOF-adjacent contractor opportunities — PAE, SOSi, MPRI, and other special operations contractors'},
+    {ic:'📈',n:'Salary.com / Glassdoor',u:'https://www.glassdoor.com/Salaries/',d:'Research civilian salaries before your first negotiation — veterans routinely underbid'},
   ]},
-  {cat:'Finance & Home',items:[
-    {ic:'📈',n:'TSP — Thrift Savings Plan',u:'https://www.tsp.gov',d:'Manage your TSP, review rollover options, investment allocations'},
-    {ic:'🏦',n:'USAA',u:'https://www.usaa.com',d:'Military-focused banking, insurance, and financial planning'},
-    {ic:'⚓',n:'Navy Federal Credit Union',u:'https://www.navyfcu.org',d:'Best rates on auto loans and mortgages for military members'},
-    {ic:'🏡',n:'VA Home Loans',u:'https://www.va.gov/housing-assistance/home-loans/',d:'No down payment, no PMI — Certificate of Eligibility and lender directory'},
-    {ic:'📊',n:'Military OneSource — Finance',u:'https://www.militaryonesource.mil/financial-legal/',d:'Free financial counseling for 365 days post-separation'},
+  {cat:'Finance & Benefits',items:[
+    {ic:'📈',n:'TSP — Thrift Savings Plan',u:'https://www.tsp.gov',d:'Manage allocations, review rollover options, and understand penalty-free withdrawal rules'},
+    {ic:'🏦',n:'USAA',u:'https://www.usaa.com',d:'Military-focused banking, insurance, investing — the gold standard for veteran financial services'},
+    {ic:'⚓',n:'Navy Federal Credit Union',u:'https://www.navyfcu.org',d:'Best auto loan and mortgage rates for military — open to all branches, family members'},
+    {ic:'🏡',n:'VA Home Loans',u:'https://www.va.gov/housing-assistance/home-loans/',d:'No down payment, no PMI, competitive rates — get Certificate of Eligibility at VA.gov/housing'},
+    {ic:'📊',n:'Military OneSource Finance',u:'https://www.militaryonesource.mil/financial-legal/',d:'Free financial counseling for 365 days post-separation — budgeting, taxes, investing'},
+    {ic:'💰',n:'SBP Information (DFAS)',u:'https://www.dfas.mil/retiredmilitary/survivors/Survivor-Benefit-Plan/',d:'Survivor Benefit Plan details — this irrevocable decision must be made correctly. Read everything.'},
+    {ic:'🏛️',n:'State Tax Exemptions for Military Retirement',u:'https://www.militaryonesource.mil/financial-legal/taxes/military-state-tax-guide/',d:'Many states fully exempt military retirement pay — check before you choose where to live'},
+    {ic:'🎯',n:'SmartAsset Military Retirement Calculator',u:'https://smartasset.com/retirement/military-retirement',d:'Independent calculator for retirement pay estimates, SBP impact, and TSP projections'},
   ]},
-  {cat:'Mental Health & Support',items:[
-    {ic:'🆘',n:'Veterans Crisis Line',u:'https://www.veteranscrisisline.net',d:'Dial 988 then Press 1 · Text 838255 · 24/7 confidential support'},
-    {ic:'🏠',n:'VA Vet Centers',u:'https://www.va.gov/find-locations/?facilityType=vet_center',d:'Readjustment counseling — combat vets, MST, family support, free'},
-    {ic:'💙',n:'Make the Connection',u:'https://maketheconnection.net',d:'Veterans supporting veterans — real stories, mental health resources'},
-    {ic:'🎗️',n:'Give an Hour',u:'https://giveanhour.org',d:'Free mental health care from licensed clinicians for veterans'},
-    {ic:'⚡',n:'Military OneSource',u:'https://www.militaryonesource.mil',d:'Counseling, relocation, financial help — free for 365 days post-sep'},
+  {cat:'Mental Health & Wellness',items:[
+    {ic:'🆘',n:'Veterans Crisis Line',u:'https://www.veteranscrisisline.net',d:'Dial 988 then Press 1 · Text 838255 · Chat at veteranscrisisline.net · 24/7 · 100% confidential'},
+    {ic:'🏠',n:'VA Vet Centers',u:'https://www.va.gov/find-locations/?facilityType=vet_center',d:'Free readjustment counseling — combat veterans, MST survivors, family support. Walk in or call.'},
+    {ic:'💙',n:'Make the Connection',u:'https://maketheconnection.net',d:'Veterans sharing real stories of recovery and mental health treatment — not alone'},
+    {ic:'🎗️',n:'Give an Hour',u:'https://giveanhour.org',d:'Free mental health care from licensed clinicians for veterans, service members, and families'},
+    {ic:'⚡',n:'Military OneSource',u:'https://www.militaryonesource.mil',d:'Free counseling, relocation support, financial help — available for 365 days post-separation'},
+    {ic:'🧠',n:'Headstrong (free mental health for veterans)',u:'https://headstrongproject.org',d:'Free, confidential, stigma-free mental health treatment for post-9/11 veterans'},
+    {ic:'🤺',n:'Team Red White & Blue',u:'https://www.teamrwb.org',d:'Physical and social activity for veterans — local chapters worldwide, community building'},
+    {ic:'🐕',n:'K9s for Warriors',u:'https://www.k9sforwarriors.org',d:'Service dogs for veterans with PTSD, TBI, and MST — free of charge'},
   ]},
   {cat:'Legal & VSOs',items:[
-    {ic:'⚖️',n:'Disabled American Veterans (DAV)',u:'https://www.dav.org',d:'Free VSO claims representation — the gold standard, 1.3M members'},
-    {ic:'🎖️',n:'Veterans of Foreign Wars (VFW)',u:'https://www.vfw.org',d:'Free claims help, community posts, advocacy in Congress'},
-    {ic:'🦅',n:'American Legion',u:'https://www.legion.org',d:'VSO claims services, scholarships, community support'},
-    {ic:'📜',n:'Student Veterans of America',u:'https://studentveterans.org',d:'GI Bill support, campus veteran chapters, scholarships'},
+    {ic:'⚖️',n:'DAV — Disabled American Veterans',u:'https://www.dav.org',d:'Free VSO claims representation — 1.3M members, full-time claims service, the gold standard for disability claims'},
+    {ic:'🎖️',n:'Veterans of Foreign Wars (VFW)',u:'https://www.vfw.org',d:'Free claims help, community posts nationwide, strong congressional advocacy, transition resources'},
+    {ic:'🦅',n:'American Legion',u:'https://www.legion.org',d:'VSO claims services, PACT Act information, scholarships, and 13,000 posts worldwide'},
+    {ic:'📜',n:'Student Veterans of America',u:'https://studentveterans.org',d:'GI Bill support, campus veteran chapters, scholarship database, and academic transition resources'},
+    {ic:'⚖️',n:'National Veterans Legal Services Program',u:'https://www.nvlsp.org',d:'Free legal representation for veterans on VA claims appeals — for complex cases that need an attorney'},
+    {ic:'🏛️',n:'Vet Center Readjustment Counseling',u:'https://www.vetcenter.va.gov',d:'Legal referral network, counseling, and reintegration support beyond VA medical centers'},
+    {ic:'🎗️',n:'IAVA (Iraq & Afghanistan Veterans of America)',u:'https://iava.org',d:'Peer support network, advocacy, mental health resources — focused on post-9/11 veterans'},
+    {ic:'📋',n:'National Resource Directory',u:'https://nrd.gov',d:'Comprehensive database of services for wounded warriors, veterans, and families — over 14,000 resources'},
+  ]},
+  {cat:'Branch-Specific Transition Programs',items:[
+    {ic:'⭐',n:'Army ACAP (Career & Alumni Program)',u:'https://www.acap.army.mil',d:'Army\'s official transition program — register at least 6 months before separation'},
+    {ic:'⚓',n:'Navy TAMP (Transition Assistance Management)',u:'https://www.cnic.navy.mil/ffr/family_programs/fleet_and_family_support_program/transition-assistance.html',d:'Navy transition assistance, TAP workshops, and employment readiness programs'},
+    {ic:'✈️',n:'Air Force Airman & Family Readiness',u:'https://www.afpc.af.mil/Career-Management/Separations/',d:'AF separation processing, TAP, and employment readiness at every installation'},
+    {ic:'🦅',n:'USMC Transition Readiness Program (TRS)',u:'https://www.usmc-mccs.org/services/career/transition-employment-assistance/',d:'Marine Corps transition readiness seminars, employment assistance, and veterans benefits'},
+    {ic:'🛡️',n:'Coast Guard Work-Life',u:'https://www.dcms.uscg.mil/Our-Organization/Assistant-Commandant-for-Human-Resources-CG-1/Work-Life-CG-111/',d:'USCG transition assistance, family support, and post-separation resource referral'},
+    {ic:'🚀',n:'Space Force Transition',u:'https://www.spaceforce.mil/About-Us/About-Space-Force/Benefits/',d:'USSF separation resources, benefits information, and transition support'},
+  ]},
+  {cat:'Housing & Relocation',items:[
+    {ic:'🏡',n:'VA Home Loan Center',u:'https://www.va.gov/housing-assistance/home-loans/',d:'Full VA loan info — eligibility, COE application, lender directory, and funding fee waivers'},
+    {ic:'🔑',n:'Veterans United Home Loans',u:'https://www.veteransunited.com',d:'Largest VA loan lender in the US — specializes exclusively in VA mortgages'},
+    {ic:'📦',n:'Military OneSource — Relocation',u:'https://www.militaryonesource.mil/moving-housing/',d:'PCS planning, moving companies, housing search, and school liaison officer contacts'},
+    {ic:'🏫',n:'Interstate Compact for Military Children (MIC3)',u:'https://www.mic3.net',d:'Protects your children\'s educational rights during PCS moves and separation transitions'},
+    {ic:'🗺️',n:'School Liaison Officer (SLO) Finder',u:'https://www.dodea.edu/Partnership/schoolLiaisonOfficers.cfm',d:'Every installation has an SLO — free help with school enrollment, transfers, and education plans'},
   ]}
 ];
 
 // ============================================================
-// STATE
+// CERTIFICATION DATABASE
 // ============================================================
+// ============================================================
+// CERTIFICATION DATABASE — TransitionCommand v1.0
+// © 2026 KIBU Global Ventures LLC
+// All Branches · Enlisted & Officer · 18-Month Plans
+// ============================================================
+
+const CERT_DB = {
+
+// ============================================================
+// ARMY — ENLISTED
+// ============================================================
+army_enlisted: {
+  '11b':{title:'Infantry',civ:'Security Manager · Law Enforcement · Operations Supervisor',
+    p:{name:'CompTIA Security+',why:'DoD 8570 baseline — required for most federal security roles. Converts infantry leadership directly into credentialed security management.',cost:'$392',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$8,000–12,000/yr avg'},
+    s:{name:'Certified Protection Professional (CPP)',why:'Gold standard for private/corporate security management. Opens executive protection, risk management, and security director roles.',cost:'$420',time:'3–4 months',vendor:'ASIS International',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–15',act:'Research CPP and Security+ requirements. Apply for Army COOL funding at coolarmor.com. Purchase Security+ study materials (Professor Messer free + Darril Gibson book).'},
+      {mo:'14–10',act:'Study 1–2 hrs/day for Security+. Join Reddit r/CompTIA for study tips. Schedule exam through Pearson VUE.'},
+      {mo:'9–7',act:'Sit Security+ exam. If passed, immediately apply for CPP (requires 9 yrs experience or degree + 7 yrs).'},
+      {mo:'6–3',act:'Update LinkedIn and resume with new credential. Apply to federal law enforcement, DoD security, and private security roles.'},
+      {mo:'2–0',act:'If CPP still in progress, use GI Bill to complete it post-separation at approved provider.'}]},
+
+  '11c':{title:'Indirect Fire Infantryman',civ:'Systems Analyst · Fire Control Specialist · Operations Analyst',
+    p:{name:'CompTIA A+',why:'Bridge into technical roles. Maps to your systems operation and precision technical background. Required for DoD IT support positions.',cost:'$246 (2 exams)',time:'8–10 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$6,000–10,000/yr'},
+    s:{name:'Six Sigma Green Belt',why:'Indirect fire crewmembers have deep process precision skills — Six Sigma formalizes that into a recognized civilian credential.',cost:'$0–299',time:'4–6 weeks',vendor:'ASQ / Council for Six Sigma',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–15',act:'Apply for COOL funding for CompTIA A+. Download free study resources: Professor Messer, Jason Dion Udemy course.'},
+      {mo:'14–9',act:'Complete A+ Core 1 and Core 2 exams. Begin Six Sigma Green Belt online course.'},
+      {mo:'8–4',act:'Sit Six Sigma exam. Build portfolio of process improvement projects from military service.'},
+      {mo:'3–0',act:'Update all profiles. Target defense contractor operations analysis and DoD logistics roles.'}]},
+
+  '12b':{title:'Combat Engineer',civ:'Construction Project Manager · Safety Manager · Civil Engineer',
+    p:{name:'OSHA 30-Hour Construction',why:'Required for most construction project management and site supervisor roles. Direct translation of your demolitions and construction safety experience.',cost:'$189',time:'1–2 weeks',vendor:'OSHA / Authorized Trainer',cool:false,ta:true,gibill:true,salary:'+$5,000–15,000/yr'},
+    s:{name:'Project Management Professional (PMP)',why:'Construction PMs with PMP earn significantly more. Requires 36 months experience (you have it) + 35 training hours.',cost:'$555 members / $405 non-member',time:'3–4 months',vendor:'PMI',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–15',act:'Enroll in OSHA 30 online immediately — quickest ROI cert available. Begin documenting your project hours for PMP application.'},
+      {mo:'14–10',act:'Complete OSHA 30. Enroll in PMP prep course (PMBOK 7). Accumulate 35 contact hours required for PMP eligibility.'},
+      {mo:'9–6',act:'Apply for PMP through PMI. Sit exam. Apply to construction management and federal engineering roles.'},
+      {mo:'5–0',act:'If eligible, pursue USACE (Army Corps of Engineers) federal hiring — former 12Bs have a massive advantage.'}]},
+
+  '12r':{title:'Interior Electrician',civ:'Journeyman Electrician · Facilities Engineer · Electrical Inspector',
+    p:{name:'Journeyman Electrician License',why:'State licensing requirement for all commercial electrical work. Your military experience counts toward apprenticeship hours in most states.',cost:'$40–200 (exam fee varies by state)',time:'1–3 months (study + exam)',vendor:'State Licensing Board',cool:false,ta:false,gibill:true,salary:'+$10,000–25,000/yr'},
+    s:{name:'OSHA 30 Construction',why:'Required alongside electrical license for most supervisor and foreman roles.',cost:'$189',time:'1 week',vendor:'OSHA',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–15',act:'Research your target state\'s electrical licensing requirements. Contact state board about military experience credit. Many states grant apprenticeship hour equivalency.'},
+      {mo:'14–8',act:'Study National Electrical Code (NEC). Purchase Mike Holt exam prep materials. Apply military experience toward hour requirements.'},
+      {mo:'7–4',act:'Sit state journeyman exam. Apply for IBEW (electrician union) apprenticeship if not licensed — paid apprenticeship programs available.'},
+      {mo:'3–0',act:'Contact local electrical contractors near your destination. Military electricians are in high demand.'}]},
+
+  '13b':{title:'Cannon Crewmember',civ:'Heavy Equipment Operator · Plant Operator · Logistics Supervisor',
+    p:{name:'CDL Class A',why:'Single highest-ROI certification for 13B. Opens trucking, heavy equipment, and logistics management. GI Bill covers CDL school fully.',cost:'$3,000–7,000 (GI Bill covers this)',time:'3–7 weeks CDL school',vendor:'Approved CDL School',cool:false,ta:false,gibill:true,salary:'+$15,000–30,000/yr starting'},
+    s:{name:'OSHA 30 General Industry',why:'Required for heavy equipment supervisor and plant operations roles.',cost:'$189',time:'1 week',vendor:'OSHA',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Research GI Bill-approved CDL schools near your destination. Apply for Post-9/11 GI Bill (22-1990) if not already done. Schedule CDL medical physical.'},
+      {mo:'13–9',act:'Complete OSHA 30. Begin CDL permit study (CDL manual is free online — study air brakes, combination vehicles, hazmat).'},
+      {mo:'8–5',act:'Enroll in CDL school immediately after separation using GI Bill. Target Class A with doubles/triples and tanker endorsements.'},
+      {mo:'4–0',act:'If staying in heavy equipment vs trucking, contact IUOE (Operating Engineers union) about apprenticeship programs.'}]},
+
+  '13f':{title:'Fire Support Specialist',civ:'Intelligence Analyst · GIS Analyst · Joint Terminal Attack Controller Contractor',
+    p:{name:'GEOINT Certificate (USGIF)',why:'Geospatial Intelligence is your direct military skill. USGIF certification is recognized by NGA, DIA, and all major IC contractors.',cost:'$350–500',time:'2–3 months',vendor:'USGIF / Esri',cool:false,ta:true,gibill:true,salary:'+$10,000–20,000/yr in IC'},
+    s:{name:'CompTIA Security+',why:'Required baseline for all IC contractor positions with clearance requirements.',cost:'$392',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply for Security+ via Army COOL. Leverage TS/SCI clearance — this alone puts you ahead of 90% of applicants. Register on USAJobs intelligence analyst series (0132).'},
+      {mo:'13–8',act:'Complete Security+. Begin Esri ArcGIS online training (free through COOL for some codes). Apply for Booz Allen, SAIC, Leidos intelligence roles.'},
+      {mo:'7–3',act:'Complete USGIF certificate. Target NGA, DIA, SOCOM contractor roles. Your JTAC/FAC2 background is extremely valuable.'},
+      {mo:'2–0',act:'Apply directly to NSA, CIA, DIA civilian GS positions using Schedule B/veterans preference.'}]},
+
+  '15t':{title:'UH-60 Repairer',civ:'Aviation Maintenance Technician · A&P Mechanic · Fleet Maintenance Manager',
+    p:{name:'FAA Airframe & Powerplant (A&P)',why:'The aviation maintenance credential. Your military maintenance hours count directly toward the 18-month experience requirement — no school required, just the exam.',cost:'$300–500 (3 exams)',time:'2–4 months study',vendor:'FAA / DER',cool:true,ta:false,gibill:true,salary:'+$15,000–35,000/yr'},
+    s:{name:'Inspection Authorization (IA)',why:'Allows you to sign off inspections — significantly increases earning power. Requires A&P first.',cost:'$150',time:'After A&P',vendor:'FAA',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–14',act:'Request FAA Form 8610-2 from local FSDO. Document all military maintenance hours (DA Form 2410 records). Military experience qualifies for A&P without school under 14 CFR 65.77.'},
+      {mo:'13–8',act:'Study A&P general, airframe, and powerplant. ASA and Jeppesen test prep books. Schedule all 3 written exams through PSI.'},
+      {mo:'7–4',act:'Complete oral and practical exams. Apply to commercial airlines (Delta TechOps, United, American hire heavily from military).'},
+      {mo:'3–0',act:'Contact AIA (Airlines for America) for military hiring programs. Most major airlines have dedicated military maintenance hiring pipelines.'}]},
+
+  '18z':{title:'Special Forces Senior NCO',civ:'Director of Operations · Security Consultant · Program Manager',
+    p:{name:'Project Management Professional (PMP)',why:'SF veterans go primarily into program management and consulting. PMP is the universally recognized credential that translates special operations experience into corporate value.',cost:'$555',time:'3–4 months',vendor:'PMI',cool:false,ta:true,gibill:true,salary:'+$15,000–30,000/yr'},
+    s:{name:'Certified Protection Professional (CPP)',why:'For those pursuing security consulting, executive protection, or corporate security director roles.',cost:'$420',time:'3 months',vendor:'ASIS',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Document 36 months project leadership experience for PMP application. Enroll in PMI membership ($139/yr — reduces exam cost). Begin PM prep course.'},
+      {mo:'13–8',act:'Complete 35 PMP contact hours. Apply and sit PMP exam. Your operational experience is directly mappable to PM knowledge areas.'},
+      {mo:'7–3',act:'Register on LinkedIn with PMP designation. Target defense contractor BD/ops roles, corporate security, and government program management (GS-13/14).'},
+      {mo:'2–0',act:'Contact USSOCOM-adjacent contractors: PAE, SOSi, MPRI, Triple Canopy, DRS Defense Solutions.'}]},
+
+  '25b':{title:'IT Specialist',civ:'Systems Administrator · Network Engineer · Cybersecurity Analyst',
+    p:{name:'CompTIA Security+',why:'DoD 8570/8140 IAT Level II baseline. Required for every federal IT position. Army COOL pays for it. Sit this one first — it opens every door.',cost:'$0 via COOL / $392 out of pocket',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$8,000–15,000/yr'},
+    s:{name:'CompTIA Network+ or AWS Cloud Practitioner',why:'Network+ validates your infrastructure knowledge. AWS opens cloud roles paying $90K+ immediately post-sep.',cost:'$338 / $100',time:'4–6 weeks each',vendor:'CompTIA / Amazon',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–15',act:'Apply for Security+ funding through Army COOL at coolarmor.com immediately. This is free money — use it. Enroll in free Professor Messer video course.'},
+      {mo:'14–10',act:'Pass Security+. Apply for Network+ COOL funding while still active. Begin AWS Cloud Practitioner free training at training.aws.'},
+      {mo:'9–6',act:'Complete Network+ or AWS CP. Apply to federal IT roles (GS-2210 series) and defense contractor IT positions.'},
+      {mo:'5–0',act:'Target CISSP for post-separation with GI Bill — adds $20K+ average salary. Requires Security+ + 5 years experience (you likely qualify).'}]},
+
+  '25u':{title:'Signal Support Systems Specialist',civ:'Telecom Technician · Field Service Engineer · IT Support Specialist',
+    p:{name:'CompTIA A+',why:'Foundation IT certification recognizing your hands-on technical background. Required for tier 1-2 IT support and most entry-level tech roles.',cost:'$0 via COOL / $246',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$5,000–10,000/yr'},
+    s:{name:'CompTIA Network+',why:'Validates your satellite, radio, and network infrastructure experience. Opens telecom and network support roles.',cost:'$338',time:'4–6 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply for A+ COOL funding. Inventory your signal equipment experience — satellite, radio, SIPR/NIPR, VOIP. These map directly to civilian certs.'},
+      {mo:'13–8',act:'Complete A+ (2 exams). Apply for Network+ COOL funding. Begin studying simultaneously.'},
+      {mo:'7–3',act:'Complete Network+. Apply to telecom companies (AT&T, Verizon, Lumen hire heavily from military signal), MSPs, and DoD contractor IT help desks.'},
+      {mo:'2–0',act:'Consider Cisco CCNA with GI Bill post-separation — adds $15K+ on top of Network+.'}]},
+
+  '31b':{title:'Military Police',civ:'Law Enforcement Officer · Corporate Security Manager · Federal Agent',
+    p:{name:'CompTIA Security+ (for federal path) OR State Police Academy Waiver',why:'For federal agent path: Security+ opens DHS, FBI, DEA support roles. For local LE: most states have military police waiver programs that credit your MP school toward academy requirements.',cost:'$392 / Varies by state',time:'6–8 weeks / Contact state POST board',vendor:'CompTIA / State POST',cool:true,ta:true,gibill:true,salary:'+$5,000–20,000 depending on path'},
+    s:{name:'CBP/TSA Application (No cert needed — federal hiring preference)',why:'CBP Border Patrol, TSA, Secret Service, Federal Air Marshal all actively recruit military police with no additional certification required beyond veterans preference.',cost:'$0',time:'Application process 6–12 months',vendor:'USAJobs.gov',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–14',act:'Research your target state\'s military police academy credit policy. Apply to CBP/TSA/USMS on USAJobs — these take 6-12 months to process, start now.'},
+      {mo:'13–8',act:'Complete Security+ via COOL if pursuing federal IT-security crossover. Contact MPAS (Military Police Regimental Association) for network.'},
+      {mo:'7–3',act:'Apply to corporate security roles (Pinkerton, G4S, Allied Universal) for income bridge while federal application processes.'},
+      {mo:'2–0',act:'Contact your state\'s POST board with DD-214 and MP school certificate for academy waiver evaluation.'}]},
+
+  '35f':{title:'Intelligence Analyst',civ:'All-Source Analyst · IC Contractor · Threat Intelligence Analyst',
+    p:{name:'CompTIA Security+',why:'DoD 8570 requirement for all IC contractor positions. With your clearance this combination is worth $80-110K immediately post-separation.',cost:'$0 via COOL / $392',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$10,000–20,000/yr'},
+    s:{name:'Certified Intelligence Professional (CIP)',why:'IAFIE certification recognized across the IC community. Validates civilian-equivalent intelligence tradecraft.',cost:'$300',time:'3–4 months',vendor:'IAFIE',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ through COOL. Your TS/SCI + poly (if held) is the most valuable asset in the job market. Register on ClearanceJobs.com immediately.'},
+      {mo:'13–8',act:'Complete Security+. Apply to IC contractor roles — your clearance alone qualifies you. Target Leidos, SAIC, Booz Allen, Northrop Grumman.'},
+      {mo:'7–3',act:'Begin CIP certification. Apply to CIA, DIA, NSA civilian GS positions. GS-0132 analyst series.'},
+      {mo:'2–0',act:'Your biggest asset walks out with you — maintain clearance. Never let it lapse. Contact former unit intel officers for contractor network.'}]},
+
+  '35l':{title:'Counterintelligence Agent',civ:'CI Contractor · Security Investigator · Corporate Threat Analyst',
+    p:{name:'Certified Fraud Examiner (CFE)',why:'CI skills translate directly to fraud investigation, corporate security, and insider threat roles. CFE is the gold standard credential for investigations.',cost:'$450',time:'3–4 months',vendor:'ACFE',cool:false,ta:true,gibill:true,salary:'+$12,000–25,000/yr'},
+    s:{name:'CompTIA Security+',why:'Pairs with CFE to open both physical security and cyber threat roles.',cost:'$0 via COOL / $392',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ through COOL. Register on ClearanceJobs.com. Your TS/SCI CI scope polygraph is one of the rarest and most valuable clearances.'},
+      {mo:'13–8',act:'Begin CFE study materials. ACFE has a free membership option. Document all CI investigation experience.'},
+      {mo:'7–3',act:'Sit CFE exam. Apply to corporate security, insider threat programs, government contractor CI support roles.'},
+      {mo:'2–0',act:'Contact FBI Field Intelligence Groups, DHS I&A, and NCIS for civilian investigator positions.'}]},
+
+  '42a':{title:'Human Resources Specialist',civ:'HR Manager · Talent Acquisition · HR Business Partner',
+    p:{name:'SHRM-CP (Certified Professional)',why:'The civilian HR gold standard. Direct translation of your military HR experience. Recognized by every major employer.',cost:'$300 members / $400 non-member',time:'3–4 months',vendor:'SHRM',cool:false,ta:true,gibill:true,salary:'+$8,000–15,000/yr'},
+    s:{name:'PHR (Professional in Human Resources)',why:'HRCI certification — many companies prefer PHR alongside or instead of SHRM-CP. Dual certification significantly strengthens your profile.',cost:'$395',time:'2–3 months',vendor:'HRCI',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Purchase SHRM Learning System through TA. SHRM student membership is $49/yr. Map your military HR experience to SHRM BoCK competencies.'},
+      {mo:'13–8',act:'Study SHRM-CP. Sit exam. Begin PHR study materials simultaneously — much of content overlaps.'},
+      {mo:'7–3',act:'Complete PHR. Apply to corporate HR roles, federal HR (GS-0201 series), and defense contractor HR positions.'},
+      {mo:'2–0',act:'Target HRIS skills (Workday, SAP SuccessFactors) — free YouTube tutorials fill this gap and significantly boost your profile.'}]},
+
+  '56m':{title:'Religious Affairs NCO',civ:'HR Specialist · Counselor · Employee Wellness Manager · Nonprofit Director',
+    p:{name:'SHRM-CP or NCC (National Certified Counselor)',why:'Two paths: SHRM-CP for HR/organizational roles, or NCC for counseling/mental health roles. Your pastoral care and crisis intervention experience is directly applicable.',cost:'$300 / $195',time:'3–4 months each',vendor:'SHRM / NBCC',cool:false,ta:true,gibill:true,salary:'+$6,000–15,000/yr'},
+    s:{name:'Nonprofit Management Certificate (NonprofitReady)',why:'Many 56Ms transition into chaplaincy support, veteran service organizations, or nonprofit leadership.',cost:'$0–200',time:'4–6 weeks',vendor:'NonprofitReady.org',cool:false,ta:false,gibill:true},
+    plan:[{mo:'18–14',act:'Determine counseling vs HR path. For counseling: research state licensure requirements (LPC/LCSW path may require graduate degree — assess GI Bill school option).'},
+      {mo:'13–8',act:'Begin SHRM-CP or NCC study. Complete required coursework for chosen path.'},
+      {mo:'7–3',act:'Sit certification exam. Apply to VA mental health support positions, corporate wellness programs, EAP providers.'},
+      {mo:'2–0',act:'Contact Vets4Warriors, Give an Hour, and veteran-focused nonprofits — high demand for veterans with your background.'}]},
+
+  '68w':{title:'Combat Medic Specialist',civ:'EMT-Basic → Paramedic · Physician Assistant · Healthcare Administrator',
+    p:{name:'NREMT-Basic (EMT-B)',why:'National registry standard for civilian EMS. Your military medical training exceeds what is required — this exam is straightforward with your background.',cost:'$70',time:'4–6 weeks review + clinical hours',vendor:'NREMT',cool:true,ta:false,gibill:true,salary:'EMT: $35K–45K / Paramedic: $55K–75K'},
+    s:{name:'NREMT-Paramedic (via GI Bill bridge program)',why:'68W to Paramedic bridge programs exist at many schools — 6–9 months, fully covered by GI Bill. Paramedic salary is nearly double EMT.',cost:'$0 via GI Bill',time:'6–9 months post-sep',vendor:'Approved EMS programs',cool:false,ta:false,gibill:true},
+    plan:[{mo:'18–14',act:'CRITICAL: Complete civilian clinical ride-along hours BEFORE separation — this cannot be done after. Contact local EMS agency for ride-along authorization. Apply for COOL funding for NREMT-B.'},
+      {mo:'13–8',act:'Complete required clinical hours. Study NREMT. Sit EMT-Basic exam. This opens civilian employment immediately.'},
+      {mo:'7–3',act:'Apply to hospital ER tech, urgent care, wildland fire EMT, and ambulance company positions using new credential.'},
+      {mo:'2–0',act:'Research 68W-to-Paramedic bridge programs with GI Bill. Georgetown, Austin Community College, and many others offer these.'}]},
+
+  '74d':{title:'CBRN Specialist',civ:'EHS Manager · Hazmat Technician · Emergency Management Specialist',
+    p:{name:'HAZWOPER 40-Hour Certification',why:'OSHA 29 CFR 1910.120 — required for all civilian hazardous materials work. Your CBRN training is the perfect foundation.',cost:'$399–600',time:'40 hours (1 week)',vendor:'OSHA Authorized Trainer',cool:false,ta:true,gibill:true,salary:'+$8,000–18,000/yr'},
+    s:{name:'Associate Emergency Manager (AEM) / CEM',why:'Emergency management certification for FEMA, state emergency management, and corporate EHS roles.',cost:'$150–250',time:'2–3 months',vendor:'IAEM',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Complete HAZWOPER 40-hour immediately — fastest ROI cert for CBRN. Also complete FEMA online courses (free at training.fema.gov).'},
+      {mo:'13–8',act:'Apply for FEMA IS courses (IS-100, 200, 700, 800 are free and respected). Begin AEM application.'},
+      {mo:'7–3',act:'Sit AEM exam. Apply to chemical plant safety, emergency management agencies, DoD contractor EHS, and industrial safety roles.'},
+      {mo:'2–0',act:'Contact FEMA directly for civilian hiring — your CBRN background is exactly what emergency management agencies need.'}]},
+
+  '88m':{title:'Motor Transport Operator',civ:'CDL-A Driver · Logistics Supervisor · Transportation Manager',
+    p:{name:'CDL Class A',why:'If you don\'t already have your civilian CDL, this is the highest-ROI certification available to you. GI Bill covers CDL school at approved providers.',cost:'$0 via GI Bill / $3,000–7,000 out of pocket',time:'3–6 weeks',vendor:'Approved CDL School',cool:false,ta:false,gibill:true,salary:'$55K–90K starting, $100K+ with experience'},
+    s:{name:'DOT Hazmat Endorsement + TSA endorsement',why:'Hazmat CDL adds $5–15K to salary. TSA background check required — start early.',cost:'$0 (TSA fee) + test',time:'2–4 weeks',vendor:'State DMV / TSA',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–14',act:'Apply for Post-9/11 GI Bill (22-1990) if not using it for school. Research approved CDL schools near destination at gibill.va.gov.'},
+      {mo:'13–8',act:'Schedule CDL DOT physical — requires FMCSA medical certificate. Study CDL manual including combination vehicles, air brakes, doubles/triples.'},
+      {mo:'7–3',act:'If no civilian CDL yet: enroll in CDL school using GI Bill immediately post-sep. If you have CDL: add endorsements (tanker, doubles, hazmat, TWIC).'},
+      {mo:'2–0',act:'Apply to Werner, Schneider, Old Dominion, and UPS — all have military hiring programs with sign-on bonuses. USPS also hires heavily from 88M.'}]},
+
+  '91b':{title:'Wheeled Vehicle Mechanic',civ:'Diesel Mechanic · Fleet Maintenance Supervisor · Service Manager',
+    p:{name:'ASE Master Technician (or start with ASE A1-A9)',why:'The civilian automotive/diesel gold standard. Your military maintenance experience directly satisfies ASE work experience requirements.',cost:'$39 per exam (9 exams for Master)',time:'3–6 months for initial certs',vendor:'ASE',cool:true,ta:true,gibill:true,salary:'+$10,000–25,000/yr'},
+    s:{name:'CDL Class B (for heavy equipment)',why:'Opens school bus, delivery truck, and municipal fleet positions. Often paired with mechanic work.',cost:'$1,500–3,000',time:'2–3 weeks',vendor:'CDL School',cool:false,ta:false,gibill:true},
+    plan:[{mo:'18–14',act:'Apply for ASE certification funding through Army COOL. Inventory your 5988-E records — these prove maintenance experience for ASE eligibility.'},
+      {mo:'13–8',act:'Sit ASE A1 (Engine Repair) and A4 (Suspension & Steering) first — highest demand. Study using Motor Age or ASA prep materials.'},
+      {mo:'7–3',act:'Complete 4–6 ASE certs. Apply to dealerships (Ford, Chevy, Toyota hire vets), fleet companies, municipal vehicle maintenance, and DoD contractor motor pools.'},
+      {mo:'2–0',act:'Target USAJobs WG-5803 (heavy mobile equipment mechanic) positions — veterans preference + ASE certs = very competitive.'}]},
+
+  '92a':{title:'Automated Logistical Specialist',civ:'Supply Chain Manager · Inventory Control Specialist · Logistics Analyst',
+    p:{name:'APICS CSCP (Certified Supply Chain Professional)',why:'The global standard in supply chain management. Your automated logistics experience maps perfectly. Opens supply chain analyst roles at $65–90K.',cost:'$695 members / $995 non-member',time:'4–6 months',vendor:'APICS (now ASCM)',cool:false,ta:true,gibill:true,salary:'+$10,000–20,000/yr'},
+    s:{name:'APICS CPIM (Certified in Production and Inventory Management)',why:'Pairs with CSCP for complete supply chain credential portfolio. Many employers prefer both.',cost:'$480 members',time:'3–4 months',vendor:'APICS',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Join APICS/ASCM as student member ($99/yr). Begin CPIM Part 1 study — Basics of Supply Chain Management.'},
+      {mo:'13–8',act:'Complete CPIM Part 1 and Part 2. Begin CSCP materials. Map your STAMIS, SARSS, and PBUSE experience to civilian ERP systems.'},
+      {mo:'7–3',act:'Sit CSCP exam. Apply to Walmart, Amazon, DoD logistics, and federal GS-2030 supply management positions.'},
+      {mo:'2–0',act:'SAP ERP skills dramatically increase offers — free SAP certification prep at openSAP.com (free platform).'}]},
+
+  '92y':{title:'Unit Supply Specialist',civ:'Procurement Specialist · Inventory Manager · Purchasing Agent',
+    p:{name:'Certified Professional Purchasing Manager (CPPM)',why:'NAPM/ISM procurement certification — validates your supply room and property accountability experience in civilian terms.',cost:'$399',time:'2–3 months',vendor:'NAPM (Institute for Supply Management)',cool:false,ta:true,gibill:true,salary:'+$5,000–12,000/yr'},
+    s:{name:'APICS CPIM',why:'Adds inventory management credential for broader supply chain roles.',cost:'$480',time:'3–4 months',vendor:'APICS',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Begin ISM membership and CPPM study. Document all property accountability experience (dollar values managed, discrepancy rates, etc.).'},
+      {mo:'13–7',act:'Sit CPPM exam. Begin APICS CPIM Part 1.'},
+      {mo:'6–2',act:'Apply to federal contracting officer roles (GS-1102 series) — military supply experience + CPPM is a strong combination for federal procurement.'},
+      {mo:'1–0',act:'Target DoD contractor logistics and USACE supply management positions.'}]},
+
+  '94e':{title:'Radio/Communications Repairer',civ:'Electronics Technician · Field Service Engineer · Telecom Systems Engineer',
+    p:{name:'CompTIA A+ and Network+',why:'Your radio and electronics repair background directly maps to IT hardware and network infrastructure. COOL covers both.',cost:'$0 via COOL',time:'10–14 weeks total',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$8,000–15,000/yr'},
+    s:{name:'FCC General Radiotelephone Operator License (GROL)',why:'Federal license for commercial radio and electronics work. Valuable for maritime, aviation, and broadcast tech roles.',cost:'$85',time:'4–6 weeks',vendor:'FCC via GMDSS',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–14',act:'Apply A+ and Network+ through COOL simultaneously. Your electronics background makes these straightforward.'},
+      {mo:'13–8',act:'Complete A+ and Network+. Begin FCC GROL study materials.'},
+      {mo:'7–3',act:'Sit FCC GROL exam. Apply to field service engineering roles, telecom companies, and DoD electronics contractor positions.'},
+      {mo:'2–0',act:'CompTIA CySA+ or CASP+ post-separation with GI Bill opens mid-level cybersecurity roles.'}]},
+},
+
+// ============================================================
+// ARMY — OFFICERS
+// ============================================================
+army_officer: {
+  '11a':{title:'Infantry Officer',civ:'Operations Director · Security Program Manager · Defense Consultant',
+    p:{name:'Project Management Professional (PMP)',why:'Infantry officers\' most transferable skill is leading complex operations under pressure. PMP formalizes this. Opens program management at $90K–140K.',cost:'$555',time:'3–4 months',vendor:'PMI',cool:false,ta:true,gibill:true,salary:'+$15,000–30,000/yr'},
+    s:{name:'Certified Defense Financial Manager (CDFM)',why:'If pursuing defense contractor or government budget roles, CDFM opens senior operations and resource management positions.',cost:'$280',time:'2–3 months',vendor:'ASMC',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Document 36 months PM experience (you have it). Join PMI ($139/yr). Enroll in 35-hour PMP prep course through TA.'},
+      {mo:'13–8',act:'Complete PMP. Begin networking with senior officers who transitioned — most are in defense contracting, federal SES, or corporate leadership.'},
+      {mo:'7–3',act:'Identify target companies: Booz Allen, SAIC, CACI, PAE, MPRI. Your battalion/brigade command experience + PMP = VP-level entry.'},
+      {mo:'2–0',act:'Consider MBA through GI Bill post-separation — many top programs have military fellowships (Kellogg, Wharton, Ross, McDonough).'}]},
+
+  '25a':{title:'Signal Officer',civ:'IT Director · CTO · Cybersecurity Program Manager',
+    p:{name:'CISSP (Certified Information Systems Security Professional)',why:'The highest-value IT security certification. Signal officers who are CISSP-certified regularly enter at $110–150K. DoD 8570 IAM Level III.',cost:'$699',time:'4–6 months',vendor:'ISC2',cool:false,ta:true,gibill:true,salary:'+$20,000–40,000/yr'},
+    s:{name:'CISM (Certified Information Security Manager)',why:'ISACA certification — preferred by enterprises and federal agencies for CISO-track roles. Pairs with CISSP.',cost:'$575 members',time:'3–4 months',vendor:'ISACA',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Begin CISSP study immediately — this is the longest cert on this list and worth the investment. (ISC)2 Official Study Guide + Boson practice exams.'},
+      {mo:'13–8',act:'Sit CISSP. If you have < 5 years experience, become Associate of (ISC)2 and fulfill experience requirement after.'},
+      {mo:'7–3',act:'Begin CISM. Apply to federal CISO positions (SES CIO track), defense contractor cybersecurity management, and corporate IT leadership.'},
+      {mo:'2–0',act:'Target DoD CIO office, NSA, CISA, and major defense contractors. 25A + CISSP + clearance = $120–160K entry point.'}]},
+
+  '35d':{title:'All-Source Intelligence Officer',civ:'Intelligence Program Director · IC Senior Analyst · Corporate Threat Intelligence Lead',
+    p:{name:'Certified Intelligence Professional (CIP)',why:'IAFIE\'s premier credential for professional intelligence officers transitioning to civilian IC or corporate roles.',cost:'$300',time:'3–4 months',vendor:'IAFIE',cool:false,ta:true,gibill:true,salary:'+$10,000–20,000/yr'},
+    s:{name:'CISSP or CompTIA Security+',why:'Cyber-intel crossover is the highest-paying path for intel officers. Security clearance + cyber cert = $130K+ immediately.',cost:'$392–699',time:'6 weeks–6 months',vendor:'CompTIA / ISC2',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Register on ClearanceJobs.com. Your TS/SCI is worth more than any certification — protect it. Begin Security+ through TA while studying for CIP.'},
+      {mo:'13–7',act:'Complete Security+ and CIP. Apply to CIA, DIA, NGA, NSA civilian GS-0132 positions. Long hiring timelines — start now.'},
+      {mo:'6–2',act:'Target Palantir, Recorded Future, and intelligence-focused startups alongside traditional contractors.'},
+      {mo:'1–0',act:'Senior intel officer path: RAND, CSIS, Atlantic Council, and other think tanks hire O4+ directly.'}]},
+
+  '65a':{title:'Medical Service Officer',civ:'Hospital Administrator · Healthcare Program Manager · DoD/VA Health Systems Manager',
+    p:{name:'Fellow of the American College of Healthcare Executives (FACHE)',why:'The premier healthcare management credential. Military healthcare administrators routinely qualify. Opens C-suite healthcare roles.',cost:'$300 (exam) + ACHE membership',time:'3–4 months',vendor:'ACHE',cool:false,ta:true,gibill:true,salary:'+$15,000–35,000/yr'},
+    s:{name:'Project Management Professional (PMP)',why:'Healthcare + PMP opens senior program management at VA, DoD, and major hospital systems.',cost:'$555',time:'3–4 months',vendor:'PMI',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Join ACHE ($249/yr). Your military healthcare management experience satisfies most FACHE requirements. Begin documenting hours.'},
+      {mo:'13–7',act:'Complete FACHE requirements and sit exam. Begin PMP study.'},
+      {mo:'6–2',act:'Apply to VA Healthcare System leadership positions, DoD TRICARE management, and major hospital systems.'},
+      {mo:'1–0',act:'Target Defense Health Agency (DHA) and Military Health System (MHS) civilian positions — familiar environment with civilian pay.'}]},
+
+  '88a':{title:'Transportation Officer',civ:'Supply Chain Director · Logistics Program Manager · DOT/Federal Transportation',
+    p:{name:'Certified Supply Chain Professional (CSCP)',why:'APICS gold standard for transportation and logistics officers. Opens director-level supply chain roles.',cost:'$995',time:'4–6 months',vendor:'APICS/ASCM',cool:false,ta:true,gibill:true,salary:'+$15,000–25,000/yr'},
+    s:{name:'PMP',why:'Transportation officers managing large programs benefit enormously from formal PM credentials.',cost:'$555',time:'3–4 months',vendor:'PMI',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Join APICS. Begin CSCP. Document transportation programs managed — dollar values, personnel, complexity.'},
+      {mo:'13–7',act:'Complete CSCP. Begin PMP.'},
+      {mo:'6–2',act:'Apply to Amazon, FedEx, UPS supply chain leadership, DoD TRANSCOM contractor roles, and USTRANSCOM civilian positions.'},
+      {mo:'1–0',act:'Target GS-2130 (Transportation Operations) and GS-2150 (Transportation Management) federal series.'}]},
+},
+
+// ============================================================
+// ARMY — WARRANT OFFICERS
+// ============================================================
+army_warrant: {
+  '25d':{title:'Cyber Operations Technician (WO)',civ:'Cybersecurity Manager · SOC Lead · Penetration Tester',
+    p:{name:'CISSP + CEH (Certified Ethical Hacker)',why:'WO cyber technicians are among the most valuable transitioning veterans. CISSP for management track, CEH for technical offensive/defensive roles.',cost:'$699 / $1,199',time:'4–8 months total',vendor:'ISC2 / EC-Council',cool:false,ta:true,gibill:true,salary:'$110,000–160,000 entry'},
+    s:{name:'OSCP (Offensive Security Certified Professional)',why:'If pursuing red team/pen test: OSCP is the hands-on gold standard. Extremely challenging, extremely well-compensated.',cost:'$999 (90-day lab)',time:'3–6 months',vendor:'Offensive Security',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Begin CISSP — hardest exam, highest value. Parallel Security+ via COOL if not already held.'},
+      {mo:'13–7',act:'Complete CISSP. Begin CEH or OSCP based on path (management vs technical).'},
+      {mo:'6–2',act:'Apply to NSA, Cyber Command contractor positions, major tech firms (Google, Microsoft, Amazon all have defense-cleared cyber teams).'},
+      {mo:'1–0',act:'$120K+ is reasonable entry with CISSP + clearance. $150K+ with OSCP + clearance for pen test roles.'}]},
+
+  '153a':{title:'Rotary Wing Aviator (WO)',civ:'Commercial Pilot · Helicopter EMS · Law Enforcement Aviation · Offshore Petroleum',
+    p:{name:'FAA Commercial Pilot Certificate (Rotorcraft)',why:'Your military hours count directly. FAA Part 61.73 military competency allows direct conversion of military ratings. One of the fastest credential paths available.',cost:'$0–500 (FAA fees only)',time:'2–4 weeks (checkride prep)',vendor:'FAA via DPE',cool:false,ta:false,gibill:false,salary:'$60K–150K+ depending on sector'},
+    s:{name:'FAA Instrument Rating + ATP (Airline Transport Pilot)',why:'ATP is required for airline/charter captain positions. Instrument rating is standard alongside commercial.',cost:'$0 via military conversion',time:'1–2 months checkride prep',vendor:'FAA',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–15',act:'CRITICAL: Contact your nearest FSDO immediately. Under FAR 61.73, military pilots can convert military ratings to FAA certificates with minimal testing. Do this early.'},
+      {mo:'14–10',act:'Complete FAA written exams (if required). Schedule instrument and commercial checkrides.'},
+      {mo:'9–5',act:'Apply to: Helicopter EMS (HEMS) operators (Air Methods, PHI, ERA), law enforcement aviation units, offshore petroleum operators (Gulf of Mexico).'},
+      {mo:'4–0',act:'Contact HAI (Helicopter Association International) job board. Military pilots are in extreme demand across all rotary sectors.'}]},
+
+  '255a':{title:'IT Technician (WO)',civ:'Enterprise IT Manager · Systems Architect · IT Director',
+    p:{name:'CISSP',why:'WO IT techs operate at enterprise level. CISSP validates that level of expertise for civilian employers.',cost:'$699',time:'4–6 months',vendor:'ISC2',cool:false,ta:true,gibill:true,salary:'+$20,000–40,000/yr'},
+    s:{name:'AWS Solutions Architect Associate',why:'Cloud architecture is the highest-paying non-management IT credential. Pairs with CISSP for cloud security architect roles at $130K+.',cost:'$300',time:'2–3 months',vendor:'Amazon Web Services',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Begin CISSP study. Your enterprise-level experience exceeds the 5-year requirement.'},
+      {mo:'13–7',act:'Sit CISSP. Begin AWS SA-Associate. Target cloud security architect roles.'},
+      {mo:'6–2',act:'Apply to DoD Cloud COE, AWS federal teams, Microsoft Azure Government, and major defense contractors.'},
+      {mo:'1–0',act:'AWS SA + CISSP + clearance = $130–170K entry point in GovCloud sector.'}]},
+},
+
+// ============================================================
+// AIR FORCE — ENLISTED
+// ============================================================
+af_enlisted: {
+  '3d0x2':{title:'Cyber Systems Operations',civ:'Cybersecurity Analyst · SOC Analyst · Network Security Engineer',
+    p:{name:'CompTIA Security+',why:'DoD 8570/8140 IAT Level II. AF COOL pays for this. With your clearance and cyber background, this + clearance = $90K+ immediately post-separation.',cost:'$0 via COOL / $392',time:'4–6 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$10,000–20,000/yr'},
+    s:{name:'CySA+ (CompTIA Cybersecurity Analyst)',why:'Next step after Security+. Aligns directly with your SOC/SIEM/threat analysis work.',cost:'$0 via COOL / $392',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply for Security+ through AFCOOL. Free training at cyberpatriot.org and pluralsight (free for AF members).'},
+      {mo:'13–8',act:'Complete Security+. Apply for CySA+ COOL funding. Explore AFCOOL for advanced certs.'},
+      {mo:'7–3',act:'Complete CySA+. Apply to CISA, NSA, CYBERCOM contractor roles and Fortune 500 SOC analyst positions.'},
+      {mo:'2–0',act:'CISSP post-sep with GI Bill is the next step — opens senior/management positions.'}]},
+
+  '3d1x2':{title:'Cyber Transport Systems',civ:'Network Engineer · Network Architect · Infrastructure Manager',
+    p:{name:'Cisco CCNA',why:'The Cisco CCNA is the gold standard network certification and directly maps to your infrastructure work. Recognized worldwide.',cost:'$330',time:'2–3 months',vendor:'Cisco',cool:true,ta:true,gibill:true,salary:'+$8,000–15,000/yr'},
+    s:{name:'CompTIA Network+ (if not already held) + AWS Cloud Practitioner',why:'Network+ as baseline, AWS for cloud infrastructure — the future of all networks.',cost:'$338 / $100',time:'4–6 weeks each',vendor:'CompTIA / Amazon',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply CCNA through AFCOOL. Free Cisco NetAcad courses available to military members.'},
+      {mo:'13–8',act:'Pass CCNA. Apply AWS Cloud Practitioner — free training at aws.training.'},
+      {mo:'7–3',act:'Complete AWS CP. Apply to network engineer roles at telecom companies, managed service providers, and federal agencies.'},
+      {mo:'2–0',act:'CCNP (Cisco professional level) with GI Bill post-separation adds $15–25K to offers.'}]},
+
+  '1n0x1':{title:'Operations Intelligence',civ:'Intelligence Analyst · All-Source Analyst · IC Contractor',
+    p:{name:'CompTIA Security+',why:'Required for all IC contractor positions. Your intelligence background + clearance + Security+ = immediate high-value employment.',cost:'$0 via COOL / $392',time:'4–6 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$10,000–20,000/yr'},
+    s:{name:'Certified Intelligence Professional (CIP)',why:'IAFIE civilian credential recognizing your intelligence tradecraft.',cost:'$300',time:'3 months',vendor:'IAFIE',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ through AFCOOL. Register on ClearanceJobs.com immediately. TS/SCI is your most valuable asset.'},
+      {mo:'13–7',act:'Complete Security+ and CIP. Apply to Leidos, SAIC, Booz Allen, General Dynamics GDIT intel roles.'},
+      {mo:'6–2',act:'Apply to NGA, DIA, NSA civilian GS-0132 positions — long lead time, apply now.'},
+      {mo:'1–0',act:'Also consider AF ISR enterprise contractor roles — familiar environment, higher pay.'}]},
+
+  '4n0x1':{title:'Aerospace Medical Service',civ:'EMT · Flight Medic · Physician Assistant (with degree) · Healthcare Admin',
+    p:{name:'NREMT-Basic (EMT-B)',why:'National registry standard. Your military medical training exceeds requirements. Opens civilian EMS immediately.',cost:'$70',time:'4–6 weeks review',vendor:'NREMT',cool:true,ta:false,gibill:true,salary:'EMT $35K–45K / Paramedic $55K–75K'},
+    s:{name:'CMA (Certified Medical Assistant) — AAMA',why:'For clinic/hospital roles vs EMS. Opens medical assistant positions at $40K–55K without additional schooling.',cost:'$125',time:'6–8 weeks',vendor:'AAMA',cool:false,ta:false,gibill:true},
+    plan:[{mo:'18–14',act:'Apply NREMT-B through AFCOOL. CRITICAL: Complete civilian clinical hours BEFORE separation — not possible after.'},
+      {mo:'13–8',act:'Complete clinical ride-alongs. Sit NREMT-B exam.'},
+      {mo:'7–3',act:'Apply to HEMS (air ambulance), airport fire/EMS, hospital ER tech, and urgent care positions.'},
+      {mo:'2–0',act:'Paramedic bridge programs with GI Bill: 6–9 months, nearly doubles EMT salary.'}]},
+
+  '6f0x1':{title:'Financial Management and Comptroller',civ:'Budget Analyst · Financial Manager · DoD Comptroller',
+    p:{name:'Certified Government Financial Manager (CGFM)',why:'AGA\'s credential specifically for government financial management. Your military finance experience qualifies you. Opens GS-0560 and GS-0505 series positions.',cost:'$245',time:'2–3 months',vendor:'AGA (Association of Government Accountants)',cool:false,ta:true,gibill:true,salary:'+$8,000–18,000/yr'},
+    s:{name:'CPA (Certified Public Accountant)',why:'Long-term highest ROI for finance professionals. Requires 150 credit hours — use GI Bill for remaining education if needed.',cost:'$1,000–2,000 (4 exams)',time:'12–24 months total',vendor:'NASBA / state boards',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Begin CGFM study. AGA membership ($75/yr for government employees). Map military FM experience to CGFM competencies.'},
+      {mo:'13–7',act:'Sit CGFM exams (3 parts). Apply for GS-0560 (Budget Analyst) and GS-0505 (Financial Management) federal positions.'},
+      {mo:'6–2',act:'For CPA path: assess credit hour requirements. GI Bill covers additional accounting coursework.'},
+      {mo:'1–0',act:'Defense contractor finance roles also highly value CGFM — Lockheed, Boeing, Raytheon all have DoD-facing finance teams.'}]},
+
+  '3e3x1':{title:'Structural',civ:'Construction Superintendent · Project Manager · Facilities Manager',
+    p:{name:'OSHA 30-Hour Construction',why:'Required for all construction supervisor and project management roles. Instant credibility with contractors.',cost:'$189',time:'30 hours (1 week online)',vendor:'OSHA',cool:false,ta:true,gibill:true,salary:'+$5,000–15,000/yr'},
+    s:{name:'PMP or CCM (Certified Construction Manager)',why:'CCM is the construction industry\'s PMP. Opens project manager roles at $80K–120K.',cost:'$425 / $325',time:'3–4 months',vendor:'PMI / CMAA',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Complete OSHA 30 online immediately. Document all construction projects with dollar values and square footage.'},
+      {mo:'13–7',act:'Begin CCM or PMP. Contact Associated General Contractors (AGC) for military member resources.'},
+      {mo:'6–2',act:'Apply to USACE contractor positions, federal facilities management (GS-1176), and commercial construction companies.'},
+      {mo:'1–0',act:'State contractor license applications — many states credit military construction experience toward licensing hours.'}]},
+
+  '8a100':{title:'Enlisted Accessions (Recruiter)',civ:'Corporate Recruiter · Talent Acquisition Manager · HR Director',
+    p:{name:'SHRM-CP',why:'Recruiter experience maps directly to civilian talent acquisition. SHRM-CP is the credential that validates it.',cost:'$300',time:'3–4 months',vendor:'SHRM',cool:false,ta:true,gibill:true,salary:'+$8,000–20,000/yr'},
+    s:{name:'LinkedIn Recruiter Certification',why:'Free certification from LinkedIn. Essential for corporate recruiting — shows you know the tools.',cost:'$0',time:'2–4 weeks',vendor:'LinkedIn Learning',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–14',act:'Begin SHRM-CP. Your recruiting metrics (contracts, DEP management, retention) are exactly what corporate HR wants to see.'},
+      {mo:'13–7',act:'Sit SHRM-CP. Complete LinkedIn Recruiter and LinkedIn Hiring certifications (free).'},
+      {mo:'6–2',act:'Apply to tech recruiting (high pay), defense contractor HR, and corporate talent acquisition roles.'},
+      {mo:'1–0',act:'Staffing agencies like Hire Heroes, Bradley-Morris/RecruitMilitary have direct pipelines for military HR professionals.'}]},
+},
+
+// ============================================================
+// AIR FORCE — OFFICERS
+// ============================================================
+af_officer: {
+  '17d':{title:'Cyberspace Operations Officer',civ:'CISO · Cybersecurity Director · Senior Security Architect',
+    p:{name:'CISSP',why:'DoD 8570 IAM Level III. Cyberspace officers + CISSP enter at $120–160K in both government and private sector.',cost:'$699',time:'4–6 months',vendor:'ISC2',cool:false,ta:true,gibill:true,salary:'+$25,000–45,000/yr'},
+    s:{name:'CISM',why:'ISACA management-level cert. CISO-track credential for corporate security leadership.',cost:'$575',time:'3–4 months',vendor:'ISACA',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'CISSP study begins now. (ISC)2 Official Guide + Boson practice tests. Your officer-level experience satisfies all requirements.'},
+      {mo:'13–7',act:'Sit CISSP. Begin CISM for CISO track. Apply to NSA, CISA, and major defense contractor cybersecurity leadership roles.'},
+      {mo:'6–2',act:'CISO-track: CISM. Technical track: additional cloud certs (AWS SA, Azure). Both paths pay $120K+.'},
+      {mo:'1–0',act:'Apply to federal CIO/CISO positions (GS-15/SES), Fortune 500 security leadership, and CYBERCOM contractor work.'}]},
+
+  '13s':{title:'Space Operations Officer',civ:'Space Systems Engineer · Satellite Operations Manager · Defense Contractor Space Program',
+    p:{name:'Project Management Professional (PMP)',why:'Space program management is a direct translation. PMP opens senior PM roles at SpaceX, Boeing Space, Northrop Grumman Space, and government space agencies.',cost:'$555',time:'3–4 months',vendor:'PMI',cool:false,ta:true,gibill:true,salary:'+$15,000–35,000/yr'},
+    s:{name:'Systems Engineering Management Certificate (SEMC)',why:'INCOSE certificate for systems engineering — highly valued in space and defense contractor world.',cost:'$500–800',time:'3–4 months',vendor:'INCOSE',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Begin PMP. Document all space systems programs managed. Contact SpaceX, ULA, Northrop Space, Boeing Space recruiting teams.'},
+      {mo:'13–7',act:'Complete PMP. Begin INCOSE SEMC.'},
+      {mo:'6–2',act:'Apply to SpaceX, United Launch Alliance, Boeing Space, NRO, and Space Force civilian positions.'},
+      {mo:'1–0',act:'NRO and NGA have the most need for officers with your background. GS-14/15 entry is common for prior 13S.'}]},
+
+  '21a':{title:'Aircraft Maintenance Officer',civ:'MRO Director · Aviation Program Manager · OEM Support Manager',
+    p:{name:'FAA A&P License',why:'Maintenance officers can qualify for A&P via 18-month military experience path. Opens maintenance director and VP of Maintenance roles.',cost:'$300–500',time:'2–4 months',vendor:'FAA',cool:false,ta:false,gibill:true,salary:'+$20,000–40,000/yr'},
+    s:{name:'PMP',why:'Aviation program management roles at airlines and OEMs (Boeing, Airbus) require both aviation credential and PM cert.',cost:'$555',time:'3–4 months',vendor:'PMI',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Contact FAA FSDO for military experience A&P path. Document all maintenance programs overseen with aircraft types and budget.'},
+      {mo:'13–7',act:'Complete A&P exams. Begin PMP.'},
+      {mo:'6–2',act:'Apply to Delta TechOps, American, United, Southwest maintenance leadership, plus Boeing Defense sustainment.'},
+      {mo:'1–0',act:'IATA and airline MRO networks are strong — join AMC (Aviation Maintenance Council).'}]},
+},
+
+// ============================================================
+// MARINES — ENLISTED
+// ============================================================
+usmc_enlisted: {
+  '0311':{title:'Rifleman',civ:'Law Enforcement · Security Manager · Operations Supervisor',
+    p:{name:'CompTIA Security+',why:'Opens federal law enforcement support, DoD security, and IT security roles. USMC COOL funds this.',cost:'$0 via COOL / $392',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$8,000–15,000/yr'},
+    s:{name:'State LE Academy / CBP Application',why:'0311 Marines are highly competitive for CBP Border Patrol, USMS, and state law enforcement. Apply now — hiring timelines are 6–12 months.',cost:'$0',time:'Start application now',vendor:'CBP / USAJobs',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–14',act:'Apply Security+ via USMC COOL. Submit CBP Border Patrol application on USAJobs — process takes 6-12 months. Contact state police academy about military police waiver programs.'},
+      {mo:'13–8',act:'Complete Security+. Continue CBP/LE application process (polygraph, background investigation).'},
+      {mo:'7–3',act:'Apply corporate security, protective services, and DoD contract security while LE applications process.'},
+      {mo:'2–0',act:'Physical fitness maintained — LE and federal agent tests include physical agility. Stay sharp.'}]},
+
+  '0651':{title:'Cyber Network Operator',civ:'Cybersecurity Analyst · Network Security Engineer',
+    p:{name:'CompTIA Security+',why:'USMC COOL funds this. DoD 8570 baseline that converts your cyber operations work into a recognized civilian credential immediately.',cost:'$0 via COOL',time:'4–6 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$10,000–20,000/yr'},
+    s:{name:'CompTIA CySA+',why:'Next level after Security+. Aligns to your network defense and threat analysis work.',cost:'$0 via COOL',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ and CySA+ through USMC COOL mccs.usmc.mil/cool. Both may be covered.'},
+      {mo:'13–7',act:'Complete both certs. Apply to NSA, CYBERCOM contractor roles, and private sector SOC positions.'},
+      {mo:'6–2',act:'CISSP is the next goal — use GI Bill post-separation for prep course.'},
+      {mo:'1–0',act:'Marines cyber operators are in extreme demand. Your clearance + certs + discipline = $90K+ entry.'}]},
+
+  '3531':{title:'Motor Vehicle Operator',civ:'CDL-A Driver · Transportation Supervisor · Logistics Coordinator',
+    p:{name:'CDL Class A',why:'GI Bill covers CDL school. With your military driving record, this is one of the fastest paths to $60K+ employment post-separation.',cost:'$0 via GI Bill',time:'3–6 weeks',vendor:'Approved CDL School',cool:false,ta:false,gibill:true,salary:'$55K–90K starting'},
+    s:{name:'APICS CPIM Part 1',why:'For logistics supervisor path, CPIM adds credibility beyond just driving.',cost:'$480',time:'3–4 months',vendor:'APICS',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Research GI Bill-approved CDL schools. Apply for Post-9/11 GI Bill (22-1990). Schedule DOT physical exam.'},
+      {mo:'13–8',act:'Complete CDL study and school enrollment. Target Class A with endorsements (tanker, hazmat, doubles/triples).'},
+      {mo:'7–3',act:'Enroll in CDL school post-separation using GI Bill. Apply to Werner, Schneider, Old Dominion trucking.'},
+      {mo:'2–0',act:'USPS, UPS, FedEx — all actively recruit from Marines with clean driving records.'}]},
+
+  '4421':{title:'Legal Services Specialist',civ:'Paralegal · Legal Administrator · Court Administrator',
+    p:{name:'NALA Certified Paralegal (CP)',why:'National Association of Legal Assistants certification — the civilian standard for paralegal work. Your JAG/legal experience qualifies.',cost:'$250',time:'3–4 months',vendor:'NALA',cool:false,ta:true,gibill:true,salary:'+$5,000–15,000/yr'},
+    s:{name:'NFPA Registered Paralegal (RP)',why:'National Federation of Paralegal Associations certification — some employers prefer this over NALA.',cost:'$200',time:'2–3 months',vendor:'NFPA',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Begin NALA CP study. Marine Corps legal experience (courts-martial, legal assistance) exceeds most paralegal school programs.'},
+      {mo:'13–7',act:'Complete NALA CP. Consider NFPA RP for dual credentials.'},
+      {mo:'6–2',act:'Apply to JAG offices, federal court clerk positions, and law firms. Federal paralegal (GS-0950 series) is a strong path.'},
+      {mo:'1–0',act:'Many 4421 Marines go to law school with GI Bill — LSAT prep is a worthwhile use of study time.'}]},
+
+  '5811':{title:'Military Police (USMC)',civ:'Federal Agent · Law Enforcement Officer · Corporate Security',
+    p:{name:'State Police Academy via Military Credit',why:'Most states credit USMC MP training toward academy requirements. Contact target state POST board immediately.',cost:'Varies by state',time:'Reduced academy time',vendor:'State POST Board',cool:false,ta:false,gibill:false,salary:'$50K–80K LE / $80K+ federal'},
+    s:{name:'CompTIA Security+ (federal/corporate path)',why:'Opens DoD contractor security, federal security management, and corporate security director roles.',cost:'$0 via COOL',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ via USMC COOL. Submit federal LE applications on USAJobs (CBP, USMS, ATF, FBI support). These take 6-12 months.'},
+      {mo:'13–7',act:'Complete Security+. Continue federal application process.'},
+      {mo:'6–2',act:'Contact state police recruiting. USMC MP credentials are highly respected in civilian law enforcement.'},
+      {mo:'1–0',act:'MCJA (Marine Corps Justice Academy) graduates often qualify for state academy credit — contact your state POST board with transcripts.'}]},
+},
+
+// ============================================================
+// NAVY — ENLISTED
+// ============================================================
+navy_enlisted: {
+  'it':{title:'Information Systems Technician',civ:'Systems Admin · Network Engineer · Cybersecurity Analyst',
+    p:{name:'CompTIA Security+',why:'DoD 8570 baseline. Navy COOL funds this. Your Navy IT work exceeds the knowledge required — this cert converts your experience into civilian currency.',cost:'$0 via COOL',time:'4–6 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$10,000–20,000/yr'},
+    s:{name:'CompTIA Network+ or CCNA',why:'Validates your network infrastructure background. CCNA is higher value but harder.',cost:'$338 / $330',time:'4–8 weeks',vendor:'CompTIA / Cisco',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ via Navy COOL (cool.navy.mil). Navy IT school training + Security+ = immediate $70K+ employment.'},
+      {mo:'13–8',act:'Complete Security+ and Network+. Target CCNA with TA if time allows.'},
+      {mo:'7–3',act:'Apply to federal IT (GS-2210 series), defense contractor IT, and private sector MSP and enterprise roles.'},
+      {mo:'2–0',act:'CISSP post-separation is realistic for ITs with 5+ years — use GI Bill for prep course.'}]},
+
+  'hm':{title:'Hospital Corpsman',civ:'EMT-B → Paramedic · Physician Assistant (with degree) · Healthcare Tech',
+    p:{name:'NREMT-Basic (EMT-B)',why:'Navy COOL funds this. Your Corpsman training EXCEEDS EMT requirements — this is one of the most straightforward cert paths on this list.',cost:'$0 via COOL / $70',time:'3–5 weeks review',vendor:'NREMT',cool:true,ta:false,gibill:true,salary:'EMT: $38K / Paramedic: $58K / PA: $115K+'},
+    s:{name:'NREMT-Paramedic bridge program (GI Bill)',why:'HM-to-Paramedic bridge programs at civilian schools. GI Bill covers 100%. Paramedic salary nearly doubles EMT.',cost:'$0 via GI Bill',time:'6–9 months post-sep',vendor:'Approved EMS programs',cool:false,ta:false,gibill:true},
+    plan:[{mo:'18–14',act:'Apply NREMT-B via Navy COOL. CRITICAL: Complete civilian clinical ride-along hours BEFORE separation. Some states require civilian clinical hours even with military experience.'},
+      {mo:'13–8',act:'Complete required clinical hours. Sit NREMT-B. This is your employment bridge while pursuing further education.'},
+      {mo:'7–3',act:'Apply to HEMS (air ambulance), hospital ER tech, urgent care, and fire department EMS positions.'},
+      {mo:'2–0',act:'PA programs actively recruit former Corpsmen. With GI Bill, PA school (2 years) leads to $115K+ salary.'}]},
+
+  'bm':{title:'Boatswain\'s Mate',civ:'Maritime Operations Manager · Port Captain · Vessel Operations Supervisor',
+    p:{name:'USCG Merchant Mariner Credential (MMC) — Able Seafarer',why:'Your Navy seamanship experience translates directly to Merchant Marine. USCG issues MMC based on military service.',cost:'$95–140',time:'4–8 weeks application',vendor:'USCG National Maritime Center',cool:false,ta:false,gibill:false,salary:'$55K–110K+ maritime'},
+    s:{name:'TWIC Card + OUPV (Captain\'s License)',why:'6-pak Captain\'s license for charter/small vessel operations. TWIC required for all maritime facilities.',cost:'$125 TWIC / $1,500–3,000 OUPV course',time:'3–6 months',vendor:'USCG',cool:false,ta:false,gibill:true},
+    plan:[{mo:'18–14',act:'Apply for USCG MMC through National Maritime Center. Navy BM experience directly satisfies rating requirements. Also apply for TWIC card.'},
+      {mo:'13–8',act:'Receive MMC credential. Enroll in OUPV (Captain\'s license) training program if not already held.'},
+      {mo:'7–3',act:'Apply to harbor pilot programs, port authority positions, tugboat companies, and maritime security roles.'},
+      {mo:'2–0',act:'Union memberships (MMP, MEBA, SIU) provide significant career support and compensation — research during transition.'}]},
+
+  'ae':{title:'Aviation Electrician\'s Mate',civ:'Avionics Technician · A&P Mechanic · Aerospace Systems Technician',
+    p:{name:'FAA Airframe & Powerplant (A&P)',why:'Your military aviation maintenance hours qualify you for direct A&P via FAA experience path. No school required — just the exam.',cost:'$300–500',time:'2–4 months',vendor:'FAA',cool:true,ta:false,gibill:true,salary:'+$15,000–35,000/yr'},
+    s:{name:'FAA Inspection Authorization (IA)',why:'Enables sign-off authority — adds $15–25K to salary.',cost:'$150',time:'After A&P',vendor:'FAA',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–14',act:'Contact FSDO. Request military experience evaluation under FAR 61.73 equivalent for maintenance. Document all aircraft types and maintenance hours.'},
+      {mo:'13–7',act:'Complete A&P written, oral, and practical exams.'},
+      {mo:'6–2',act:'Apply to Delta TechOps, United, American, Southwest MRO, and defense contractor aviation maintenance.'},
+      {mo:'1–0',act:'Avionics specialty (AV systems) adds premium over general A&P — retain your specialty documentation.'}]},
+
+  'et':{title:'Electronics Technician',civ:'Electronics Systems Engineer · Field Service Technician · RF Engineer',
+    p:{name:'CompTIA A+ and Network+',why:'Navy COOL covers both. Your radar, sonar, and electronics systems background exceeds both cert requirements.',cost:'$0 via COOL',time:'8–12 weeks total',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$8,000–15,000/yr'},
+    s:{name:'FCC General Radiotelephone Operator License (GROL)',why:'Federal license for commercial RF and electronics work. Your Navy electronics background makes this straightforward.',cost:'$85',time:'4–6 weeks',vendor:'FCC',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–14',act:'Apply A+ and Network+ via Navy COOL simultaneously.'},
+      {mo:'13–7',act:'Complete both certs. Sit FCC GROL exam.'},
+      {mo:'6–2',act:'Apply to defense electronics contractor roles, telecom field engineering, and maritime electronics companies.'},
+      {mo:'1–0',act:'Northrop Grumman, Raytheon, L3Harris, and Leonardo DRS all hire Navy ETs heavily for systems engineering support.'}]},
+
+  'ma':{title:'Master-at-Arms',civ:'Federal Agent · Physical Security Manager · Law Enforcement Officer',
+    p:{name:'CompTIA Security+',why:'Opens federal security management, DoD physical security, and access control program management roles.',cost:'$0 via COOL',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$8,000–15,000/yr'},
+    s:{name:'Certified Protection Professional (CPP)',why:'ASIS gold standard for security management — opens corporate and government security director roles.',cost:'$420',time:'3–4 months',vendor:'ASIS',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ via Navy COOL. Submit federal LE applications on USAJobs — NCIS agent, CBP, USMS all target former MA rates.'},
+      {mo:'13–7',act:'Complete Security+. Research state LE academy military credit policies.'},
+      {mo:'6–2',act:'Begin CPP study. Apply to DoD contractor physical security, protective services, and government facility security management.'},
+      {mo:'1–0',act:'NCIS actively recruits former MA rates for special agent positions — apply through USAJobs GS-1811 series.'}]},
+
+  'ls':{title:'Logistics Specialist',civ:'Supply Chain Manager · Logistics Analyst · Procurement Specialist',
+    p:{name:'APICS CPIM',why:'Navy logistics experience maps directly to APICS competencies. CPIM opens supply chain analyst roles at $65K+.',cost:'$480',time:'3–4 months',vendor:'APICS',cool:false,ta:true,gibill:true,salary:'+$8,000–18,000/yr'},
+    s:{name:'APICS CSCP',why:'Full supply chain credential adds $10K+ over CPIM alone.',cost:'$995',time:'4–6 months',vendor:'APICS',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Join APICS. Begin CPIM study. Document all logistics operations managed — dollar values, throughput, accuracy rates.'},
+      {mo:'13–7',act:'Complete CPIM. Begin CSCP.'},
+      {mo:'6–2',act:'Apply to DoD logistics contractor roles, federal GS-2030 positions, and Fortune 500 supply chain analyst roles.'},
+      {mo:'1–0',act:'Amazon, Walmart, Target logistics leadership programs actively recruit veterans with supply chain credentials.'}]},
+
+  'yn':{title:'Yeoman',civ:'Administrative Manager · HR Coordinator · Executive Assistant',
+    p:{name:'SHRM-CP',why:'Your Navy admin and personnel management experience maps perfectly to civilian HR. SHRM-CP opens HR roles at $55K–75K.',cost:'$300',time:'3–4 months',vendor:'SHRM',cool:false,ta:true,gibill:true,salary:'+$8,000–15,000/yr'},
+    s:{name:'Certified Administrative Professional (CAP)',why:'IAAP certification for administrative professionals — opens executive assistant and office manager roles.',cost:'$300',time:'2–3 months',vendor:'IAAP',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Begin SHRM-CP study through TA. Your command-level administrative experience is exactly what corporate HR needs.'},
+      {mo:'13–7',act:'Complete SHRM-CP. Begin CAP.'},
+      {mo:'6–2',act:'Apply to federal HR (GS-0201), military-to-civilian HR coordinator roles, and corporate administrative management.'},
+      {mo:'1–0',act:'Federal HR roles with Navy background: NAVPERSCOM, BUPERS, DFAS civilian positions are natural fits.'}]},
+},
+
+// ============================================================
+// COAST GUARD — ENLISTED
+// ============================================================
+cg_enlisted: {
+  'me':{title:'Maritime Enforcement Specialist',civ:'CBP Marine Interdiction Agent · Federal Agent · Port Security Officer',
+    p:{name:'CompTIA Security+',why:'Opens federal law enforcement tech support, port security management, and DoD physical security roles.',cost:'$0 via COOL',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$8,000–15,000/yr'},
+    s:{name:'CBP Marine Interdiction Agent (Direct Application)',why:'Your USCG ME background is the most competitive profile for CBP MIA positions. No additional cert needed — apply now.',cost:'$0',time:'Apply 12–18 months out',vendor:'CBP / USAJobs',cool:false,ta:false,gibill:false},
+    plan:[{mo:'18–14',act:'Submit CBP Marine Interdiction Agent application on USAJobs (GS-1896) — process takes 12-18 months. Apply Security+ via COOL simultaneously.'},
+      {mo:'13–7',act:'Complete Security+. Continue federal application process (background, polygraph, medical).'},
+      {mo:'6–2',act:'Apply to port security companies, TSA maritime security, and FEMA maritime emergency management roles.'},
+      {mo:'1–0',act:'USCG Active Duty experience for CBP is as strong as any federal law enforcement background. Leverage it.'}]},
+
+  'mk':{title:'Machinery Technician',civ:'Marine Engineer · Diesel Mechanic · Plant Engineer · Maritime Industry',
+    p:{name:'USCG QMED (Qualified Member Engine Department)',why:'Your MK rating converts directly to USCG QMED credential — opens all commercial maritime engine room positions.',cost:'$95–140',time:'Application process — weeks',vendor:'USCG National Maritime Center',cool:false,ta:false,gibill:false,salary:'$55K–90K maritime'},
+    s:{name:'ASE Master Technician (diesel path)',why:'Opens shore-side diesel maintenance, fleet management, and industrial plant engineering roles.',cost:'$39/exam',time:'3–6 months',vendor:'ASE',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply for USCG MMC at National Maritime Center. MK rating directly satisfies QMED requirements.'},
+      {mo:'13–8',act:'Receive MMC. Begin ASE diesel certifications for shore-side path.'},
+      {mo:'7–3',act:'Apply to Merchant Marine positions (engine department), power generation companies, and heavy equipment maintenance.'},
+      {mo:'2–0',act:'MEBA and other maritime unions offer strong career support and wages for licensed engineers.'}]},
+
+  'is':{title:'Intelligence Specialist (CG)',civ:'Intelligence Analyst · Maritime Intelligence · DHS Analyst',
+    p:{name:'CompTIA Security+',why:'Required for all DHS and maritime intelligence contractor positions.',cost:'$0 via COOL',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$10,000–18,000/yr'},
+    s:{name:'Certified Intelligence Professional (CIP)',why:'Civilian intelligence credential recognizing your maritime intelligence tradecraft.',cost:'$300',time:'3 months',vendor:'IAFIE',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ via COOL. Register on ClearanceJobs.com — USCG intelligence clearances are directly transferable to DHS contractor roles.'},
+      {mo:'13–7',act:'Complete Security+ and CIP.'},
+      {mo:'6–2',act:'Apply to CBP intelligence, DHS I&A, and USCG contractor maritime intelligence roles.'},
+      {mo:'1–0',act:'FEMA, CBP, ICE, TSA all benefit from USCG IS experience — your maritime domain expertise is genuinely rare.'}]},
+},
+
+// ============================================================
+// SPACE FORCE — ENLISTED
+// ============================================================
+sf_enlisted: {
+  '1c6x1':{title:'Space Systems Operations',civ:'Satellite Operations Specialist · Space Systems Analyst · Defense Contractor',
+    p:{name:'CompTIA Security+',why:'Required baseline for all Space Force and IC contractor positions. SF COOL funds this.',cost:'$0 via COOL',time:'4–6 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'+$10,000–20,000/yr'},
+    s:{name:'AWS Cloud Practitioner + CISSP (career track)',why:'Space systems are migrating to cloud infrastructure. AWS opens high-paying roles at commercial space companies.',cost:'$100 / $699',time:'6 weeks / 4–6 months',vendor:'AWS / ISC2',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ via SF COOL. Your clearance + space domain knowledge = extremely rare combination in civilian market.'},
+      {mo:'13–7',act:'Complete Security+. Begin AWS CP. Apply to SpaceX, ULA, Boeing Space, L3Harris Space, Northrop Grumman Space.'},
+      {mo:'6–2',act:'Begin CISSP study. Defense space contractors pay $90–130K for 1C6 background with clearance.'},
+      {mo:'1–0',act:'NRO, USSF civilian positions, and commercial satellite operators (Viasat, Intelsat, SES) are priority targets.'}]},
+
+  '3d0x2_sf':{title:'Cyber Operations (SF)',civ:'Cybersecurity Analyst · Space Cybersecurity Specialist',
+    p:{name:'CompTIA Security+ → CISSP track',why:'Space cyber is one of the most specialized and highest-paid cyber disciplines. Your combination is extremely rare.',cost:'$0 via COOL → $699',time:'4–6 weeks + 4–6 months',vendor:'CompTIA / ISC2',cool:true,ta:true,gibill:true,salary:'$100,000–150,000+ entry'},
+    s:{name:'Certified Space Professional (CSP)',why:'National Space Club Foundation credential for space professionals. Recognized across government and commercial space.',cost:'$300',time:'3–4 months',vendor:'NSCF',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply Security+ via SF COOL. Space cyber professionals with clearance are the rarest combination in the current hiring market.'},
+      {mo:'13–7',act:'Complete Security+. Begin CISSP. Apply to Space ISAC, Space Force civilian positions, and major defense space contractors.'},
+      {mo:'6–2',act:'CISSP completion. Apply to SpaceX IT security, Boeing Cyber (Space div), and Northrop Grumman space cyber teams.'},
+      {mo:'1–0',act:'$120–160K is a realistic entry point with your background, clearance, and CISSP.'}]},
+
+  '17sx':{title:'Cyberspace Operations (SF Officer)',civ:'Space Cyber Director · CISO · Program Security Officer',
+    p:{name:'CISSP',why:'At officer level with space + cyber, CISSP opens CISO-track positions in both government and commercial space.',cost:'$699',time:'4–6 months',vendor:'ISC2',cool:false,ta:true,gibill:true,salary:'+$30,000–50,000/yr'},
+    s:{name:'CISM + AWS Solutions Architect',why:'Complete the CISO-track credential set for space cyber leadership.',cost:'$575 + $300',time:'3–4 months each',vendor:'ISACA / AWS',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Begin CISSP immediately. Network with SpaceX, AWS government services, and Microsoft Azure Space teams.'},
+      {mo:'13–7',act:'Complete CISSP. Begin CISM. Target senior leadership roles in commercial and government space.'},
+      {mo:'6–2',act:'Apply to SpaceX security leadership, NRO CISO support, and Fortune 500 space division security roles.'},
+      {mo:'1–0',act:'$150K+ is realistic. Space cyber is the most in-demand combination in the defense market.'}]},
+},
+
+// ============================================================
+// UNIVERSAL — ALL BRANCHES, ALL RANKS
+// ============================================================
+universal: {
+  'pmp':{title:'Any MOS — Project/Program Management Track',civ:'Program Manager · Operations Director · Defense PM',
+    p:{name:'Project Management Professional (PMP)',why:'The most universally valuable transition credential. Every service member has led people and managed resources — PMP validates that in civilian terms. $90K–130K entry.',cost:'$555 (PMI member) / $405 (non-member)',time:'3–4 months',vendor:'PMI',cool:false,ta:true,gibill:true,salary:'+$15,000–30,000/yr'},
+    s:{name:'PMP prep: Agile/Scrum Master',why:'Many organizations want hybrid PM/Agile. CSM (Certified Scrum Master) pairs well with PMP.',cost:'$200–400',time:'2–3 days course + exam',vendor:'Scrum Alliance',cool:false,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Join PMI ($139/yr). Document 36 months PM experience (every military supervisor qualifies). Enroll in 35-hour PMP prep course via TA.'},
+      {mo:'13–8',act:'Complete 35 contact hours. Apply for PMP exam authorization. Study PMBOK 7 + Agile Practice Guide.'},
+      {mo:'7–4',act:'Sit PMP exam. Begin CSM if pursuing agile path.'},
+      {mo:'3–0',act:'Update LinkedIn and resume with PMP designation. Apply to PM roles in defense contracting and federal agencies.'}]},
+
+  'sec_plus':{title:'Any MOS — IT/Security Entry Path',civ:'IT Support · Cybersecurity Analyst · DoD IT',
+    p:{name:'CompTIA Security+',why:'The single fastest-ROI cert for any service member regardless of MOS. DoD 8570/8140 requirement. ALL branches have COOL programs that cover this. $60K+ immediately post-sep.',cost:'$0 via COOL / $392 out of pocket',time:'4–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true,salary:'$55,000–80,000 entry'},
+    s:{name:'CompTIA A+',why:'If no prior IT experience, A+ first then Security+. Establishes foundational IT credential.',cost:'$246',time:'6–8 weeks',vendor:'CompTIA',cool:true,ta:true,gibill:true},
+    plan:[{mo:'18–14',act:'Apply for Security+ through your branch\'s COOL program IMMEDIATELY — this is free money with zero paperwork burden relative to the ROI.'},
+      {mo:'13–8',act:'Study: Professor Messer (free), Jason Dion Udemy course ($15), Darril Gibson book ($30). Pass the exam.'},
+      {mo:'7–4',act:'Apply to GS-2210 IT Specialist positions, DoD contractor help desk/sysadmin, and corporate IT entry roles.'},
+      {mo:'3–0',act:'With Security+ in hand, begin studying toward Network+, CySA+, or CCNA based on specialization preference.'}]},
+}
+};
+
+// COOL PROGRAM LINKS BY BRANCH
+const COOL_LINKS = {
+  army: {name:'Army COOL', url:'https://coolarmor.com', desc:'Army Credentialing Assistance — funding for certifications while still on active duty'},
+  navy: {name:'Navy COOL', url:'https://www.cool.navy.mil', desc:'Navy Credentialing Opportunities On-Line'},
+  af:   {name:'Air Force COOL', url:'https://www.afvec.us.af.mil', desc:'AF Credentialing and Education program'},
+  usmc: {name:'Marine Corps COOL', url:'https://www.cool.osd.mil/usmc', desc:'USMC COOL program for enlisted and officer credentialing'},
+  cg:   {name:'Coast Guard COOL', url:'https://www.dcms.uscg.mil/cool', desc:'USCG Credentialing Opportunities On-Line'},
+  sf:   {name:'Space Force COOL', url:'https://www.cool.osd.mil/ussf', desc:'Space Force credentialing and education funding'}
+};
+
+
 let S={user:{},tasks:{},plans:{A:{steps:[]},B:{steps:[]},C:{steps:[]}},goals:[],cal:[],calOff:0,resume:{exp:[],summary:'',edu:'',certs:'',skills:''},va:{},fin:{},fam:{},notes:{}};
 
 function loadS(){try{const d=localStorage.getItem('tc2');if(d){const p=JSON.parse(d);S={...S,...p};if(!S.plans)S.plans={A:{steps:[]},B:{steps:[]},C:{steps:[]}};['A','B','C'].forEach(k=>{if(!S.plans[k])S.plans[k]={steps:[]};if(!S.plans[k].steps)S.plans[k].steps=[];});if(!S.resume)S.resume={exp:[],summary:'',edu:'',certs:'',skills:''};if(!S.resume.exp)S.resume.exp=[];if(!S.goals)S.goals=[];if(!S.cal)S.cal=[];}}catch(e){}}
@@ -689,7 +1293,7 @@ function launchApp(){
   G('tbav').textContent=initials(u.name);
   G('menu-name').textContent=u.name||'—';
   G('menu-branch').textContent=[u.rank,BL(u.branch)].filter(Boolean).join(' · ')||'—';
-  bOv();bTk();bPl('A');bVA();bFi();bFa();bTl();bGo();bCal();bCo();bRe();bRs();
+  bOv();bTk();bPl('A');bVA();bFi();bFa();bTl();bGo();bCal();bCo();bRe();bRs();bCr();
   window.addEventListener('scroll',()=>G('fab').classList.toggle('on',window.scrollY>180));
 }
 function goProfile(){wSt=0;G('onboard').classList.add('on');G('app').classList.remove('on');renderWiz();}
@@ -1185,6 +1789,209 @@ function copyRe(){
 function bRs(){
   G('p-rs').innerHTML=`<div class="ph">Resources</div><div class="psub">Curated links for transitioning service members — all branches, fully vetted</div>
     ${RESOURCES.map(s=>`<div class="card"><div class="ch"><div class="cd"></div>${s.cat}</div>${s.items.map(i=>`<div class="res-i"><div class="res-ic">${i.ic}</div><div style="flex:1"><div class="res-n">${i.n}</div><div class="res-d">${i.d}</div><a href="${i.u}" target="_blank" class="txxs txa mt8" style="text-decoration:none">🔗 ${i.u.replace('https://','').replace('http://','')}</a></div></div>`).join('')}</div>`).join('')}`;
+}
+
+// ============================================================
+// CERTIFICATIONS TAB
+// ============================================================
+function bCr(){
+  const u=S.user;
+  const br=u.branch||'army';
+  const mos=(u.mos||'').toLowerCase().trim().replace(/\s/g,'');
+  const isOfficer=(u.rank||'').match(/^(o-[0-9]|w-[0-9]|wo|cw|lt|cpt|maj|ltc|col|gen|ens|ltjg|lcdr|cdr|capt|brig|mgen|lgen|radm|vadm|adm|1lt|2lt)/i);
+  const brName={army:'Army',navy:'Navy',af:'Air Force',marines:'Marines',cg:'Coast Guard',sf:'Space Force'}[br]||'Service';
+
+  // Determine cert section key
+  const brMap={army:isOfficer?'army_officer':'army_enlisted',navy:'navy_enlisted',af:isOfficer?'af_officer':'af_enlisted',marines:'usmc_enlisted',cg:'cg_enlisted',sf:'sf_enlisted'};
+  // Warrant officer override
+  const woBrMap={army:'army_warrant'};
+  const isWO=(u.rank||'').match(/^(w-[0-9]|wo|cw|cwo|wo1|wo2|wo3|wo4|wo5)/i);
+  const dbKey=isWO&&woBrMap[br]?woBrMap[br]:brMap[br]||'army_enlisted';
+  const dbSection=CERT_DB[dbKey]||{};
+
+  // Find matching cert entry
+  let entry=null;
+  const mosKeys=Object.keys(dbSection);
+  // Try exact match, then partial
+  for(const k of mosKeys){if(mos===k||mos.startsWith(k)||k.startsWith(mos)){entry=dbSection[k];break;}}
+  // Try navy rate style
+  if(!entry&&dbSection[mos])entry=dbSection[mos];
+
+  const days=DU(u.sepDate);
+  const mo18=days?Math.ceil(days/30):18;
+
+  G('p-cr').innerHTML=`
+    <div class="ph">Certifications</div>
+    <div class="psub">Critical credentials to earn in your final 18 months — by MOS, Rate, AFSC, and rank</div>
+
+    <div class="alert al-i"><span class="ai">🎓</span><span><strong>COOL Programs pay for certifications while you're still on active duty.</strong> Every branch has a Credentialing Opportunities On-Line (COOL) program. This is free money — use it before you separate. Find your branch's COOL link in the Resources tab.</span></div>
+
+    <!-- PROFILE SUMMARY -->
+    <div class="card"><div class="ch"><div class="cd"></div>Your Certification Profile</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;font-size:13px;margin-bottom:12px">
+        <span class="txf">Branch:</span><span>${brName}</span>
+        <span class="txf">Rank:</span><span>${u.rank||'Not set'}</span>
+        <span class="txf">MOS / Rate / AFSC:</span><span>${u.mos||'Not set — tap Edit Profile to add'}</span>
+        <span class="txf">Category:</span><span>${isWO?'Warrant Officer':isOfficer?'Officer':'Enlisted'}</span>
+        <span class="txf">Time remaining:</span><span>${days!==null?mo18+' months (approx.)':'Set separation date for timeline'}</span>
+      </div>
+      <div class="ar">
+        <button class="btn btn-xs btn-o" onclick="goProfile()">✏️ Update Profile</button>
+        <a href="${(COOL_LINKS[br]||COOL_LINKS.army).url}" target="_blank" class="btn btn-xs btn-a">${(COOL_LINKS[br]||COOL_LINKS.army).name} →</a>
+      </div>
+    </div>
+
+    <!-- PERSONALIZED CERT CARD -->
+    ${entry?`
+    <div class="card" style="border:1.5px solid var(--ac)">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div class="ch" style="margin:0"><div class="cd"></div>${u.mos?.toUpperCase()||''} — ${entry.title}</div>
+        <span class="badge ba">Personalized for your MOS</span>
+      </div>
+      <div class="txs txm mb12">${entry.civ}</div>
+
+      <!-- PRIMARY CERT -->
+      <div style="background:var(--acl);border-radius:var(--r);padding:14px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div style="font-weight:700;font-size:14px;color:var(--nav)">🎯 Primary: ${entry.p.name}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            ${entry.p.cool?'<span class="badge bg">COOL Funded</span>':''}
+            ${entry.p.ta?'<span class="badge bbl">TA Eligible</span>':''}
+            ${entry.p.gibill?'<span class="badge bm">GI Bill</span>':''}
+          </div>
+        </div>
+        <div class="txs" style="color:var(--tx);margin-bottom:8px">${entry.p.why}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-top:10px">
+          <div style="background:rgba(255,255,255,.7);border-radius:6px;padding:8px;text-align:center"><div style="font-size:16px">💰</div><div style="font-size:11px;font-weight:700;color:var(--ac)">${entry.p.cost}</div><div style="font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em">Exam Cost</div></div>
+          <div style="background:rgba(255,255,255,.7);border-radius:6px;padding:8px;text-align:center"><div style="font-size:16px">⏱️</div><div style="font-size:11px;font-weight:700;color:var(--ac)">${entry.p.time}</div><div style="font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em">Study Time</div></div>
+          <div style="background:rgba(255,255,255,.7);border-radius:6px;padding:8px;text-align:center"><div style="font-size:16px">🏢</div><div style="font-size:11px;font-weight:700;color:var(--ac)">${entry.p.vendor}</div><div style="font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em">Issuing Body</div></div>
+          <div style="background:rgba(255,255,255,.7);border-radius:6px;padding:8px;text-align:center"><div style="font-size:16px">📈</div><div style="font-size:11px;font-weight:700;color:var(--gr)">${entry.p.salary}</div><div style="font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em">Salary Impact</div></div>
+        </div>
+      </div>
+
+      <!-- SECONDARY CERT -->
+      <div style="background:var(--surf2);border-radius:var(--r);padding:14px;margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div style="font-weight:700;font-size:14px;color:var(--nav)">🥈 Secondary: ${entry.s.name}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            ${entry.s.cool?'<span class="badge bg">COOL Funded</span>':''}
+            ${entry.s.ta?'<span class="badge bbl">TA Eligible</span>':''}
+          </div>
+        </div>
+        <div class="txs txm">${entry.s.why}</div>
+        <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+          <span class="txs"><strong>Cost:</strong> ${entry.s.cost}</span>
+          <span class="txs"><strong>Time:</strong> ${entry.s.time}</span>
+          <span class="txs"><strong>Vendor:</strong> ${entry.s.vendor}</span>
+        </div>
+      </div>
+
+      <!-- 18-MONTH PLAN -->
+      <div class="ch"><div class="cd"></div>Your 18-Month Certification Roadmap</div>
+      <div class="tl">
+        ${entry.plan.map((p,i)=>`<div class="tli${i===0?' sp':mo18>=(18-i*4)?' ':' fut'}">
+          <div class="tld">Months ${p.mo} before separation</div>
+          <div class="tlt">${p.act}</div>
+        </div>`).join('')}
+      </div>
+    </div>`:`
+    <!-- NO MATCH — SHOW MANUAL LOOKUP -->
+    <div class="card"><div class="ch"><div class="cd"></div>Find Your Certification Path</div>
+      <div class="txs txm mb12">MOS/Rate/AFSC "${u.mos||'not set'}" not yet in our database — use the lookup below or update your profile.</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="text" id="cr-mos-in" placeholder="Enter your MOS, Rate, or AFSC..." style="flex:1" value="${u.mos||''}">
+        <button class="btn btn-a btn-sm" onclick="crManualLookup()">Look Up</button>
+      </div>
+      <div id="cr-manual-result"></div>
+      <div class="div-lbl">or browse all paths below</div>
+    </div>`}
+
+    <!-- UNIVERSAL CERT PATHS -->
+    <div class="card"><div class="ch"><div class="cd"></div>High-Value Certifications — Any Branch, Any MOS</div>
+      <div class="txs txm mb12">These credentials translate military experience into civilian value regardless of your specialty.</div>
+      ${Object.entries(CERT_DB.universal).map(([k,e])=>`
+      <div style="border:1px solid var(--b1);border-radius:var(--r);padding:14px;margin-bottom:10px">
+        <div class="fxb mb8">
+          <div style="font-weight:700;font-size:13px;color:var(--nav)">${e.p.name}</div>
+          <div style="display:flex;gap:5px">
+            ${e.p.cool?'<span class="badge bg">COOL</span>':''}
+            ${e.p.ta?'<span class="badge bbl">TA</span>':''}
+            ${e.p.gibill?'<span class="badge bm">GI Bill</span>':''}
+          </div>
+        </div>
+        <div class="txs txm mb8">${e.p.why}</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <span class="txxs"><strong>Cost:</strong> ${e.p.cost}</span>
+          <span class="txxs"><strong>Time:</strong> ${e.p.time}</span>
+          <span class="txxs txg"><strong>Salary impact:</strong> ${e.p.salary}</span>
+        </div>
+      </div>`).join('')}
+    </div>
+
+    <!-- BROWSE BY BRANCH -->
+    <div class="card"><div class="ch"><div class="cd"></div>Browse by Branch & Category</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px">
+        ${[
+          {ic:'⭐',lbl:'Army Enlisted',key:'army_enlisted'},
+          {ic:'🎖️',lbl:'Army Officers',key:'army_officer'},
+          {ic:'🔧',lbl:'Army Warrants',key:'army_warrant'},
+          {ic:'✈️',lbl:'Air Force Enlisted',key:'af_enlisted'},
+          {ic:'🦅',lbl:'AF Officers',key:'af_officer'},
+          {ic:'🦅',lbl:'USMC Enlisted',key:'usmc_enlisted'},
+          {ic:'⚓',lbl:'Navy Enlisted',key:'navy_enlisted'},
+          {ic:'🛡️',lbl:'Coast Guard',key:'cg_enlisted'},
+          {ic:'🚀',lbl:'Space Force',key:'sf_enlisted'},
+        ].map(b=>`<button class="btn btn-sm btn-o" style="justify-content:flex-start;gap:6px" onclick="crBrowse('${b.key}')">${b.ic} ${b.lbl}</button>`).join('')}
+      </div>
+      <div id="cr-browse-result" class="mt16"></div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="card"><div class="ch"><div class="cd"></div>Certification Notes & Progress</div>
+      <textarea rows="4" id="cr-notes" placeholder="Track your progress:&#10;Security+ — scheduled exam for [date]&#10;Study hours completed: ___&#10;COOL application submitted: [date]&#10;Exam passed: [date] | Score: ___">${(S.notes||{}).certs||''}</textarea>
+      <div class="ar"><button class="btn btn-sm btn-a" onclick="if(!S.notes)S.notes={};S.notes.certs=G('cr-notes').value;saveS();toast('✓ Notes saved')">💾 Save Notes</button></div>
+    </div>
+  `;
+}
+
+function crManualLookup(){
+  const v=(G('cr-mos-in')?.value||'').toLowerCase().trim().replace(/\s/g,'');
+  const el=G('cr-manual-result');if(!el)return;
+  // Search all sections
+  let found=null,foundKey='';
+  for(const section of Object.values(CERT_DB)){
+    if(typeof section!=='object')continue;
+    for(const [k,e] of Object.entries(section)){
+      if(k===v||k.startsWith(v)||v.startsWith(k)){found=e;foundKey=k;break;}
+    }
+    if(found)break;
+  }
+  if(found){
+    el.innerHTML=`<div class="alert al-s"><span class="ai">✅</span><span><strong>${foundKey.toUpperCase()} found:</strong> ${found.title}<br>Primary cert: <strong>${found.p.name}</strong> · ${found.p.cost} · ${found.p.time}</span></div>`;
+    S.user.mos=G('cr-mos-in').value;saveS();bCr();
+  } else {
+    el.innerHTML=`<div class="alert al-w"><span class="ai">🔍</span><span>MOS "${v.toUpperCase()}" not yet in database. Try: <a href="https://www.onetonline.org/crosswalk/MOC/" target="_blank" style="color:var(--am)">O*NET Military Crosswalk →</a></span></div>`;
+  }
+}
+
+function crBrowse(sectionKey){
+  const section=CERT_DB[sectionKey]||{};
+  const el=G('cr-browse-result');if(!el)return;
+  const entries=Object.entries(section);
+  if(!entries.length){el.innerHTML='<div class="txs txm">No entries for this section yet.</div>';return;}
+  el.innerHTML=`<div style="display:flex;flex-direction:column;gap:8px">${entries.map(([k,e])=>`
+    <div style="background:var(--surf2);border:1px solid var(--b1);border-radius:var(--r);padding:12px">
+      <div class="fxb mb4">
+        <div style="font-weight:700;font-size:13px;color:var(--nav)">${k.toUpperCase()} — ${e.title}</div>
+        <span class="badge ba">${e.p.name}</span>
+      </div>
+      <div class="txs txm mb4">${e.civ}</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <span class="txxs"><strong>Primary:</strong> ${e.p.name} · ${e.p.cost}</span>
+        <span class="txxs txg"><strong>${e.p.salary}</strong></span>
+        ${e.p.cool?'<span class="badge bg" style="font-size:9px">COOL Funded</span>':''}
+      </div>
+    </div>`).join('')}</div>`;
 }
 
 // ============================================================
