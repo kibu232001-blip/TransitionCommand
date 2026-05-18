@@ -953,10 +953,15 @@ window.addEventListener('DOMContentLoaded',()=>{
     G('splash').classList.add('out');
     setTimeout(()=>{
       G('splash').style.display='none';
-      if(isLicensed()){S.user&&S.user.name?launchApp():startWiz();}
-      else{showPaywall();}
+      try{
+        if(isLicensed()){S.user&&S.user.name?launchApp():startWiz();}
+        else{showPaywall();}
+      }catch(e){
+        console.error('Launch error:',e);
+        showPaywall();
+      }
     },520);
-  },3400);
+  },2800);
 });
 
 // ============================================================
@@ -1065,7 +1070,18 @@ function launchApp(){
   G('tbav').textContent=initials(u.name);
   G('menu-name').textContent=u.name||'—';
   G('menu-branch').textContent=[u.rank,BL(u.branch)].filter(Boolean).join(' · ')||'—';
-  bOv();bTk();bPl('A');bVA();bFi();bFa();bTl();bGo();bCal();bCo();bRe();bRs();
+  try{bOv();}catch(e){console.error('bOv error:',e);}
+  try{bTk();}catch(e){console.error('bTk error:',e);}
+  try{bPl('A');}catch(e){console.error('bPl error:',e);}
+  try{bVA();}catch(e){console.error('bVA error:',e);}
+  try{bFi();}catch(e){console.error('bFi error:',e);}
+  try{bFa();}catch(e){console.error('bFa error:',e);}
+  try{bTl();}catch(e){console.error('bTl error:',e);}
+  try{bGo();}catch(e){console.error('bGo error:',e);}
+  try{bCal();}catch(e){console.error('bCal error:',e);}
+  try{bCo();}catch(e){console.error('bCo error:',e);}
+  try{bRe();}catch(e){console.error('bRe error:',e);}
+  try{bRs();}catch(e){console.error('bRs error:',e);}
   window.addEventListener('scroll',()=>G('fab').classList.toggle('on',window.scrollY>180));
 }
 function goProfile(){wSt=0;G('onboard').classList.add('on');G('app').classList.remove('on');renderWiz();}
@@ -1899,7 +1915,7 @@ const CERT_DB = {
   allbranches: [
     {
       mos:['ALL'],
-      name:'Commercial Driver's License (CDL-A)',
+      name:'Commercial Driver\'s License (CDL-A)',
       provider:'FMCSA / State DMV',
       url:'https://www.fmcsa.dot.gov/registration/commercial-drivers-license/what-cdl',
       cool:'https://coolarmor.goarmy.com',
