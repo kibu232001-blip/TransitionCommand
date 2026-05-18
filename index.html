@@ -231,6 +231,180 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
 .pw-back{background:none;border:none;color:var(--tx3);font-size:12px;cursor:pointer;padding:8px 0;text-decoration:underline;display:block;margin:10px auto 0;font-family:var(--fb)}
 .pw-back:hover{color:var(--tx)}
 @media(max-width:520px){.pw-feats{grid-template-columns:1fr}.pw-box{padding:28px 22px}.pw-amt{font-size:44px}}
+
+/* ── TEMPLATE PREVIEW ── */
+.tk-actions{display:flex;align-items:center;gap:6px;margin-top:4px}
+.btn-tpl{background:rgba(200,136,26,.12);border:1px solid rgba(200,136,26,.25);color:#C8881A;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;position:relative}
+.btn-tpl:hover{background:rgba(200,136,26,.22)}
+.btn-link{background:rgba(26,95,168,.1);border:1px solid rgba(26,95,168,.2);color:#1A5FA8;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap}
+.btn-link:hover{background:rgba(26,95,168,.18)}
+.tpl-popup{position:fixed;z-index:999;background:#1B2B4B;border:1.5px solid rgba(200,136,26,.3);border-radius:12px;padding:16px 18px;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,.4);display:none}
+.tpl-popup.show{display:block}
+.tpl-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#C8881A;margin-bottom:10px}
+.tpl-sec{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,239,224,.4);margin:8px 0 4px}
+.tpl-item{font-size:12px;color:rgba(245,239,224,.75);padding:2px 0;display:flex;align-items:flex-start;gap:6px;line-height:1.45}
+.tpl-item::before{content:'•';color:#C8881A;flex-shrink:0}
+.tpl-warn{background:rgba(184,50,50,.12);border-left:2px solid #B83232;padding:6px 10px;border-radius:0 6px 6px 0;font-size:11px;color:#FF9090;margin-top:8px;line-height:1.5}
+.tpl-close{position:absolute;top:8px;right:10px;background:none;border:none;color:rgba(245,239,224,.4);cursor:pointer;font-size:16px}
+/* ── PRE-COMPLETION MODAL ── */
+.prereq-modal{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:flex;align-items:center;justify-content:center;display:none}
+.prereq-modal.show{display:flex}
+.prereq-box{background:#1B2B4B;border:1.5px solid rgba(200,136,26,.25);border-radius:16px;padding:24px;max-width:400px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.prereq-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#F5EFE0;margin-bottom:6px}
+.prereq-task{font-size:13px;color:#C8881A;font-weight:600;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(245,239,224,.08)}
+.prereq-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(245,239,224,.06);cursor:pointer}
+.prereq-item:last-of-type{border-bottom:none}
+.prereq-cb{width:18px;height:18px;border:2px solid rgba(245,239,224,.25);border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.prereq-cb.checked{background:#4A7C59;border-color:#4A7C59}
+.prereq-cb.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:800}
+.prereq-txt{font-size:13px;color:rgba(245,239,224,.7);line-height:1.5}
+.prereq-actions{display:flex;gap:8px;margin-top:16px}
+.prereq-skip{flex:1;padding:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(245,239,224,.5);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.prereq-confirm{flex:1;padding:10px;background:#4A7C59;border:none;color:#fff;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;opacity:.4;transition:opacity .2s}
+.prereq-confirm.ready{opacity:1}
+.prereq-link-row{background:rgba(26,95,168,.1);border:1px solid rgba(26,95,168,.2);border-radius:8px;padding:8px 12px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.prereq-link-lbl{font-size:11px;color:rgba(245,239,224,.5)}
+.prereq-link-btn{background:#1A5FA8;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
+/* ── DEMO TIMER ── */
+.demo-banner{background:linear-gradient(90deg,#8B2020,#B83232);padding:6px 16px;display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:#fff;display:none}
+.demo-banner.show{display:flex}
+.demo-timer{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:.08em;color:#FFCCCC}
+.demo-cta{background:#fff;color:#B83232;border:none;border-radius:6px;padding:4px 12px;font-size:11px;font-weight:800;cursor:pointer;text-decoration:none;letter-spacing:.06em;text-transform:uppercase}
+/* ── CERT TAB ── */
+.cert-branch-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.cert-btab{background:rgba(255,255,255,.06);border:1px solid rgba(27,43,75,.15);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;color:var(--tx2);transition:all .15s}
+.cert-btab.a{background:var(--nav);color:var(--navt);border-color:var(--nav)}
+.cert-card{background:var(--surf);border:1px solid var(--b1);border-radius:12px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden}
+.cert-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--ac)}
+.cert-name{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.cert-provider{font-size:11px;color:var(--tx3);margin-bottom:8px}
+.cert-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.cert-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;letter-spacing:.04em}
+.ct-cool{background:rgba(74,124,89,.12);color:#2A6639}
+.ct-cost{background:rgba(200,136,26,.1);color:#8B5000}
+.ct-salary{background:rgba(26,95,168,.1);color:#1A5FA8}
+.cert-desc{font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:10px}
+.cert-roadmap{background:var(--bg2);border-radius:8px;padding:10px 12px;margin-bottom:10px}
+.cert-rm-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:6px}
+.cert-rm-step{display:flex;gap:8px;font-size:11px;color:var(--tx2);padding:3px 0;align-items:flex-start}
+.cert-rm-mo{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--ac);min-width:60px;flex-shrink:0}
+.cert-actions{display:flex;gap:8px;flex-wrap:wrap}
+.cert-btn{border-radius:8px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;letter-spacing:.04em;border:none}
+.cert-btn-primary{background:var(--nav);color:var(--navt)}
+.cert-btn-primary:hover{background:var(--ac)}
+.cert-btn-secondary{background:var(--bg2);border:1px solid var(--b2);color:var(--tx2)}
+.cert-btn-secondary:hover{border-color:var(--ac);color:var(--ac)}
+
+/* ── GEOLOCATION ── */
+.geo-section{background:rgba(26,95,168,.08);border:1px solid rgba(26,95,168,.18);border-radius:10px;padding:12px 14px;margin-top:12px}
+.geo-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,239,224,.5);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.geo-btn{background:#1A5FA8;color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
+.geo-btn:hover{background:#2470C2}
+.geo-result{margin-top:10px;display:flex;flex-direction:column;gap:7px}
+.geo-center{background:rgba(255,255,255,.05);border:1px solid rgba(245,239,224,.08);border-radius:8px;padding:10px 12px}
+.geo-center-name{font-size:13px;font-weight:700;color:#F5EFE0;margin-bottom:2px}
+.geo-center-addr{font-size:11px;color:rgba(245,239,224,.5);margin-bottom:5px}
+.geo-center-meta{display:flex;gap:8px;flex-wrap:wrap}
+.geo-dist{background:rgba(74,124,89,.15);color:#6EBB85;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700}
+.geo-phone{color:rgba(245,239,224,.5);font-size:10px}
+.geo-dirs{background:rgba(200,136,26,.12);border:1px solid rgba(200,136,26,.2);color:#C8881A;border-radius:6px;padding:2px 9px;font-size:10px;font-weight:700;text-decoration:none;margin-left:auto}
+.geo-status{font-size:11px;color:rgba(245,239,224,.45);padding:4px 0;font-style:italic}
+
+/* ── 3D INSTALLATION MAP ── */
+.map3d-wrap{margin:16px 0}
+.map3d-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.map3d-sub{font-size:11px;color:var(--tx3);margin-bottom:14px}
+.iso-scene{position:relative;height:260px;overflow:hidden;background:linear-gradient(160deg,#E8F4FF 0%,#D4E8F0 100%);border-radius:12px;border:1px solid var(--b1);cursor:default}
+.iso-ground{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(180deg,#C8D8A8,#B8C898);clip-path:polygon(0 30px,100% 0,100% 100%,0 100%)}
+.iso-road-h{position:absolute;background:#9A9A8A;opacity:.6}
+.iso-road-v{position:absolute;background:#9A9A8A;opacity:.6}
+.iso-bldg{position:absolute;cursor:pointer;transition:filter .15s}
+.iso-bldg:hover{filter:brightness(1.15)}
+.iso-bldg:hover .iso-label{opacity:1;transform:translateY(-4px)}
+/* CSS isometric building parts */
+.iso-top{position:absolute;transform-origin:top left}
+.iso-front{position:absolute;transform-origin:top left}
+.iso-side{position:absolute;transform-origin:top right}
+.iso-label{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);white-space:nowrap;background:rgba(27,43,75,.88);color:#F5EFE0;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;opacity:0;transition:all .2s;pointer-events:none;z-index:10}
+.iso-bldg.highlighted .iso-top{filter:brightness(1.2) saturate(1.3)}
+.iso-bldg.highlighted .iso-label{opacity:1}
+.iso-ping{position:absolute;width:10px;height:10px;border-radius:50%;background:#C8881A;animation:isoPing 1.5s ease-in-out infinite}
+@keyframes isoPing{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.4}}
+.bldg-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:flex;align-items:center;justify-content:center;display:none}
+.bldg-modal-overlay.show{display:flex}
+.bldg-modal{background:#1B2B4B;border:1.5px solid rgba(200,136,26,.25);border-radius:14px;padding:22px;max-width:360px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.bldg-modal-icon{font-size:36px;margin-bottom:10px}
+.bldg-modal-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#F5EFE0;margin-bottom:4px}
+.bldg-modal-type{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#C8881A;margin-bottom:12px}
+.bldg-modal-desc{font-size:13px;color:rgba(245,239,224,.65);line-height:1.65;margin-bottom:14px}
+.bldg-modal-tips{background:rgba(200,136,26,.08);border-left:2px solid #C8881A;padding:10px 12px;border-radius:0 8px 8px 0;font-size:12px;color:rgba(245,239,224,.7);line-height:1.55;margin-bottom:14px}
+.bldg-modal-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(245,239,224,.6);border-radius:8px;padding:8px 20px;cursor:pointer;font-size:13px;font-weight:600;width:100%}
+
+/* ── CERTIFICATE ── */
+.cert-trigger{background:linear-gradient(135deg,#C8881A,#D9960F);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:0 3px 14px rgba(200,136,26,.35)}
+.cert-trigger:hover{background:#D9960F;transform:translateY(-1px)}
+@media print{
+  body>*:not(#cert-print-area){display:none!important}
+  #cert-print-area{display:block!important;position:fixed;inset:0;z-index:9999;background:#fff}
+}
+
+/* ── INTERACTIVE BODY MODEL ── */
+.body-wrap{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+.body-svg-wrap{position:relative;flex-shrink:0;text-align:center}
+.body-view-toggle{display:flex;gap:6px;justify-content:center;margin-bottom:8px}
+.bvt-btn{background:rgba(27,43,75,.07);border:1px solid var(--b2);border-radius:16px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer;color:var(--tx3);transition:all .15s}
+.bvt-btn.a{background:var(--nav);color:var(--navt);border-color:var(--nav)}
+.body-svg{width:160px;height:380px;display:block;margin:0 auto}
+.bp{cursor:pointer;transition:all .18s;fill-opacity:.85}
+.bp:hover{fill-opacity:1;filter:drop-shadow(0 0 6px rgba(200,136,26,.5))}
+.bp.selected{fill:#C8881A!important;fill-opacity:1;filter:drop-shadow(0 0 8px rgba(200,136,26,.6))}
+.bp.has-condition{fill:#B83232;fill-opacity:.7}
+.bp.has-condition.selected{fill:#C8881A;fill-opacity:1}
+.body-tip{font-size:10px;color:var(--tx3);text-align:center;margin-top:6px;font-style:italic}
+.body-right{flex:1;min-width:0}
+.body-region-popup{background:var(--nav);border-radius:12px;padding:16px;margin-bottom:12px;animation:fadeInUp .3s ease both}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.brp-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.brp-icon{font-size:24px}
+.brp-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#F5EFE0}
+.brp-sub{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,239,224,.4);margin-top:1px}
+.brp-conditions{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.brp-cond{background:rgba(255,255,255,.05);border:1px solid rgba(245,239,224,.08);border-radius:8px;padding:8px 10px;display:flex;align-items:flex-start;gap:8px;cursor:pointer;transition:all .15s}
+.brp-cond:hover{border-color:rgba(200,136,26,.3);background:rgba(200,136,26,.06)}
+.brp-cond.added{border-color:rgba(74,124,89,.4);background:rgba(74,124,89,.08)}
+.brp-cond-name{font-size:12px;font-weight:600;color:#F5EFE0;margin-bottom:2px}
+.brp-cond-rating{font-size:10px;color:#C8881A;font-weight:700}
+.brp-cond-note{font-size:10px;color:rgba(245,239,224,.45);line-height:1.4;margin-top:2px}
+.brp-add-btn{font-size:10px;font-weight:700;background:rgba(74,124,89,.15);border:1px solid rgba(74,124,89,.3);color:#6EBB85;border-radius:6px;padding:2px 8px;margin-left:auto;flex-shrink:0;cursor:pointer;white-space:nowrap;align-self:flex-start}
+.brp-cond.added .brp-add-btn{background:rgba(74,124,89,.25);color:#6EBB85}
+.brp-bring{background:rgba(200,136,26,.08);border-left:2px solid #C8881A;padding:8px 10px;border-radius:0 8px 8px 0;font-size:11px;color:rgba(245,239,224,.65);line-height:1.55;margin-bottom:10px}
+.brp-bring-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C8881A;margin-bottom:4px}
+.claimed-list{background:var(--bg2);border-radius:10px;padding:10px 12px}
+.claimed-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}
+.claimed-item{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--b1);font-size:12px;color:var(--tx)}
+.claimed-item:last-child{border-bottom:none}
+.claimed-remove{background:none;border:none;color:var(--tx4);cursor:pointer;font-size:14px;padding:0 2px;margin-left:auto}
+.claimed-remove:hover{color:var(--re)}
+.no-claims{font-size:12px;color:var(--tx3);font-style:italic;text-align:center;padding:8px 0}
+
+/* ── ISOMETRIC INSTALLATION MAP ── */
+.iso-wrap{position:relative;overflow:hidden;border-radius:12px;background:linear-gradient(145deg,#E8F0D8,#D0DCC0);border:1px solid rgba(27,43,75,.1);padding:0}
+.iso-canvas{display:block;width:100%;height:280px;cursor:default}
+.iso-legend{display:flex;gap:8px;flex-wrap:wrap;padding:10px 12px;background:rgba(27,43,75,.04);border-top:1px solid rgba(27,43,75,.08)}
+.iso-leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--tx2);font-weight:600}
+.iso-leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.iso-bldg-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:600;display:none;align-items:center;justify-content:center}
+.iso-bldg-modal.show{display:flex}
+.iso-bm-box{background:#1B2B4B;border:1.5px solid rgba(200,136,26,.3);border-radius:16px;padding:24px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.iso-bm-icon{font-size:40px;margin-bottom:10px}
+.iso-bm-name{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:#F5EFE0;margin-bottom:4px}
+.iso-bm-type{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#C8881A;margin-bottom:12px}
+.iso-bm-desc{font-size:13px;color:rgba(245,239,224,.65);line-height:1.65;margin-bottom:12px}
+.iso-bm-bring{background:rgba(200,136,26,.08);border-left:2px solid #C8881A;padding:9px 11px;border-radius:0 8px 8px 0;font-size:12px;color:rgba(245,239,224,.7);line-height:1.55;margin-bottom:8px}
+.iso-bm-bring b{color:#C8881A;display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.iso-bm-phone{font-size:11px;color:rgba(245,239,224,.4);margin-bottom:14px}
+.iso-bm-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(245,239,224,.6);border-radius:8px;padding:9px;cursor:pointer;font-size:13px;font-weight:600;width:100%}
+.iso-urgent-badge{display:inline-block;background:#B83232;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -344,6 +518,7 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
     <button class="tb" data-t="co" onclick="ot('co')">📨 Comms</button>
     <button class="tb" data-t="re" onclick="ot('re')">📄 Resume</button>
     <button class="tb" data-t="rs" onclick="ot('rs')">🔗 Resources</button>
+    <button class="tb" data-t="ct" onclick="ot('ct')">🎓 Certifications</button>
   </div>
   <div class="content">
     <div class="panel a" id="p-ov"></div>
@@ -358,6 +533,7 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
     <div class="panel" id="p-co"></div>
     <div class="panel" id="p-re"></div>
     <div class="panel" id="p-rs"></div>
+    <div class="panel" id="p-ct"></div>
   </div>
 </div>
 <button class="fab" id="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
@@ -439,7 +615,7 @@ const MOS_DB={
 
 const TCATS=[
   {id:'adm',label:'Administrative & Legal',icon:'📋',tasks:[
-    {id:'a1',text:'Request and verify DD-214 draft',detail:'Review every field before signing — errors require DD-215 amendments and cause VA claim delays',urg:'critical'},
+    {id:'a1',text:'Request and verify DD-214 draft',link:'https://www.archives.gov/veterans/military-service-records',template:{form:'DD-214',fields:['Character of Service','Separation Code','Reenlistment Code','Decorations & Awards','MOS/Rate/AFSC'],mistakes:['Wrong separation code delays VA claims','Missing awards require DD-215 amendment','Name/SSN errors cause DFAS payout issues']},prereqs:['I have reviewed all fields for accuracy','Character of service is correct','All awards and decorations are listed'],detail:'Review every field before signing — errors require DD-215 amendments and cause VA claim delays',urg:'critical'},
     {id:'a2',text:'Complete TAP/ACAP mandatory program',detail:'All workshops required before separation — register at least 6 months out',urg:'critical'},
     {id:'a3',text:'Update will and power of attorney (JAG)',detail:'Free on base — do this at minimum 90 days before separation',urg:'high'},
     {id:'a4',text:'Update SGLI life insurance beneficiaries',detail:'Review and update Servicemembers Group Life Insurance now',urg:'high'},
@@ -449,19 +625,19 @@ const TCATS=[
     {id:'a8',text:'Verify final pay routing in MyPay/DFAS',detail:'Confirm your civilian bank account is set up before final day',urg:'high'},
   ]},
   {id:'va',label:'VA & Healthcare',icon:'🏥',tasks:[
-    {id:'v1',text:'File VA disability claim — BDD (180-90 days out)',detail:'Benefits Delivery at Discharge: file before separation for fastest processing. File EVERYTHING.',urg:'critical'},
+    {id:'v1',text:'File VA disability claim — BDD (180-90 days out)',link:'https://www.va.gov/disability/how-to-file-claim/when-to-file/pre-discharge-claim/',template:{form:'VA Form 21-526EZ',fields:['All service-connected conditions listed','STRs attached','Buddy statements included','Private medical evidence'],mistakes:['Filing after separation loses back pay','Not claiming all conditions','Not connecting conditions to service']},prereqs:['I have listed ALL conditions including minor ones','I have attached my Service Treatment Records','I have contacted a VSO for review'],detail:'Benefits Delivery at Discharge: file before separation for fastest processing. File EVERYTHING.',urg:'critical'},
     {id:'v2',text:'Obtain complete Service Treatment Records (STR)',detail:'Request from your MTF — this is the single most important document for VA claims',urg:'critical'},
-    {id:'v3',text:'Enroll in VA healthcare (Form 10-10EZ)',detail:'Critical if you will not have TRICARE coverage post-separation',urg:'high'},
+    {id:'v3',text:'Enroll in VA healthcare (Form 10-10EZ)',link:'https://www.va.gov/health-care/apply/application/introduction',template:{form:'VA Form 10-10EZ',fields:['Financial information','Insurance information','Service information','DD-214 or Certificate of Release'],mistakes:['Waiting until after TRICARE ends creates coverage gap','Not reporting all health conditions at enrollment']},prereqs:['I have my DD-214 ready to attach','I know my service dates and discharge type'],detail:'Critical if you will not have TRICARE coverage post-separation',urg:'high'},
     {id:'v4',text:'Complete all dental work before separation',detail:'VA dental coverage is extremely limited after separation',urg:'high'},
     {id:'v5',text:'Get 90-day supply of all prescriptions',detail:'Bridge the coverage gap while VA or civilian pharmacy is established',urg:'high'},
     {id:'v6',text:'Finalize TRICARE transition plan',detail:'TRICARE Transitional Reserve, spouse plan, or ACA marketplace',urg:'high'},
     {id:'v7',text:'Document all service-connected conditions',detail:'Even minor issues — hearing loss, knee pain, back problems, sleep apnea, TBI',urg:'high'},
     {id:'v8',text:'Connect with a VSO for free claims help',detail:'DAV, VFW, American Legion — they do this for free and are better than doing it alone',urg:'medium'},
-    {id:'v9',text:'Schedule C&P exam — attend all appointments',detail:'Missing a C&P exam is the fastest way to get a 0% rating',urg:'critical'},
+    {id:'v9',text:'Schedule C&P exam — attend all appointments',link:'https://www.va.gov/disability/va-claim-exam/',template:{form:'C&P Exam Guidance',fields:['Describe your WORST day — not average','Bring buddy statements','Bring private medical records','Note functional limitations at work/home'],mistakes:['Saying you manage fine — VA rates worst day','Minimizing symptoms — be thorough and honest','Missing appointment — causes automatic 0% rating']},prereqs:['I know to describe my worst day not best day','I have attended or rescheduled ALL appointments','I have documentation of functional limitations'],detail:'Missing a C&P exam is the fastest way to get a 0% rating',urg:'critical'},
   ]},
   {id:'fin',label:'Finance & TSP',icon:'💰',tasks:[
-    {id:'f1',text:'Elect Survivor Benefit Plan (SBP) — retirees',detail:'IRREVOCABLE decision — protects family income if you die. Default is NO coverage.',urg:'critical'},
-    {id:'f2',text:'Decide TSP rollover strategy before separation',detail:'Penalty-free options: keep in TSP, roll to IRA, or roll to new employer plan',urg:'high'},
+    {id:'f1',text:'Elect Survivor Benefit Plan (SBP) — retirees',link:'https://militarypay.defense.gov/Benefits/SBP/',template:{form:'SBP Election Form',fields:['Election is IRREVOCABLE after 1 year','Spouse coverage = 55% of retirement pay','Premium = 6.5% of covered base pay','Option to elect children-only coverage'],mistakes:['Declining to save the monthly premium','Not understanding the irrevocable nature','Forgetting spouse has 1 year to request change']},prereqs:['I understand SBP is irrevocable after 1 year','I have discussed this decision with my spouse','I understand the cost vs. benefit calculation'],detail:'IRREVOCABLE decision — protects family income if you die. Default is NO coverage.',urg:'critical'},
+    {id:'f2',text:'Decide TSP rollover strategy before separation',link:'https://www.tsp.gov/tsp/withdrawals.html',template:{form:'TSP Withdrawal/Rollover',fields:['Option 1: Keep in TSP (.04% fee — lowest cost)','Option 2: Roll to Traditional IRA (more investment options)','Option 3: Roll to civilian 401(k)','Option 4: Cash out — 10% penalty + income tax'],mistakes:['Cashing out triggers 10% early withdrawal penalty','Not comparing TSP 0.04% fee to IRA options','Missing 60-day rollover window causes tax event']},prereqs:['I have compared all 4 options','I understand the 10% penalty for early withdrawal','I have NOT chosen the cash-out option without consulting a financial advisor'],detail:'Penalty-free options: keep in TSP, roll to IRA, or roll to new employer plan',urg:'high'},
     {id:'f3',text:'Build 6-month emergency fund',detail:'Target 3-6 months of living expenses saved before separation day',urg:'high'},
     {id:'f4',text:'Verify retirement pay amounts with DFAS',detail:'Call DFAS: 1-800-321-1080. Confirm monthly amount, start date, tax withholding',urg:'high'},
     {id:'f5',text:'Review credit score and reduce debt',detail:'Free check: annualcreditreport.com — VA loan requires solid credit',urg:'medium'},
@@ -471,7 +647,7 @@ const TCATS=[
   ]},
   {id:'hou',label:'Housing & Relocation',icon:'🏠',tasks:[
     {id:'h1',text:'Notify housing office of planned move-out date',detail:'BAH termination must be coordinated carefully',urg:'high'},
-    {id:'h2',text:'Research VA Home Loan benefit',detail:'Zero down payment for eligible veterans — get Certificate of Eligibility at VA.gov',urg:'medium'},
+    {id:'h2',text:'Research VA Home Loan benefit',link:'https://www.va.gov/housing-assistance/home-loans/eligibility/',template:{form:'Certificate of Eligibility (COE)',fields:['0% down payment for eligible veterans','No private mortgage insurance (PMI)','Competitive interest rates','VA funding fee waived for 10%+ disability rating'],mistakes:['Using FHA instead — costs 3.5% down + monthly MIP','Not getting COE before house hunting','Not knowing funding fee is waived with disability rating']},prereqs:['I have obtained my Certificate of Eligibility','I understand VA loan requires no down payment','I have compared VA loan vs. conventional loan costs'],detail:'Zero down payment for eligible veterans — get Certificate of Eligibility at VA.gov',urg:'medium'},
     {id:'h3',text:'Book household goods shipment (PPM or GTC)',detail:'Schedule early — peak summer dates fill months in advance',urg:'high'},
     {id:'h4',text:'Research schools if relocating with children',detail:'Contact the School Liaison Officer (SLO) on your installation for help',urg:'medium'},
     {id:'h5',text:'Update all addresses — DFAS, VA, banks, USPS',detail:'Official forward + every institution that mails you anything',urg:'high'},
@@ -480,7 +656,7 @@ const TCATS=[
   {id:'car',label:'Career & Education',icon:'💼',tasks:[
     {id:'c1',text:'Build civilian resume — translate MOS language',detail:'Use the Resume Builder tab. Lead with numbers and impact, not job descriptions.',urg:'critical'},
     {id:'c2',text:'Create and optimize LinkedIn profile',detail:'Professional photo, keyword-rich summary, connect with 50+ veterans in your field',urg:'high'},
-    {id:'c3',text:'Apply for GI Bill (Form 22-1990) if using',detail:'Allow 4-6 weeks processing — apply early if starting school right after separation',urg:'high'},
+    {id:'c3',text:'Apply for GI Bill (Form 22-1990) if using',link:'https://www.va.gov/education/apply-for-education-benefits/application/1990/introduction',template:{form:'VA Form 22-1990',fields:['Chapter 33 (Post-9/11) — most valuable for recent veterans','Chapter 30 (Montgomery) — if you contributed $100/mo during service','Chapter 1606 — Reserves/National Guard','Yellow Ribbon schools listed at va.gov/gi-bill-comparison-tool'],mistakes:['Not applying 4-6 weeks before school starts','Choosing Chapter 30 when Chapter 33 is better','Not using the GI Bill Comparison Tool for school/BAH research']},prereqs:['I have compared Chapter 33 vs Chapter 30 benefits','I have used the GI Bill comparison tool to check BAH','I have applied at least 4 weeks before my start date'],detail:'Allow 4-6 weeks processing — apply early if starting school right after separation',urg:'high'},
     {id:'c4',text:'Research and apply to target positions',detail:'USAJobs for federal, Hire Heroes USA for corporate, 10+ apps per week',urg:'high'},
     {id:'c5',text:'Research professional license reciprocity',detail:'CDL, EMT, FAA, HAZMAT, real estate — many military certifications convert',urg:'medium'},
     {id:'c6',text:'Join veterans professional networks',detail:'Hire Heroes USA, American Corporate Partners, LinkedIn Veterans community',urg:'medium'},
@@ -666,23 +842,79 @@ async function hashKey(orderPart){
 
 async function validateKey(key){
   const k=key.trim().toUpperCase();
+  // ── DEV KEY — permanent, never expires ──
+  if(k===DEV_KEY){
+    localStorage.setItem(LIC_KEY,JSON.stringify({key:k,valid:true,dev:true,date:new Date().toISOString()}));
+    return true;
+  }
+  // ── DEMO KEY — 30 minute expiration ──
+  if(k.startsWith(DEMO_PREFIX)){
+    const expiry=Date.now()+(30*60*1000);
+    localStorage.setItem(LIC_KEY,JSON.stringify({key:k,valid:true,demo:true,demoExpiry:expiry,date:new Date().toISOString()}));
+    return true;
+  }
+  // ── STANDARD TC KEY ──
   if(!/^TC-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}$/.test(k))return false;
-  // Extract hash prefix from key
-  const hashPart=k.replace(/^TC-/,'').replace(/-/g,'');
-  // Try all order IDs ORDER00001-ORDER99999
-  // For client-side: we validate by checking the key structure is self-consistent
-  // Full validation: key must have been generated from our known hash pattern
-  // We store validated key + a verification token in localStorage
   const stored=localStorage.getItem(LIC_KEY);
   if(stored){const p=JSON.parse(stored);if(p.key===k&&p.valid)return true;}
-  // For demo/launch: accept any correctly formatted key and store it
-  // Production upgrade: add server-side validation endpoint
   localStorage.setItem(LIC_KEY,JSON.stringify({key:k,valid:true,date:new Date().toISOString()}));
   return true;
 }
 
+// ── DEV + DEMO KEY CONSTANTS ──
+const DEV_KEY = 'KIBU-DEV-KIRK-2026';
+const DEMO_PREFIX = 'KIBU-DEMO-';
+let demoInterval = null;
+
 function isLicensed(){
-  try{const s=localStorage.getItem(LIC_KEY);if(!s)return false;const p=JSON.parse(s);return p&&p.valid===true&&p.key;}catch(e){return false;}
+  try{
+    // Check permanent dev key
+    const s=localStorage.getItem(LIC_KEY);
+    if(!s)return false;
+    const p=JSON.parse(s);
+    if(!p||!p.key)return false;
+    // Dev key — never expires
+    if(p.key===DEV_KEY)return true;
+    // Demo key — check expiration
+    if(p.key.startsWith(DEMO_PREFIX)){
+      if(!p.demoExpiry)return false;
+      if(Date.now()>p.demoExpiry){
+        showDemoExpired();
+        return false;
+      }
+      return true;
+    }
+    // Regular license key
+    return p.valid===true;
+  }catch(e){return false;}
+}
+
+function startDemoTimer(){
+  const s=localStorage.getItem(LIC_KEY);
+  if(!s)return;
+  const p=JSON.parse(s);
+  if(!p||!p.key||!p.key.startsWith(DEMO_PREFIX))return;
+  const banner=document.getElementById('demo-banner');
+  if(banner)banner.classList.add('show');
+  if(demoInterval)clearInterval(demoInterval);
+  demoInterval=setInterval(()=>{
+    const remaining=Math.max(0,p.demoExpiry-Date.now());
+    const mins=Math.floor(remaining/60000);
+    const secs=Math.floor((remaining%60000)/1000);
+    const el=document.getElementById('demo-timer');
+    if(el)el.textContent=mins+':'+(secs<10?'0':'')+secs;
+    if(remaining<=0){
+      clearInterval(demoInterval);
+      showDemoExpired();
+    }
+  },1000);
+}
+
+function showDemoExpired(){
+  const banner=document.getElementById('demo-banner');
+  if(banner){banner.style.background='#0D1520';banner.innerHTML='<span>⏰ Demo session expired</span><a href="https://kibuglobal.com" class="demo-cta" target="_blank">Buy Full Access — $39</a>';banner.classList.add('show');}
+  document.getElementById('app').classList.remove('on');
+  showPaywall();
 }
 
 function showPaywall(){
@@ -819,6 +1051,14 @@ function wAdv(){
 // ============================================================
 function launchApp(){
   G('onboard').classList.remove('on');G('app').classList.add('on');
+  startDemoTimer();
+  setTimeout(()=>{
+    // Init ISO map on overview
+    const canvas=document.getElementById('iso-canvas');
+    if(canvas){canvas.addEventListener('click',isoMapClick);renderIsoMap('iso-canvas');}
+    // Attach body click handlers
+    attachBodyClicks();
+  }, 200);
   const u=S.user;
   G('tbn').textContent=u.name||'Service Member';
   G('tbr2').textContent=[u.rank,BL(u.branch)].filter(Boolean).join(' · ');
@@ -870,6 +1110,9 @@ function ot(id){
   document.querySelector('[data-t="'+id+'"]').classList.add('a');
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='ca')renderCal();
+  if(id==='ct')bCt();
+  if(id==='ov'){bOv();setTimeout(()=>{const c=document.getElementById('iso-canvas');if(c){c.addEventListener('click',isoMapClick);renderIsoMap('iso-canvas');}},100);}
+  if(id==='va'){bVA();setTimeout(attachBodyClicks,100);}
 }
 
 // ============================================================
@@ -900,7 +1143,12 @@ function bOv(){
   `;
   const all=TCATS.flatMap(c=>c.tasks.filter(t=>t.urg==='critical'||t.urg==='high'));
   const pend=all.filter(t=>!S.tasks[t.id]).slice(0,5);
-  G('ov-tl').innerHTML=pend.length?pend.map(t=>`<li class="cr${S.tasks[t.id]?' dn':''}" onclick="qToggle('${t.id}',this)"><div class="cb"></div><div class="cc"><div class="cm">${t.text}</div><div class="cme">${t.detail}</div></div><div class="crr"><span class="badge ${t.urg==='critical'?'br':'bam'}">${t.urg}</span></div></li>`).join(''):'<li style="padding:12px 0;color:var(--gr);font-weight:600;font-size:14px">✅ All priority tasks complete — outstanding work!</li>';
+  G('ov-tl').innerHTML=pend.length?pend.map(t=>`<li class="cr${S.tasks[t.id]?' dn':''}" data-tid="${t.id}" onclick="taskClick(event,'${t.id}',this)"><div class="cb"></div><div class="cc"><div class="cm">${t.text}</div><div class="cme">${t.detail}</div>
+                ${(t.link||t.template)?`<div class="tk-actions">
+                  ${t.link?`<a href="${t.link}" target="_blank" class="btn-link">↗ Official Resource</a>`:''}
+                  ${t.template?`<button class="btn-tpl" onclick="event.stopPropagation();showTpl(TCATS.flatMap(c=>c.tasks).find(x=>x.id==='${t.id}'),this)">📋 Form Preview</button>`:''}
+                </div>`:''}
+              </div><div class="crr"><span class="badge ${t.urg==='critical'?'br':'bam'}">${t.urg}</span></div></li>`).join(''):'<li style="padding:12px 0;color:var(--gr);font-weight:600;font-size:14px">✅ All priority tasks complete — outstanding work!</li>';
   G('ov-snap').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;font-size:13px">
     <span class="txf">Separation:</span><span>${u.sepType||'Not set'}</span>
     <span class="txf">Branch:</span><span>${BL(u.branch)}</span>
@@ -930,7 +1178,12 @@ function bTk(){
       </div>
       <div class="pt"><div class="pf" style="width:${cp}%"></div></div>
       <ul class="cl" id="tcat-${cat.id}">
-        ${cat.tasks.map(t=>`<li class="cr${S.tasks[t.id]?' dn':''}" onclick="togTk('${t.id}',this)"><div class="cb"></div><div class="cc"><div class="cm">${t.text}</div><div class="cme">${t.detail}</div></div><div class="crr"><span class="badge ${t.urg==='critical'?'br':t.urg==='high'?'bam':t.urg==='medium'?'bbl':'bm'}">${t.urg}</span></div></li>`).join('')}
+        ${cat.tasks.map(t=>`<li class="cr${S.tasks[t.id]?' dn':''}" data-tid="${t.id}" onclick="taskClick(event,'${t.id}',this)"><div class="cb"></div><div class="cc"><div class="cm">${t.text}</div><div class="cme">${t.detail}</div>
+                ${(t.link||t.template)?`<div class="tk-actions">
+                  ${t.link?`<a href="${t.link}" target="_blank" class="btn-link">↗ Official Resource</a>`:''}
+                  ${t.template?`<button class="btn-tpl" onclick="event.stopPropagation();showTpl(TCATS.flatMap(c=>c.tasks).find(x=>x.id==='${t.id}'),this)">📋 Form Preview</button>`:''}
+                </div>`:''}
+              </div><div class="crr"><span class="badge ${t.urg==='critical'?'br':t.urg==='high'?'bam':t.urg==='medium'?'bbl':'bm'}">${t.urg}</span></div></li>`).join('')}
       </ul>
     </div>`;
   });
@@ -939,7 +1192,7 @@ function bTk(){
     <div class="pt mb16"><div class="pf" id="tk-bar" style="width:0"></div></div>${html}`;
   upTkProg();
 }
-function togTk(id,row){S.tasks[id]=!S.tasks[id];row.classList.toggle('dn',S.tasks[id]);saveS();upTkProg();bOv();}
+function togTk(id,row){S.tasks[id]=!S.tasks[id];row.classList.toggle('dn',!!S.tasks[id]);saveS();upTkProg();bOv();toast(S.tasks[id]?'✅ Task complete':'↩ Task reopened');}
 function toggleCat(lid,hdr){const l=G(lid);const id=lid.replace('tcat-','');const a=G('tarr-'+id);if(!l)return;const h=l.style.display==='none';l.style.display=h?'block':'none';if(a)a.textContent=h?'▾':'▸';}
 function upTkProg(){
   const tot=TCATS.reduce((n,c)=>n+c.tasks.length,0);
@@ -1001,6 +1254,7 @@ function savePlan(){
 function bVA(){
   const u=S.user,isR=(u.sepType||'').toLowerCase().includes('retirement');
   G('p-va').innerHTML=`<div class="ph">VA & Medical</div><div class="psub">Benefits claims, healthcare transition, and medical records strategy</div>
+    ${buildBodySection()}
     <div class="alert al-w"><span class="ai">⚠️</span><span><strong>File your VA claim before separation.</strong> Your active-duty records are fully accessible now. Every undocumented condition is compensation you may lose permanently. File everything — even minor issues.</span></div>
     <div class="card"><div class="ch"><div class="cd"></div>Your VA Status</div>
       <div class="sg" style="margin-bottom:14px">
@@ -1323,11 +1577,1254 @@ function bRs(){
     ${RESOURCES.map(s=>`<div class="card"><div class="ch"><div class="cd"></div>${s.cat}</div>${s.items.map(i=>`<div class="res-i"><div class="res-ic">${i.ic}</div><div style="flex:1"><div class="res-n">${i.n}</div><div class="res-d">${i.d}</div><a href="${i.u}" target="_blank" class="txxs txa mt8" style="text-decoration:none">🔗 ${i.u.replace('https://','').replace('http://','')}</a></div></div>`).join('')}</div>`).join('')}`;
 }
 
+
+// ============================================================
+// PREREQ MODAL + TEMPLATE PREVIEW
+// ============================================================
+let _prereqTask=null,_prereqChecked=new Set();
+
+function showPrereq(task){
+  if(!task.prereqs||!task.prereqs.length){
+    // No prereqs — just complete it
+    completeTask(task.id);
+    return;
+  }
+  _prereqTask=task;
+  _prereqChecked=new Set();
+  document.getElementById('prereq-task-name').textContent=task.text;
+  // Link row
+  const lr=document.getElementById('prereq-link-row');
+  if(task.link){
+    lr.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;background:rgba(26,95,168,.1);border:1px solid rgba(26,95,168,.2);border-radius:8px;padding:8px 12px;margin-bottom:14px"><span style="font-size:11px;color:rgba(245,239,224,.5)">Visit official resource first</span><a href="${task.link}" target="_blank" class="prereq-link-btn" style="background:#1A5FA8;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none">Open Resource ↗</a></div>`;
+  } else {
+    lr.innerHTML='';
+  }
+  // Checklist
+  const items=document.getElementById('prereq-items');
+  items.innerHTML=task.prereqs.map((p,i)=>`
+    <div class="prereq-item" onclick="togglePrereq(${i})">
+      <div class="prereq-cb" id="pcb-${i}"></div>
+      <div class="prereq-txt">${p}</div>
+    </div>`).join('');
+  document.getElementById('prereq-modal').classList.add('show');
+  updatePrereqBtn();
+}
+
+function togglePrereq(i){
+  const cb=document.getElementById('pcb-'+i);
+  if(_prereqChecked.has(i)){_prereqChecked.delete(i);cb.classList.remove('checked');}
+  else{_prereqChecked.add(i);cb.classList.add('checked');}
+  updatePrereqBtn();
+}
+
+function updatePrereqBtn(){
+  const btn=document.getElementById('prereq-confirm-btn');
+  const allChecked=_prereqTask&&_prereqChecked.size>=Math.ceil(_prereqTask.prereqs.length/2);
+  btn.classList.toggle('ready',allChecked);
+}
+
+function prereqDone(){
+  if(!_prereqTask)return;
+  completeTask(_prereqTask.id);
+  document.getElementById('prereq-modal').classList.remove('show');
+  _prereqTask=null;
+}
+
+function prereqSkip(){
+  if(!_prereqTask)return;
+  completeTask(_prereqTask.id);
+  document.getElementById('prereq-modal').classList.remove('show');
+  _prereqTask=null;
+}
+
+
+function taskClick(e,id,row){
+  // If already done, untoggle
+  if(S.tasks[id]){S.tasks[id]=false;row.classList.remove('dn');saveS();upTkProg();bOv();return;}
+  // Find the task object
+  const task=TCATS.flatMap(c=>c.tasks).find(t=>t.id===id);
+  if(task&&(task.prereqs||task.link)){
+    showPrereq(task);
+  } else {
+    completeTask(id);
+  }
+}
+
+function completeTask(id){
+  S.tasks[id]=true;
+  const row=document.querySelector('[data-tid="'+id+'"]');
+  if(row)row.classList.add('dn');
+  saveS();upTkProg();bOv();
+  toast('✅ Task marked complete');
+}
+
+function showTpl(task,btn){
+  if(!task.template)return;
+  const tpl=task.template;
+  const popup=document.getElementById('tpl-popup');
+  document.getElementById('tpl-content').innerHTML=`
+    <div class="tpl-title">📋 ${tpl.form}</div>
+    <div class="tpl-sec">Key Fields</div>
+    ${tpl.fields.map(f=>`<div class="tpl-item">${f}</div>`).join('')}
+    <div class="tpl-sec">Common Mistakes</div>
+    <div class="tpl-warn">${tpl.mistakes.map(m=>`⚠️ ${m}`).join('<br>')}</div>
+    ${task.link?`<div style="margin-top:10px"><a href="${task.link}" target="_blank" style="color:#C8881A;font-size:11px;font-weight:700">↗ Open Official Form/Resource</a></div>`:''}
+  `;
+  const rect=btn.getBoundingClientRect();
+  popup.style.top=(rect.bottom+8)+'px';
+  popup.style.left=Math.min(rect.left,window.innerWidth-360)+'px';
+  popup.classList.add('show');
+  // Close on outside click
+  setTimeout(()=>document.addEventListener('click',closeTplOutside),100);
+}
+
+function closeTpl(){
+  document.getElementById('tpl-popup').classList.remove('show');
+  document.removeEventListener('click',closeTplOutside);
+}
+
+function closeTplOutside(e){
+  const popup=document.getElementById('tpl-popup');
+  if(popup&&!popup.contains(e.target)){closeTpl();}
+}
+
+// ============================================================
+// CERTIFICATIONS TAB
+// ============================================================
+const CERT_DB = {
+  army: [
+    {
+      mos:['25B','25U'],
+      name:'CompTIA Security+',
+      provider:'CompTIA',
+      url:'https://www.comptia.org/certifications/security',
+      cool:'https://coolarmor.goarmy.com',
+      cost:'$370 exam (Army COOL covers it)',
+      coolFunded:true,
+      salary:'+$10,000–$20,000/yr (DoD 8570 baseline)',
+      desc:'The mandatory DoD 8570 baseline certification for IT security roles. Army COOL covers the exam fee for 25B/25U. Opens immediately to federal IT security and help desk supervision.',
+      roadmap:[
+        {mo:'Now–Month 2',act:'Apply for Army COOL funding at coolarmor.goarmy.com. Free Professor Messer course on YouTube.'},
+        {mo:'Month 3',act:'Schedule and pass Security+ exam. Cost: $0 with COOL voucher.'},
+        {mo:'Month 4–6',act:'Apply to GS-9 IT Security Specialist positions on USAJobs. Target $60–75K.'},
+      ]
+    },
+    {
+      mos:['25B','25N','17C'],
+      name:'AWS Cloud Practitioner',
+      provider:'Amazon Web Services',
+      url:'https://aws.amazon.com/certification/certified-cloud-practitioner/',
+      cool:'https://coolarmor.goarmy.com',
+      cost:'$100 exam',
+      coolFunded:false,
+      salary:'+$10,000–$15,000/yr entry boost',
+      desc:'Entry-level cloud certification. The fastest path from IT MOS to cloud roles paying $80–95K. Study time is 4–6 weeks. Stacks powerfully with Security+.',
+      roadmap:[
+        {mo:'Month 1–2',act:'Free AWS training at aws.amazon.com/training. Use AWS free tier account to practice.'},
+        {mo:'Month 3',act:'Schedule exam — $100, passes most take 1-2 attempts.'},
+        {mo:'Month 4+',act:'Target cloud support and junior cloud architect roles.'},
+      ]
+    },
+    {
+      mos:['68W'],
+      name:'EMT-Basic (NREMT)',
+      provider:'NREMT',
+      url:'https://www.nremt.org/rwd/public/document/emt',
+      cool:'https://coolarmor.goarmy.com',
+      cost:'$120 exam (COOL may cover)',
+      coolFunded:true,
+      salary:'$35,000–$55,000 base + benefits',
+      desc:'68W experience directly maps to civilian EMT certification. COOL covers the NREMT exam. Fastest path to immediate employment in healthcare.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Apply for Army COOL NREMT voucher. Complete any refresher training required by state.'},
+        {mo:'Month 1',act:'Register at NREMT.org. Submit military experience documentation.'},
+        {mo:'Month 2',act:'Pass cognitive and psychomotor exams. Apply for state license.'},
+      ]
+    },
+    {
+      mos:['91B','91S','91X'],
+      name:'ASE Automotive Certification',
+      provider:'ASE (National Institute for Auto Service)',
+      url:'https://www.ase.com/tests-certifications/',
+      cool:'https://coolarmor.goarmy.com',
+      cost:'$36–$107 per test (COOL may cover)',
+      coolFunded:true,
+      salary:'$45,000–$75,000 as master tech',
+      desc:'91B vehicle mechanic experience directly earns ASE credit. Become ASE Master Technician by passing all 8 tests. COOL covers exam fees.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Apply for COOL funding. Get service records documenting vehicles maintained.'},
+        {mo:'Month 1–3',act:'Study ASE test content. Take tests in your specialty areas first.'},
+        {mo:'Month 4–12',act:'Complete all 8 tests for Master Tech designation. Highest pay tier.'},
+      ]
+    },
+  ],
+  navy: [
+    {
+      mos:['IT','CTN','CTI'],
+      name:'CompTIA Security+',
+      provider:'CompTIA',
+      url:'https://www.comptia.org/certifications/security',
+      cool:'https://www.cool.navy.mil',
+      cost:'$370 exam (Navy COOL covers it)',
+      coolFunded:true,
+      salary:'+$10,000–$20,000/yr (DoD 8570 baseline)',
+      desc:'Navy COOL covers Security+ for IT and CT rates. The fastest DoD 8570 baseline cert to open federal cybersecurity roles.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Apply at cool.navy.mil. Review eligibility for your rate.'},
+        {mo:'Month 1–2',act:'Study with Professor Messer (free) and CompTIA study materials.'},
+        {mo:'Month 3',act:'Take exam with COOL voucher — $0 out of pocket.'},
+      ]
+    },
+    {
+      mos:['HM'],
+      name:'EMT-Basic or Paramedic',
+      provider:'NREMT',
+      url:'https://www.nremt.org',
+      cool:'https://www.cool.navy.mil',
+      cost:'$120–$240 (COOL may cover)',
+      coolFunded:true,
+      salary:'$35,000–$65,000 (Paramedic significantly higher)',
+      desc:'HM rate directly qualifies for EMT and often Paramedic depending on NEC. COOL covers NREMT registration. Immediate employment on separation.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Apply for COOL funding. Request military service documentation from MTF.'},
+        {mo:'Month 1',act:'Register at NREMT.org and submit Navy training records.'},
+        {mo:'Month 2',act:'Pass NREMT exams. Apply for state licensure and civilian positions.'},
+      ]
+    },
+  ],
+  airforce: [
+    {
+      mos:['3D0X2','3D1X2','1B4X1'],
+      name:'CompTIA Security+ / CySA+',
+      provider:'CompTIA',
+      url:'https://www.comptia.org/certifications/security',
+      cool:'https://www.cool.af.mil',
+      cost:'$370–$494 (AF COOL covers)',
+      coolFunded:true,
+      salary:'+$15,000–$30,000/yr cybersecurity premium',
+      desc:'USAF cyber AFSCs translate directly to civilian SOC analyst and cybersecurity engineer roles. COOL covers Security+ and CySA+. TS/SCI clearance + cert = premium salary.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Apply at cool.af.mil. Both Security+ and CySA+ are COOL-eligible for 3D0X2.'},
+        {mo:'Month 1–2',act:'Pass Security+ first (prerequisite for CySA+).'},
+        {mo:'Month 3',act:'Pass CySA+. Target SOC analyst roles at $80–110K with TS/SCI.'},
+      ]
+    },
+    {
+      mos:['2A3X3','2A5X1','2A6X2'],
+      name:'FAA Airframe & Powerplant (A&P)',
+      provider:'FAA',
+      url:'https://www.faa.gov/mechanics/become',
+      cool:'https://www.cool.af.mil',
+      cost:'$150–$300 (COOL may cover)',
+      coolFunded:true,
+      salary:'$60,000–$100,000+ airline mechanics',
+      desc:'USAF aviation maintenance AFSCs qualify for FAA A&P license. Airlines actively recruit military-trained mechanics. Delta, United, American all have veteran hiring programs.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Apply for COOL funding. Request all training records from 781s and AF Form 623.'},
+        {mo:'Month 1–2',act:'Apply to FAA FSDO with military documentation. Written, oral, and practical exams.'},
+        {mo:'Month 3+',act:'Apply to airline mechanics programs. Signing bonuses of $5,000–$15,000 common.'},
+      ]
+    },
+  ],
+  marines: [
+    {
+      mos:['0651','2651','2671'],
+      name:'CompTIA Security+',
+      provider:'CompTIA',
+      url:'https://www.comptia.org/certifications/security',
+      cool:'https://www.cool.usmc.mil',
+      cost:'$370 (COOL covers for eligible MOSs)',
+      coolFunded:true,
+      salary:'+$10,000–$20,000/yr DoD baseline',
+      desc:'USMC COOL covers Security+ for signal and IT MOSs. Essential DoD 8570 cert for federal and defense contractor IT roles.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Apply at cool.usmc.mil. Confirm MOS eligibility.'},
+        {mo:'Month 1–2',act:'Study and take exam with COOL voucher.'},
+        {mo:'Month 3+',act:'Target GS-9 IT positions and cleared contractor roles.'},
+      ]
+    },
+    {
+      mos:['0311','0331','0341','0351'],
+      name:'Project Management Professional (PMP)',
+      provider:'Project Management Institute',
+      url:'https://www.pmi.org/certifications/project-management-pmp',
+      cool:'https://www.cool.usmc.mil',
+      cost:'$555 members / $405 (TA may cover)',
+      coolFunded:false,
+      salary:'+$15,000–$30,000/yr average PMP premium',
+      desc:'Infantry leadership experience — squad leader, platoon sergeant — directly maps to civilian project management. PMP is the civilian standard and opens corporate and federal program management roles.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Verify 36 months of project leadership experience (military counts). Apply for TA while active.'},
+        {mo:'Month 1–3',act:'Complete 35-hour PMP prep course (PMBOK). Study for exam.'},
+        {mo:'Month 3–4',act:'Pass PMP exam. Target program manager roles at $85–120K.'},
+      ]
+    },
+  ],
+  coastguard: [
+    {
+      mos:['MK','ENG'],
+      name:'USCG Merchant Mariner Credential (MMC)',
+      provider:'US Coast Guard / NMC',
+      url:'https://www.dco.uscg.mil/national-maritime-center/',
+      cool:'https://www.cool.uscg.mil',
+      cost:'$95–$140 (COOL may cover)',
+      coolFunded:true,
+      salary:'$55,000–$120,000 merchant marine',
+      desc:'CG MK rate directly earns Merchant Mariner Credentials with minimal additional testing. Opens high-paying maritime employment including offshore and commercial shipping.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Apply for MMC at NMC. Submit sea service documentation from CG.'},
+        {mo:'Month 1–2',act:'Complete any required additional training. Take needed STCW endorsements.'},
+        {mo:'Month 2+',act:'Apply to maritime companies, offshore oil, commercial shipping. High demand.'},
+      ]
+    },
+  ],
+  spacefore: [
+    {
+      mos:['1C6X1','17S3'],
+      name:'AWS Solutions Architect',
+      provider:'Amazon Web Services',
+      url:'https://aws.amazon.com/certification/certified-solutions-architect-associate/',
+      cool:'https://www.cool.af.mil',
+      cost:'$150 exam',
+      coolFunded:false,
+      salary:'$110,000–$160,000 cloud architect',
+      desc:'Space Force cyber and space operations backgrounds align directly with cloud architecture roles. AWS Solutions Architect is the most valued cloud cert for $100K+ roles.',
+      roadmap:[
+        {mo:'Month 1–3',act:'Complete AWS free training. Adrian Cantrill course is the gold standard ($40).'},
+        {mo:'Month 3',act:'Take SAA-C03 exam ($150). One of the highest-value certifications in tech.'},
+        {mo:'Month 4+',act:'Target cloud architect and DevSecOps roles. Defense contractors actively hiring.'},
+      ]
+    },
+  ],
+  allbranches: [
+    {
+      mos:['ALL'],
+      name:'Commercial Driver's License (CDL-A)',
+      provider:'FMCSA / State DMV',
+      url:'https://www.fmcsa.dot.gov/registration/commercial-drivers-license/what-cdl',
+      cool:'https://coolarmor.goarmy.com',
+      cost:'$3,000–$7,000 training (GI Bill covers)',
+      coolFunded:false,
+      salary:'$55,000–$95,000 OTR trucker',
+      desc:'Military drivers (88M, 91B, any with vehicle operator MOS) can waive certain CDL tests with military experience. GI Bill covers CDL school. Massive national shortage means immediate hiring.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Request military driving documentation. Check state CDL waiver rules for military drivers.'},
+        {mo:'Month 1',act:'Apply GI Bill to accredited CDL school (3–6 weeks program).'},
+        {mo:'Month 2',act:'Pass state CDL-A exam. Most companies pay signing bonuses of $5,000–$15,000.'},
+      ]
+    },
+    {
+      mos:['ALL-OFFICER'],
+      name:'Project Management Professional (PMP)',
+      provider:'Project Management Institute',
+      url:'https://www.pmi.org/certifications/project-management-pmp',
+      cool:null,
+      cost:'$555 members (TA may cover while active)',
+      coolFunded:false,
+      salary:'+$15,000–$30,000/yr PMP premium',
+      desc:'Every officer with command, staff, or program experience qualifies for PMP. The #1 certification for translating officer leadership to corporate program management. Required for many GS-13+ federal positions.',
+      roadmap:[
+        {mo:'Pre-separation',act:'Verify 36 months leadership experience (military qualifies). Apply for TA while active.'},
+        {mo:'Month 1–3',act:'Complete 35-hour PMP prep course. Study PMBOK Guide 7th edition.'},
+        {mo:'Month 3–4',act:'Pass exam. Immediate access to $90–130K program management roles.'},
+      ]
+    },
+  ]
+};
+
+let certBranch = 'army';
+
+function bCt(){
+  const u=S.user;
+  const br=(u.branch||'army').toLowerCase();
+  certBranch=br;
+  renderCertTab();
+}
+
+function renderCertTab(){
+  const branches=['army','navy','airforce','marines','coastguard','spacefore','allbranches'];
+  const branchLabels={army:'⭐ Army',navy:'⚓ Navy',airforce:'✈️ Air Force',marines:'🦅 Marines',coastguard:'🛡️ Coast Guard',spacefore:'🚀 Space Force',allbranches:'🌐 All Branches'};
+  const certs=(CERT_DB[certBranch]||[]).concat(CERT_DB.allbranches||[]);
+  
+  G('p-ct').innerHTML=`
+    <div class="ph">Certification Roadmaps</div>
+    <div class="psub">MOS/Rate/AFSC-specific certification paths — including which certifications your branch will pay for through COOL before you separate</div>
+    <div class="cert-branch-tabs">
+      ${branches.map(b=>`<button class="cert-btab${b===certBranch?' a':''}" onclick="certBranch='${b}';renderCertTab()">${branchLabels[b]}</button>`).join('')}
+    </div>
+    ${certs.length===0?'<div class="alert al-i"><span class="ai">ℹ️</span><span>Select your branch above to see certification roadmaps</span></div>':
+    certs.map(c=>`
+      <div class="cert-card">
+        <div class="cert-name">${c.name}</div>
+        <div class="cert-provider">${c.provider}${c.mos[0]!=='ALL'&&c.mos[0]!=='ALL-OFFICER'?' · Relevant MOS/Rate: '+c.mos.join(', '):''}</div>
+        <div class="cert-meta">
+          ${c.coolFunded?`<span class="cert-tag ct-cool">✅ COOL Funded — $0 Out of Pocket</span>`:`<span class="cert-tag ct-cost">💰 ${c.cost}</span>`}
+          <span class="cert-tag ct-salary">📈 ${c.salary}</span>
+        </div>
+        <div class="cert-desc">${c.desc}</div>
+        <div class="cert-roadmap">
+          <div class="cert-rm-title">📅 18-Month Roadmap</div>
+          ${c.roadmap.map(r=>`<div class="cert-rm-step"><span class="cert-rm-mo">${r.mo}</span><span>${r.act}</span></div>`).join('')}
+        </div>
+        <div class="cert-actions">
+          <a href="${c.url}" target="_blank" class="cert-btn cert-btn-primary">↗ Official Certification Site</a>
+          ${c.cool?`<a href="${c.cool}" target="_blank" class="cert-btn cert-btn-secondary">🎯 Apply for COOL Funding</a>`:''}
+          ${c.coolFunded?`<span class="cert-tag ct-cool" style="align-self:center;margin-left:4px">Free — Apply Before Separation</span>`:''}
+        </div>
+      </div>`).join('')}
+  `;
+}
+
+
+// ============================================================
+// BODY REGIONS DATABASE
+// ============================================================
+const BODY_REGIONS = {
+  head:{name:'Head / Brain',icon:'🧠',sub:'TBI · Migraines · PTSD',
+    conditions:[
+      {name:'Traumatic Brain Injury (TBI)',rating:'0–100%',note:'Any blast exposure within 50m, vehicle accident, or fall causing head injury qualifies. File even if you were "just near" an explosion.'},
+      {name:'Chronic Migraines',rating:'0–50%',note:'Document frequency (how many per month) and functional impact. 50% if completely prostrating 1x/month or more.'},
+      {name:'PTSD / Anxiety / Depression',rating:'0–100%',note:'Combat exposure, MST, or any qualifying stressor. Most impactful claim — file with mental health provider statements.'},
+    ],
+    bring:'STRs for any head injury. Mental health treatment records. Buddy statements for blast events. Line-of-duty determinations.',
+    tip:'TBI is the most under-claimed condition. Blast exposure — even without direct impact — qualifies. The VA looks for 1+ symptom in each of 3 categories.'},
+  ears:{name:'Ears / Hearing',icon:'👂',sub:'Tinnitus · Hearing Loss',
+    conditions:[
+      {name:'Tinnitus (Ringing in Ears)',rating:'10% (flat rate)',note:'The #1 most claimed VA condition. Constant or recurring ringing, buzzing, or hissing. File separately for each ear — rates are combined.'},
+      {name:'Bilateral Hearing Loss',rating:'0–100%',note:'Requires audiology test (pure tone audiometry). File before separation — VA audiology is free during transition. Rating based on speech recognition score.'},
+      {name:'Acoustic Neuroma',rating:'30–60%',note:'Tumor on auditory nerve from noise exposure. Rare but service-connected if noise exposure documented.'},
+    ],
+    bring:'Audiology records from MTF. Any documentation of noise exposure (ranges, aircraft, generators, explosions).',
+    tip:'Hearing loss is bilateral by default from military service. Get audiogram before separation — it is free and establishes baseline.'},
+  eyes:{name:'Eyes / Vision',icon:'👁️',sub:'Vision Loss · Eye Injuries',
+    conditions:[
+      {name:'Decreased Visual Acuity',rating:'0–30% per eye',note:'Service-related vision deterioration. Common from digital work, UV exposure in desert environments, and blast concussive waves.'},
+      {name:'Eye Injuries / Scarring',rating:'Varies',note:'Any combat or training injury to the eye qualifies. Document with STRs and ophthalmology records.'},
+    ],
+    bring:'Ophthalmology records. Any STR documentation of eye injury or treatment.',
+    tip:'Get a full eye exam at the MTF before separation to document baseline vision at time of separation.'},
+  neck:{name:'Neck / Cervical Spine',icon:'🦴',sub:'Cervical Strain · DDD · Nerve Damage',
+    conditions:[
+      {name:'Cervical Strain / Sprain',rating:'10–30%',note:'Range of motion is the primary rating factor. Document worst-day ROM, not average. Body armor and rucksacks are established causes.'},
+      {name:'Cervical Degenerative Disc Disease',rating:'10–40%',note:'Degenerative changes accelerated by military service (carrying loads, vehicle operations). Needs imaging (X-ray/MRI).'},
+      {name:'Cervical Radiculopathy',rating:'20–40% per arm',note:'Nerve pain/numbness radiating into arms. Rated separately from the cervical condition — double your claim.'},
+    ],
+    bring:'X-rays or MRI imaging. STRs documenting neck treatment. Buddy statements about load-carrying duties.',
+    tip:'Rate cervical spine AND each radiculopathy separately. This is one of the highest-value multi-condition claims.'},
+  lshoulder:{name:'Left Shoulder',icon:'💪',sub:'Rotator Cuff · SLAP · Impingement',
+    conditions:[
+      {name:'Rotator Cuff Tear/Tendinitis',rating:'10–40%',note:'Range of motion (flexion, abduction, rotation) determines rating. Document your worst-day range.'},
+      {name:'SLAP Tear',rating:'10–30%',note:'Common from load-bearing, rucksacks, overhead pressing. Confirm with MRI. Often requires surgery.'},
+      {name:'Shoulder Impingement',rating:'10–20%',note:'Chronic impingement from repetitive military tasks qualifies. Must show ROM limitation.'},
+    ],
+    bring:'X-rays, MRI. STRs for any shoulder treatment. Buddy statements about duty-specific tasks.',
+    tip:'File each shoulder separately. Left and right are rated independently.'},
+  rshoulder:{name:'Right Shoulder',icon:'💪',sub:'Rotator Cuff · SLAP · Impingement',
+    conditions:[
+      {name:'Rotator Cuff Tear/Tendinitis',rating:'10–40%',note:'Range of motion (flexion, abduction, rotation) determines rating. Document your worst-day range.'},
+      {name:'SLAP Tear',rating:'10–30%',note:'Common from load-bearing, rucksacks, overhead pressing. Confirm with MRI. Often requires surgery.'},
+      {name:'Shoulder Impingement',rating:'10–20%',note:'Chronic impingement from repetitive military tasks qualifies. Must show ROM limitation.'},
+    ],
+    bring:'X-rays, MRI. STRs for any shoulder treatment. Buddy statements about duty-specific tasks.',
+    tip:'File each shoulder separately. Left and right are rated independently.'},
+  chest:{name:'Chest / Lungs',icon:'🫁',sub:'Asthma · Sleep Apnea · Burn Pit Exposure',
+    conditions:[
+      {name:'Sleep Apnea (with CPAP)',rating:'50% (flat rate if prescribed CPAP)',note:'50% if on CPAP. Automatic. Get a sleep study before separation — if prescribed CPAP you get 50% immediately. One of the highest-value single claims.'},
+      {name:'Asthma / Reactive Airway Disease',rating:'10–100%',note:'Burn pit exposure (Iraq/Afghanistan) is a direct nexus. Document any deployment to Southwest Asia — PACT Act expanded eligibility significantly.'},
+      {name:'Pulmonary Conditions (PACT Act)',rating:'Varies',note:'Post-9/11 veterans with Southwest Asia deployments presumptively qualify for respiratory conditions under PACT Act 2022.'},
+    ],
+    bring:'Sleep study results. Any respiratory treatment records. Deployment orders to SWA for PACT Act claims.',
+    tip:'SLEEP APNEA IS AUTOMATIC AT 50% WITH CPAP. This is the single most valuable quick claim. Get a sleep study at the MTF before your last day.'},
+  abdomen:{name:'Abdomen / Digestive',icon:'🫀',sub:'GERD · IBS · Hernia',
+    conditions:[
+      {name:'GERD / Acid Reflux',rating:'10–30%',note:'Chronic stress, diet disruptions, and deployment conditions are established causes. Very common. Usually 10%.'},
+      {name:'Irritable Bowel Syndrome (IBS)',rating:'10–30%',note:'Combat stress, deployment diet, and contaminated water are nexus points. Document frequency and functional impact.'},
+      {name:'Inguinal Hernia',rating:'0–30%',note:'Heavy lifting duties, ruck marching, and field conditions. If surgically repaired, still rate the residuals.'},
+    ],
+    bring:'GI treatment records. Gastroenterology consults. STRs for any abdominal surgery.',
+    tip:'GERD and IBS are often overlooked. Even if managed, file — ratings compound with other conditions.'},
+  lback:{name:'Lower Back / Lumbar',icon:'🦴',sub:'Lumbar DDD · Strain · Radiculopathy',
+    conditions:[
+      {name:'Lumbar Strain / DDD',rating:'10–40%',note:'The most commonly claimed musculoskeletal condition. Rucksack, body armor, and vehicle operations are direct nexus. Rating based on flexion range of motion.'},
+      {name:'Lumbar Degenerative Disc Disease',rating:'10–40%',note:'Imaging (MRI/X-ray) documents the damage. Military load-bearing accelerates DDD. Common in infantry, SF, aviation.'},
+      {name:'Lumbar Radiculopathy',rating:'10–40% per leg',note:'Nerve pain radiating down legs (sciatica). Rate separately from the lumbar condition — can significantly increase combined rating.'},
+    ],
+    bring:'MRI or X-ray imaging. STRs for back treatment. Buddy statements about load-bearing duties.',
+    tip:'LOWER BACK IS THE #1 CLAIM BY VOLUME. File lumbar strain + DDD + each radiculopathy separately — they combine for dramatically higher ratings.'},
+  uback:{name:'Upper Back / Thoracic',icon:'🦴',sub:'Thoracic Strain · Scoliosis',
+    conditions:[
+      {name:'Thoracic Strain',rating:'10–20%',note:'Body armor and rucksack weight concentrate stress on the thoracic spine. Document treatment history.'},
+      {name:'Thoracic DDD / Scoliosis',rating:'10–30%',note:'Pre-existing scoliosis may be aggravated by military service. Imaging required.'},
+    ],
+    bring:'X-ray/MRI. STRs for thoracic treatment.',
+    tip:'Often combined with cervical and lumbar claims. All three can be filed simultaneously.'},
+  lhip:{name:'Left Hip',icon:'🦴',sub:'Hip Bursitis · IT Band · Labral Tear',
+    conditions:[
+      {name:'Hip Bursitis / Trochanteric Pain',rating:'10–20%',note:'Marching, rucksacking, and running on hard surfaces are established service nexus. Document limited ROM.'},
+      {name:'Hip Labral Tear',rating:'10–30%',note:'Confirm with MRI arthrogram. Common in infantry and combat arms from high-impact activity.'},
+    ],
+    bring:'MRI imaging. STRs for hip treatment. Buddy statements about marching/physical duties.',
+    tip:'File hips separately (left vs. right). Each rates independently.'},
+  rhip:{name:'Right Hip',icon:'🦴',sub:'Hip Bursitis · IT Band · Labral Tear',
+    conditions:[
+      {name:'Hip Bursitis / Trochanteric Pain',rating:'10–20%',note:'Marching, rucksacking, and running on hard surfaces are established service nexus. Document limited ROM.'},
+      {name:'Hip Labral Tear',rating:'10–30%',note:'Confirm with MRI arthrogram. Common in infantry and combat arms from high-impact activity.'},
+    ],
+    bring:'MRI imaging. STRs for hip treatment.',
+    tip:'File hips separately (left vs. right). Each rates independently.'},
+  lknee:{name:'Left Knee',icon:'🦵',sub:'ACL · Meniscus · Patellofemoral',
+    conditions:[
+      {name:'Patellofemoral Syndrome',rating:'10–20%',note:'The most common knee condition in military veterans. Running, jumping, carrying loads on uneven terrain. Document ROM and any instability.'},
+      {name:'Meniscus Tear',rating:'10–20%',note:'Medial or lateral meniscus. Confirm with MRI. Even if surgically repaired, rate the residuals.'},
+      {name:'ACL/MCL/PCL Tears',rating:'10–30%',note:'Traumatic or degenerative from high-impact military activity. Rate each ligament separately if multiple are involved.'},
+    ],
+    bring:'MRI. STRs for knee treatment or surgery. Any physical therapy records.',
+    tip:'KNEES ARE THE #2 CLAIM BY VOLUME. Rate each ligament separately. Even healed knees can have ratable residuals.'},
+  rknee:{name:'Right Knee',icon:'🦵',sub:'ACL · Meniscus · Patellofemoral',
+    conditions:[
+      {name:'Patellofemoral Syndrome',rating:'10–20%',note:'The most common knee condition in military veterans. Running, jumping, carrying loads on uneven terrain.'},
+      {name:'Meniscus Tear',rating:'10–20%',note:'Medial or lateral meniscus. Even if surgically repaired, rate the residuals.'},
+      {name:'ACL/MCL/PCL Tears',rating:'10–30%',note:'Traumatic or degenerative. Rate each ligament separately if multiple involved.'},
+    ],
+    bring:'MRI. STRs for knee treatment or surgery. Physical therapy records.',
+    tip:'File left and right knees separately — they rate independently.'},
+  lankle:{name:'Left Ankle / Foot',icon:'🦶',sub:'Plantar Fasciitis · Ankle Instability',
+    conditions:[
+      {name:'Plantar Fasciitis',rating:'0–30%',note:'Extremely common from prolonged marching and physical training. Document morning pain and functional limitation.'},
+      {name:'Ankle Instability / Sprains',rating:'10–20%',note:'Chronic instability from repeated ankle sprains during service. Document frequency and functional limitations.'},
+      {name:'Flat Feet (Pes Planus)',rating:'0–50%',note:'Secondary to marching and load bearing. Often symptomatic in veterans. Rate as acquired, not congenital.'},
+    ],
+    bring:'STRs for ankle/foot treatment. Any orthopedic consult records.',
+    tip:'Plantar fasciitis and ankle instability are often dismissed by veterans as minor. File everything — they add to combined rating.'},
+  rankle:{name:'Right Ankle / Foot',icon:'🦶',sub:'Plantar Fasciitis · Ankle Instability',
+    conditions:[
+      {name:'Plantar Fasciitis',rating:'0–30%',note:'Extremely common from prolonged marching and physical training. Document morning pain and functional limitation.'},
+      {name:'Ankle Instability / Sprains',rating:'10–20%',note:'Chronic instability from repeated ankle sprains during service. Document frequency and functional limitations.'},
+      {name:'Flat Feet (Pes Planus)',rating:'0–50%',note:'Secondary to marching and load bearing. Often symptomatic in veterans.'},
+    ],
+    bring:'STRs for ankle/foot treatment. Any orthopedic consult records.',
+    tip:'File left and right feet/ankles separately — they rate independently.'},
+  mental:{name:'Mental Health',icon:'🧩',sub:'PTSD · Depression · Anxiety · MST',
+    conditions:[
+      {name:'PTSD',rating:'0–100%',note:'Combat exposure, MST, or any traumatic stressor during service. 70% is the key threshold — above this, Individual Unemployability may apply. MOST IMPORTANT MENTAL HEALTH CLAIM.'},
+      {name:'Major Depressive Disorder',rating:'0–70%',note:'Often secondary to PTSD or service-connected conditions. File as both primary and secondary — both paths are valid.'},
+      {name:'Military Sexual Trauma (MST)',rating:'0–100%',note:'VA has a dedicated MST coordinator at every facility. Nexus can be established without official report. Private and confidential process.'},
+    ],
+    bring:'Mental health treatment records. Private therapist letters. Buddy statements. For MST: personal statement is sufficient as nexus.',
+    tip:'PTSD at 70%+ combined with other conditions may qualify you for 100% TDIU (Total Disability Individual Unemployability) — equivalent to 100% rating in benefits.'},
+};
+
+// Stored claimed conditions
+if(!S.va) S.va={};
+if(!S.va.claimed) S.va.claimed=[];
+
+let activeBodyRegion = null;
+let bodyView = 'front'; // front or back
+
+function renderBodyDiagram() {
+  const front = bodyView === 'front';
+  
+  // SVG paths for human body silhouette
+  const bodyPath = front ? `
+    <!-- HEAD -->
+    <ellipse cx="80" cy="38" rx="28" ry="32" class="bp body-fill-head" data-region="head" id="bp-head"/>
+    <!-- EARS -->
+    <ellipse cx="52" cy="38" rx="7" ry="10" class="bp body-fill-ear" data-region="ears" id="bp-learing"/>
+    <ellipse cx="108" cy="38" rx="7" ry="10" class="bp body-fill-ear" data-region="ears" id="bp-rearing"/>
+    <!-- NECK -->
+    <rect x="71" y="67" width="18" height="16" rx="4" class="bp body-fill-neck" data-region="neck"/>
+    <!-- SHOULDERS -->
+    <ellipse cx="42" cy="100" rx="19" ry="14" class="bp body-fill-shoulder" data-region="lshoulder" id="bp-lsh"/>
+    <ellipse cx="118" cy="100" rx="19" ry="14" class="bp body-fill-shoulder" data-region="rshoulder" id="bp-rsh"/>
+    <!-- UPPER ARMS -->
+    <rect x="24" y="108" width="18" height="55" rx="9" class="bp body-fill-arm" data-region="lshoulder"/>
+    <rect x="118" y="108" width="18" height="55" rx="9" class="bp body-fill-arm" data-region="rshoulder"/>
+    <!-- FOREARMS -->
+    <rect x="20" y="168" width="15" height="48" rx="7" class="bp body-fill-arm2" data-region="lshoulder"/>
+    <rect x="125" y="168" width="15" height="48" rx="7" class="bp body-fill-arm2" data-region="rshoulder"/>
+    <!-- HANDS -->
+    <ellipse cx="27" cy="225" rx="9" ry="11" class="bp body-fill-hand" data-region="lshoulder"/>
+    <ellipse cx="133" cy="225" rx="9" ry="11" class="bp body-fill-hand" data-region="rshoulder"/>
+    <!-- CHEST/TORSO -->
+    <path d="M55,83 Q45,90 42,100 L42,150 Q42,158 55,160 L105,160 Q118,158 118,150 L118,100 Q115,90 105,83 Z" class="bp body-fill-chest" data-region="chest"/>
+    <!-- ABDOMEN -->
+    <path d="M50,158 L50,200 Q50,210 60,212 L100,212 Q110,210 110,200 L110,158 Z" class="bp body-fill-abdomen" data-region="abdomen"/>
+    <!-- EYES indicator -->
+    <ellipse cx="69" cy="34" rx="7" ry="5" class="bp body-fill-eye" data-region="eyes"/>
+    <ellipse cx="91" cy="34" rx="7" ry="5" class="bp body-fill-eye" data-region="eyes"/>
+    <!-- HIPS -->
+    <path d="M50,208 Q44,215 44,228 L44,250 L75,250 L75,208 Z" class="bp body-fill-hip" data-region="lhip"/>
+    <path d="M85,208 L85,250 L116,250 L116,228 Q116,215 110,208 Z" class="bp body-fill-hip" data-region="rhip"/>
+    <!-- THIGHS -->
+    <rect x="46" y="248" width="27" height="65" rx="12" class="bp body-fill-thigh" data-region="lknee"/>
+    <rect x="87" y="248" width="27" height="65" rx="12" class="bp body-fill-thigh" data-region="rknee"/>
+    <!-- KNEES -->
+    <ellipse cx="59" cy="322" rx="14" ry="12" class="bp body-fill-knee" data-region="lknee"/>
+    <ellipse cx="101" cy="322" rx="14" ry="12" class="bp body-fill-knee" data-region="rknee"/>
+    <!-- CALVES -->
+    <rect x="49" y="332" width="21" height="60" rx="10" class="bp body-fill-calf" data-region="lankle"/>
+    <rect x="90" y="332" width="21" height="60" rx="10" class="bp body-fill-calf" data-region="rankle"/>
+    <!-- ANKLES/FEET -->
+    <ellipse cx="59" cy="400" rx="13" ry="9" class="bp body-fill-ankle" data-region="lankle"/>
+    <ellipse cx="101" cy="400" rx="13" ry="9" class="bp body-fill-ankle" data-region="rankle"/>
+    <ellipse cx="55" cy="408" rx="18" ry="7" class="bp body-fill-foot" data-region="lankle"/>
+    <ellipse cx="105" cy="408" rx="18" ry="7" class="bp body-fill-foot" data-region="rankle"/>
+    <!-- MENTAL HEALTH INDICATOR -->
+    <circle cx="80" cy="38" r="12" class="bp body-fill-mental" data-region="mental" opacity="0.0" id="mental-overlay"/>
+  ` : `
+    <!-- BACK VIEW -->
+    <!-- HEAD BACK -->
+    <ellipse cx="80" cy="38" rx="28" ry="32" class="bp body-fill-head" data-region="head"/>
+    <!-- EARS BACK -->
+    <ellipse cx="52" cy="38" rx="7" ry="10" class="bp body-fill-ear" data-region="ears"/>
+    <ellipse cx="108" cy="38" rx="7" ry="10" class="bp body-fill-ear" data-region="ears"/>
+    <!-- NECK BACK -->
+    <rect x="71" y="67" width="18" height="16" rx="4" class="bp body-fill-neck" data-region="neck"/>
+    <!-- SHOULDERS BACK -->
+    <ellipse cx="42" cy="100" rx="19" ry="14" class="bp body-fill-shoulder" data-region="lshoulder"/>
+    <ellipse cx="118" cy="100" rx="19" ry="14" class="bp body-fill-shoulder" data-region="rshoulder"/>
+    <!-- UPPER ARMS BACK -->
+    <rect x="24" y="108" width="18" height="55" rx="9" class="bp body-fill-arm" data-region="lshoulder"/>
+    <rect x="118" y="108" width="18" height="55" rx="9" class="bp body-fill-arm" data-region="rshoulder"/>
+    <!-- FOREARMS BACK -->
+    <rect x="20" y="168" width="15" height="48" rx="7" class="bp body-fill-arm2" data-region="lshoulder"/>
+    <rect x="125" y="168" width="15" height="48" rx="7" class="bp body-fill-arm2" data-region="rshoulder"/>
+    <!-- HANDS BACK -->
+    <ellipse cx="27" cy="225" rx="9" ry="11" class="bp body-fill-hand" data-region="lshoulder"/>
+    <ellipse cx="133" cy="225" rx="9" ry="11" class="bp body-fill-hand" data-region="rshoulder"/>
+    <!-- UPPER BACK -->
+    <path d="M55,83 Q45,90 42,100 L42,160 Q55,165 80,165 Q105,165 118,160 L118,100 Q115,90 105,83 Z" class="bp body-fill-uback" data-region="uback"/>
+    <!-- LOWER BACK -->
+    <path d="M50,162 L50,215 Q60,220 80,220 Q100,220 110,215 L110,162 Z" class="bp body-fill-lback" data-region="lback"/>
+    <!-- GLUTES/HIPS BACK -->
+    <path d="M50,213 Q44,220 44,235 L44,255 L75,255 L75,213 Z" class="bp body-fill-hip" data-region="lhip"/>
+    <path d="M85,213 L85,255 L116,255 L116,235 Q116,220 110,213 Z" class="bp body-fill-hip" data-region="rhip"/>
+    <!-- THIGHS BACK -->
+    <rect x="46" y="252" width="27" height="65" rx="12" class="bp body-fill-thigh" data-region="lknee"/>
+    <rect x="87" y="252" width="27" height="65" rx="12" class="bp body-fill-thigh" data-region="rknee"/>
+    <!-- KNEES BACK -->
+    <ellipse cx="59" cy="326" rx="14" ry="12" class="bp body-fill-knee" data-region="lknee"/>
+    <ellipse cx="101" cy="326" rx="14" ry="12" class="bp body-fill-knee" data-region="rknee"/>
+    <!-- CALVES BACK -->
+    <rect x="49" y="336" width="21" height="58" rx="10" class="bp body-fill-calf" data-region="lankle"/>
+    <rect x="90" y="336" width="21" height="58" rx="10" class="bp body-fill-calf" data-region="rankle"/>
+    <!-- ANKLES/FEET BACK -->
+    <ellipse cx="59" cy="400" rx="13" ry="9" class="bp body-fill-ankle" data-region="lankle"/>
+    <ellipse cx="101" cy="400" rx="13" ry="9" class="bp body-fill-ankle" data-region="rankle"/>
+    <ellipse cx="64" cy="408" rx="14" ry="7" class="bp body-fill-foot" data-region="lankle"/>
+    <ellipse cx="96" cy="408" rx="14" ry="7" class="bp body-fill-foot" data-region="rankle"/>
+  `;
+
+  return `
+  <defs>
+    <linearGradient id="g-skin" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4A574;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#A67C52;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="g-selected" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D9960F;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#A06A0A;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .body-fill-head{fill:url(#g-skin)} .body-fill-ear{fill:#C49262} .body-fill-neck{fill:#C8956A}
+      .body-fill-shoulder{fill:#BF8C60} .body-fill-arm{fill:#C49262} .body-fill-arm2{fill:#BA8858}
+      .body-fill-hand{fill:#C49262} .body-fill-chest{fill:#C8956A} .body-fill-abdomen{fill:#C08860}
+      .body-fill-eye{fill:#4A3020;opacity:.7} .body-fill-hip{fill:#BA8858}
+      .body-fill-thigh{fill:#C49262} .body-fill-knee{fill:#B07848}
+      .body-fill-calf{fill:#BA8858} .body-fill-ankle{fill:#A87040} .body-fill-foot{fill:#A06838}
+      .body-fill-uback{fill:#C08060} .body-fill-lback{fill:#B87850}
+      .body-fill-mental{fill:transparent}
+      .bp.selected{fill:url(#g-selected)!important}
+    </style>
+  </defs>
+  ${bodyPath}
+  `;
+}
+
+function buildBodySection() {
+  const claimed = (S.va && S.va.claimed) ? S.va.claimed : [];
+  return `
+  <div class="card" id="body-card">
+    <div class="ch"><div class="cd"></div>📍 Condition Locator — Click Your Pain Points</div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:12px;line-height:1.6">
+      Click on any body area to see common VA conditions, typical rating percentages, and what to bring to your C&P exam. Selected areas build your conditions list automatically.
+    </div>
+    <div class="body-wrap">
+      <div class="body-svg-wrap">
+        <div class="body-view-toggle">
+          <button class="bvt-btn ${bodyView==='front'?'a':''}" onclick="bodyView='front';rebuildBodySection()">Front</button>
+          <button class="bvt-btn ${bodyView==='back'?'a':''}" onclick="bodyView='back';rebuildBodySection()">Back</button>
+        </div>
+        <svg class="body-svg" viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg">
+          ${renderBodyDiagram()}
+        </svg>
+        <div class="body-tip">Tap any area to explore conditions</div>
+        ${bodyView==='back'?'<div class="body-tip" style="color:var(--ac);font-weight:600">↻ Back view — lower back & upper back visible</div>':''}
+      </div>
+      <div class="body-right" id="body-right-panel">
+        ${activeBodyRegion ? buildRegionPanel(activeBodyRegion) : buildClaimedPanel()}
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildRegionPanel(regionId) {
+  const r = BODY_REGIONS[regionId];
+  if(!r) return buildClaimedPanel();
+  const claimed = (S.va && S.va.claimed) ? S.va.claimed : [];
+  return `
+  <div class="body-region-popup">
+    <div class="brp-header">
+      <span class="brp-icon">${r.icon}</span>
+      <div><div class="brp-name">${r.name}</div><div class="brp-sub">${r.sub}</div></div>
+    </div>
+    <div class="brp-conditions">
+      ${r.conditions.map((c,i)=>{
+        const isAdded = claimed.some(cl=>cl.name===c.name);
+        return `<div class="brp-cond${isAdded?' added':''}" id="cond-${regionId}-${i}">
+          <div style="flex:1">
+            <div class="brp-cond-name">${c.name}</div>
+            <div class="brp-cond-rating">⭐ Typical Rating: ${c.rating}</div>
+            <div class="brp-cond-note">${c.note}</div>
+          </div>
+          <button class="brp-add-btn" onclick="toggleClaim('${regionId}',${i},'${c.name.replace(/'/g,"\\'")}','${c.rating}')">
+            ${isAdded?'✓ Added':'+ Add to Claim'}
+          </button>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="brp-bring"><div class="brp-bring-lbl">📁 What to Bring to C&P Exam</div>${r.bring}</div>
+    <div style="background:rgba(74,124,89,.08);border-left:2px solid #4A7C59;padding:8px 10px;border-radius:0 8px 8px 0;font-size:11px;color:rgba(245,239,224,.7);line-height:1.55">
+      💡 <strong style="color:#6EBB85">Veteran Tip:</strong> ${r.tip}
+    </div>
+  </div>
+  ${buildClaimedPanel()}`;
+}
+
+function buildClaimedPanel() {
+  const claimed = (S.va && S.va.claimed) ? S.va.claimed : [];
+  return `
+  <div class="claimed-list">
+    <div class="claimed-title">
+      <span>My Conditions to Claim (${claimed.length})</span>
+      ${claimed.length>0?`<button onclick="exportClaimedToVA()" style="background:var(--ac);color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:10px;font-weight:700;cursor:pointer">→ Add to VA Notes</button>`:''}
+    </div>
+    ${claimed.length===0?`<div class="no-claims">Click body parts above to add conditions to your claim list</div>`:
+      claimed.map((c,i)=>`<div class="claimed-item">
+        <span style="font-size:12px">🔴</span>
+        <div style="flex:1"><div style="font-weight:600">${c.name}</div><div style="font-size:10px;color:var(--tx3)">${c.rating}</div></div>
+        <button class="claimed-remove" onclick="removeClaim(${i})">✕</button>
+      </div>`).join('')}
+  </div>`;
+}
+
+function toggleClaim(regionId, condIdx, condName, condRating) {
+  if(!S.va) S.va={};
+  if(!S.va.claimed) S.va.claimed=[];
+  const exists = S.va.claimed.findIndex(c=>c.name===condName);
+  if(exists>=0){
+    S.va.claimed.splice(exists,1);
+    toast('Condition removed from claim list');
+  } else {
+    S.va.claimed.push({name:condName,rating:condRating,region:regionId});
+    toast('✅ Added to your claim list');
+  }
+  saveS();
+  rebuildBodySection();
+}
+
+function removeClaim(idx){
+  if(!S.va||!S.va.claimed)return;
+  S.va.claimed.splice(idx,1);
+  saveS();
+  rebuildBodySection();
+}
+
+function exportClaimedToVA(){
+  const claimed = (S.va&&S.va.claimed)||[];
+  if(!claimed.length)return;
+  const txt = claimed.map(c=>`• ${c.name} (Typical: ${c.rating})`).join('\n');
+  const existing = (S.va.cond||'').trim();
+  const sep = existing ? '\n\n--- Added from Condition Locator ---\n' : '';
+  S.va.cond = existing + sep + txt;
+  saveS();
+  const el = document.getElementById('va-cond');
+  if(el){el.value=S.va.cond;el.style.borderColor='var(--gr)';setTimeout(()=>el.style.borderColor='',1500);}
+  toast('✅ Conditions added to VA notes');
+}
+
+function bodyPartClick(e){
+  const regionId = e.currentTarget.dataset.region || e.target.dataset.region;
+  if(!regionId||!BODY_REGIONS[regionId])return;
+  activeBodyRegion = regionId;
+  rebuildBodySection();
+  // Highlight all parts of this region
+  document.querySelectorAll('.bp').forEach(bp=>{
+    bp.classList.toggle('selected', bp.dataset.region===regionId);
+  });
+  const panel = document.getElementById('body-right-panel');
+  if(panel) panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function rebuildBodySection(){
+  const card = document.getElementById('body-card');
+  if(!card)return;
+  const wrap = card.parentNode;
+  const idx = Array.from(wrap.children).indexOf(card);
+  card.outerHTML = buildBodySection();
+  // Re-attach click events
+  setTimeout(attachBodyClicks, 50);
+}
+
+function attachBodyClicks(){
+  document.querySelectorAll('.bp').forEach(bp=>{
+    bp.addEventListener('click', bodyPartClick);
+    // Mark selected
+    bp.classList.toggle('selected', bp.dataset.region===activeBodyRegion);
+    // Mark has-condition
+    const claimed=(S.va&&S.va.claimed)||[];
+    const region=BODY_REGIONS[bp.dataset.region];
+    if(region){
+      const hasClaim=region.conditions.some(c=>claimed.some(cl=>cl.name===c.name));
+      bp.classList.toggle('has-condition', hasClaim&&bp.dataset.region!==activeBodyRegion);
+    }
+  });
+}
+
+// ============================================================
+// ISOMETRIC INSTALLATION MAP
+// ============================================================
+const ISO_BUILDINGS = [
+  {
+    id:'acap',name:'ACAP / TAP Center',icon:'🎯',
+    type:'Army Career & Alumni Program / Transition Assistance Program',
+    desc:'Your mandatory transition headquarters. Hosts all required TAP workshops, offers one-on-one career counseling, resume reviews, and interview prep. Every separating service member MUST attend.',
+    bring:'DD-214 (draft), resume draft, civilian job target list, questions about your transition timeline.',
+    phone:'Contact your installation directory — search "[installation name] ACAP"',
+    urgency:'critical',color:'#4A7C59',x:120,y:60,w:80,h:50,depth:25
+  },
+  {
+    id:'finance',name:'Finance / DFAS',icon:'💰',
+    type:'Finance Office / Defense Finance & Accounting Service',
+    desc:'Handles your final pay, back pay reconciliation, TSP elections, allotments termination, and direct deposit changes. Must visit before separation day.',
+    bring:'Bank account routing/account numbers, TSP rollover decision, allotment list, retirement pay questions.',
+    phone:'DFAS Retired/Annuitant Pay: 1-800-321-1080',
+    urgency:'high',color:'#1A5FA8',x:260,y:100,w:70,h:40,depth:22
+  },
+  {
+    id:'jag',name:'JAG / Legal Services',icon:'⚖️',
+    type:'Judge Advocate General Office',
+    desc:'Free legal services for active duty and separating members. Handles wills, powers of attorney, separation agreements, name changes on DD-214, and general legal questions.',
+    bring:'Any legal documents needing review, questions about separation agreements, will update needs.',
+    phone:'Contact your installation directory — search "[installation name] Legal Assistance"',
+    urgency:'high',color:'#6B2D8B',x:60,y:130,w:70,h:45,depth:22
+  },
+  {
+    id:'medical',name:'TriCare / MTF',icon:'🏥',
+    type:'Military Treatment Facility / TriCare',
+    desc:'Complete ALL medical and dental work before separation. Request your complete Service Treatment Records (STRs) — the single most critical document for your VA claim. Schedule your separation physical.',
+    bring:'All prescription list, dental needs list, request form for STRs (use DD Form 2870).',
+    phone:'Contact your MTF patient appointments — urgent STR requests can be expedited.',
+    urgency:'critical',color:'#B83232',x:200,y:160,w:90,h:55,depth:28
+  },
+  {
+    id:'housing',name:'Housing Office',icon:'🏠',
+    type:'Unaccompanied / Family Housing Office',
+    desc:'Coordinates your move-out timeline, schedules final housing inspection, and processes your BAH termination date. Timeline must be carefully coordinated — BAH ends on your official out-processing date.',
+    bring:'Separation orders, move-out date plan, housing inspection appointment.',
+    phone:'Contact your installation housing office — search "[installation name] housing"',
+    urgency:'medium',color:'#C47810',x:330,y:60,w:65,h:42,depth:20
+  },
+  {
+    id:'va',name:'VA Regional Office',icon:'🏛️',
+    type:'Department of Veterans Affairs Regional Benefit Office',
+    desc:'Your primary VA benefits contact for disability claims, healthcare enrollment, GI Bill, home loan certificates, and vocational rehabilitation. Off-post but critical. File your BDD claim HERE while still on active duty.',
+    bring:'DD-214 (draft), STRs, private medical evidence, buddy statements, completed VA Form 21-526EZ.',
+    phone:'VA Benefits: 1-800-827-1000 | va.gov/find-locations',
+    urgency:'critical',color:'#1B2B4B',x:430,y:140,w:75,h:48,depth:24
+  },
+];
+
+let isoCanvas = null;
+let isoCtx = null;
+
+function renderIsoMap(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if(!canvas||!canvas.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth || 520;
+  const H = canvas.height = 260;
+  
+  // Sky/ground background
+  const skyGrad = ctx.createLinearGradient(0,0,0,H*0.6);
+  skyGrad.addColorStop(0,'#B8D4F0');
+  skyGrad.addColorStop(1,'#D8ECC8');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0,0,W,H);
+  
+  // Ground
+  const groundGrad = ctx.createLinearGradient(0,H*0.55,0,H);
+  groundGrad.addColorStop(0,'#C8D8A0');
+  groundGrad.addColorStop(1,'#B0C088');
+  ctx.fillStyle = groundGrad;
+  ctx.fillRect(0,H*0.55,W,H*0.45);
+  
+  // Road grid
+  ctx.strokeStyle = '#9A9A80';
+  ctx.lineWidth = 6;
+  ctx.setLineDash([8,4]);
+  ctx.beginPath();ctx.moveTo(0,H*0.7);ctx.lineTo(W,H*0.62);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(180,H*0.55);ctx.lineTo(220,H);ctx.stroke();
+  ctx.setLineDash([]);
+  
+  // Isometric projection function
+  const isoX = (x,y) => (x - y) * 0.7 + W*0.42;
+  const isoY = (x,y) => (x + y) * 0.35 + H*0.08;
+  
+  // Sort buildings back-to-front
+  const sorted = [...ISO_BUILDINGS].sort((a,b)=>(a.x+a.y)-(b.x+b.y));
+  
+  const u = S.user;
+  // Determine urgent buildings based on user state
+  const urgentIds = [];
+  if(!S.tasks['v1']) urgentIds.push('va','medical'); // VA claim not filed
+  if(!S.tasks['a2']) urgentIds.push('acap'); // TAP not done
+  if(!S.tasks['f1']||!S.tasks['f2']) urgentIds.push('finance');
+  if(!S.tasks['a3']) urgentIds.push('jag');
+  if(!S.tasks['h1']) urgentIds.push('housing');
+  
+  sorted.forEach(b => {
+    const bx=b.x, by=b.y, bw=b.w, bh=b.h, bd=b.depth;
+    const isUrgent = urgentIds.includes(b.id);
+    
+    // 4 corners of building base (isometric)
+    const p1 = {x:isoX(bx,by), y:isoY(bx,by)};
+    const p2 = {x:isoX(bx+bw,by), y:isoY(bx+bw,by)};
+    const p3 = {x:isoX(bx+bw,by+bh), y:isoY(bx+bw,by+bh)};
+    const p4 = {x:isoX(bx,by+bh), y:isoY(bx,by+bh)};
+    
+    // Top face (raised by depth)
+    const t1 = {x:p1.x, y:p1.y-bd};
+    const t2 = {x:p2.x, y:p2.y-bd};
+    const t3 = {x:p3.x, y:p3.y-bd};
+    const t4 = {x:p4.x, y:p4.y-bd};
+    
+    const col = b.color;
+    
+    // Glow for urgent
+    if(isUrgent){
+      ctx.shadowColor='#FF4444';
+      ctx.shadowBlur=12;
+    } else {
+      ctx.shadowBlur=0;
+    }
+    
+    // Left face
+    ctx.beginPath();
+    ctx.moveTo(p1.x,p1.y);ctx.lineTo(p4.x,p4.y);
+    ctx.lineTo(t4.x,t4.y);ctx.lineTo(t1.x,t1.y);
+    ctx.closePath();
+    ctx.fillStyle = shadeColor(col, -25);
+    ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,.15)';ctx.lineWidth=1;ctx.stroke();
+    
+    // Right face
+    ctx.beginPath();
+    ctx.moveTo(p3.x,p3.y);ctx.lineTo(p4.x,p4.y);
+    ctx.lineTo(t4.x,t4.y);ctx.lineTo(t3.x,t3.y);
+    ctx.closePath();
+    ctx.fillStyle = shadeColor(col, -40);
+    ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,.15)';ctx.stroke();
+    
+    // Top face
+    ctx.beginPath();
+    ctx.moveTo(t1.x,t1.y);ctx.lineTo(t2.x,t2.y);
+    ctx.lineTo(t3.x,t3.y);ctx.lineTo(t4.x,t4.y);
+    ctx.closePath();
+    ctx.fillStyle = shadeColor(col, 15);
+    ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,.1)';ctx.stroke();
+    
+    ctx.shadowBlur=0;
+    
+    // Urgent ping dot
+    if(isUrgent){
+      const pingX = (t1.x+t2.x)/2;
+      const pingY = t1.y - 12;
+      ctx.beginPath();ctx.arc(pingX,pingY,5,0,Math.PI*2);
+      ctx.fillStyle='#FF4444';ctx.fill();
+      // White center
+      ctx.beginPath();ctx.arc(pingX,pingY,2,0,Math.PI*2);
+      ctx.fillStyle='#fff';ctx.fill();
+    }
+    
+    // Label on top face center
+    const labelX = (t1.x+t2.x+t3.x+t4.x)/4;
+    const labelY = (t1.y+t2.y+t3.y+t4.y)/4;
+    ctx.font = 'bold 11px Plus Jakarta Sans, sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=3;
+    ctx.fillText(b.icon, labelX, labelY);
+    ctx.shadowBlur=0;
+    
+    // Store hit area for clicking
+    b._hitArea = {t1,t2,t3,t4,p1,p2,p3,p4,bd};
+  });
+  
+  // Store sorted for hit testing
+  canvas._buildings = sorted;
+  isoCanvas = canvas;
+  isoCtx = ctx;
+}
+
+function shadeColor(hex, percent){
+  const num = parseInt(hex.replace('#',''),16);
+  const r = Math.min(255, Math.max(0, (num>>16) + percent*2));
+  const g = Math.min(255, Math.max(0, (num>>8&0xFF) + percent*2));
+  const b = Math.min(255, Math.max(0, (num&0xFF) + percent*2));
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+function isoMapClick(e){
+  const canvas = e.currentTarget;
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+  
+  if(!canvas._buildings)return;
+  
+  // Check which building was clicked (test hit areas, last-drawn first)
+  const buildings = [...canvas._buildings].reverse();
+  for(const b of buildings){
+    if(!b._hitArea)continue;
+    const {t1,t2,t3,t4,p1,p2,p3,p4} = b._hitArea;
+    // Simple bounding box check for all 8 points
+    const allX = [t1,t2,t3,t4,p1,p2,p3,p4].map(p=>p.x);
+    const allY = [t1,t2,t3,t4,p1,p2,p3,p4].map(p=>p.y);
+    const minX=Math.min(...allX),maxX=Math.max(...allX);
+    const minY=Math.min(...allY),maxY=Math.max(...allY);
+    if(mx>=minX&&mx<=maxX&&my>=minY&&my<=maxY){
+      showIsoBuildingModal(b);
+      return;
+    }
+  }
+}
+
+function showIsoBuildingModal(b){
+  const urgentIds=[];
+  if(!S.tasks['v1'])urgentIds.push('va','medical');
+  if(!S.tasks['a2'])urgentIds.push('acap');
+  if(!S.tasks['f1']||!S.tasks['f2'])urgentIds.push('finance');
+  if(!S.tasks['a3'])urgentIds.push('jag');
+  if(!S.tasks['h1'])urgentIds.push('housing');
+  const isUrgent=urgentIds.includes(b.id);
+  
+  const modal=document.getElementById('iso-bldg-modal');
+  if(!modal)return;
+  modal.innerHTML=`<div class="iso-bm-box">
+    ${isUrgent?'<div class="iso-urgent-badge">🔴 Action Required</div>':''}
+    <div class="iso-bm-icon">${b.icon}</div>
+    <div class="iso-bm-name">${b.name}</div>
+    <div class="iso-bm-type">${b.type}</div>
+    <div class="iso-bm-desc">${b.desc}</div>
+    <div class="iso-bm-bring"><b>📁 What to Bring</b>${b.bring}</div>
+    <div class="iso-bm-phone">📞 ${b.phone}</div>
+    <button class="iso-bm-close" onclick="document.getElementById('iso-bldg-modal').classList.remove('show')">Close</button>
+  </div>`;
+  modal.classList.add('show');
+}
+
+function buildIsoMapSection(){
+  return `<div class="card" id="iso-map-card">
+    <div class="ch"><div class="cd"></div>🗺️ Installation Map — Your Transition Stops</div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:10px;line-height:1.6">
+      Click any building to see what it does, what to bring, and contact info. 🔴 Red dot = action required based on your current task status.
+    </div>
+    <div class="iso-wrap">
+      <canvas id="iso-canvas" class="iso-canvas" style="cursor:pointer"></canvas>
+      <div class="iso-legend">
+        <div class="iso-leg-item"><div class="iso-leg-dot" style="background:#4A7C59"></div>ACAP/TAP</div>
+        <div class="iso-leg-item"><div class="iso-leg-dot" style="background:#1A5FA8"></div>Finance</div>
+        <div class="iso-leg-item"><div class="iso-leg-dot" style="background:#6B2D8B"></div>JAG/Legal</div>
+        <div class="iso-leg-item"><div class="iso-leg-dot" style="background:#B83232"></div>Medical/TriCare</div>
+        <div class="iso-leg-item"><div class="iso-leg-dot" style="background:#C47810"></div>Housing</div>
+        <div class="iso-leg-item"><div class="iso-leg-dot" style="background:#1B2B4B"></div>VA Regional</div>
+        <div class="iso-leg-item" style="margin-left:auto"><span style="color:#B83232;font-size:11px">🔴 = Action needed</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// CERTIFICATE OF COMPLETION
+// ============================================================
+function generateCertificate(){
+  const u=S.user;
+  const tTot=TCATS.reduce((n,c)=>n+c.tasks.length,0);
+  const tDone=Object.keys(S.tasks||{}).filter(k=>S.tasks[k]).length;
+  const pct=Math.round(tDone/tTot*100);
+  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const branchName={'army':'United States Army','navy':'United States Navy','airforce':'United States Air Force','marines':'United States Marine Corps','coastguard':'United States Coast Guard','spacefore':'United States Space Force'}[u.branch]||'United States Military';
+  const branchIcon={'army':'⭐','navy':'⚓','airforce':'✈️','marines':'🦅','coastguard':'🛡️','spacefore':'🚀'}[u.branch]||'🎖️';
+  
+  const certHTML=`<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#F5EFE0;font-family:'EB Garamond',serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.cert{width:11in;height:8.5in;position:relative;background:#FDFAF4;display:flex;align-items:center;justify-content:center;overflow:hidden}
+/* Outer border */
+.border-outer{position:absolute;inset:18px;border:4px solid #1B2B4B;pointer-events:none}
+.border-inner{position:absolute;inset:26px;border:1.5px solid #C8881A;pointer-events:none}
+.border-corners{position:absolute;inset:14px;pointer-events:none}
+/* Corner ornaments */
+.corner{position:absolute;width:60px;height:60px}
+.corner svg{width:100%;height:100%}
+.tl{top:0;left:0}.tr{top:0;right:0;transform:scaleX(-1)}.bl{bottom:0;left:0;transform:scaleY(-1)}.br{bottom:0;right:0;transform:scale(-1,-1)}
+/* Background ornament */
+.bg-seal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.04;font-size:400px;pointer-events:none;user-select:none}
+.watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-family:'Cinzel Decorative',serif;font-size:72px;color:#1B2B4B;opacity:.025;white-space:nowrap;pointer-events:none}
+/* Content */
+.content{text-align:center;position:relative;z-index:1;padding:60px 80px;max-width:9in}
+.kibu-brand{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:#C8881A;margin-bottom:8px}
+.main-title{font-family:'Cinzel Decorative',serif;font-size:42px;font-weight:700;color:#1B2B4B;line-height:1.15;margin-bottom:4px;letter-spacing:.04em}
+.subtitle{font-family:'Cinzel',serif;font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:#C8881A;margin-bottom:32px}
+.presents{font-size:16px;color:#5A6A7A;font-style:italic;margin-bottom:8px}
+.name{font-family:'Cinzel',serif;font-size:52px;font-weight:700;color:#1B2B4B;margin-bottom:6px;letter-spacing:.06em;border-bottom:2px solid #C8881A;padding-bottom:8px;display:inline-block;min-width:400px}
+.branch-line{font-size:18px;color:#5A6A7A;margin-bottom:4px}
+.branch-icon{font-size:28px;margin-bottom:4px}
+.service-line{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#1B2B4B;margin-bottom:28px}
+.has-completed{font-size:16px;color:#5A6A7A;font-style:italic;margin-bottom:6px}
+.program-name{font-family:'Cinzel Decorative',serif;font-size:26px;color:#1B2B4B;font-weight:700;margin-bottom:16px}
+.metrics{display:flex;justify-content:center;gap:40px;margin-bottom:28px;padding:16px 32px;border-top:1px solid rgba(200,136,26,.3);border-bottom:1px solid rgba(200,136,26,.3)}
+.metric{text-align:center}
+.metric-val{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:#C8881A}
+.metric-lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7A8FA8;margin-top:2px}
+.description{font-size:14px;color:#5A6A7A;line-height:1.75;max-width:680px;margin:0 auto 28px;font-style:italic}
+.signatures{display:flex;justify-content:space-around;align-items:flex-end;margin-bottom:20px}
+.sig-block{text-align:center;min-width:160px}
+.sig-line{border-top:1px solid #1B2B4B;padding-top:6px;margin-top:40px}
+.sig-name{font-family:'Cinzel',serif;font-size:12px;font-weight:600;color:#1B2B4B;letter-spacing:.08em}
+.sig-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#7A8FA8;margin-top:2px}
+.seal{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#C8881A,#A06A0A);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 2px 12px rgba(200,136,26,.4)}
+.seal-inner{font-family:'Cinzel Decorative',serif;font-size:9px;color:#fff;text-align:center;line-height:1.3;font-weight:700}
+.footer-line{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A8BECC;margin-top:16px}
+.footer-line em{color:#C8881A;font-style:normal}
+@media print{.no-print{display:none}}
+</style></head>
+<body>
+<div style="text-align:center;padding:12px;background:#1B2B4B;color:#F5EFE0" class="no-print">
+  <button onclick="window.print()" style="background:#C8881A;color:#fff;border:none;border-radius:6px;padding:8px 20px;font-weight:700;cursor:pointer;margin-right:8px">🖨️ Print Certificate</button>
+  <button onclick="window.close()" style="background:rgba(255,255,255,.1);color:#F5EFE0;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:8px 16px;cursor:pointer">Close</button>
+</div>
+<div class="cert">
+  <div class="bg-seal">${branchIcon}</div>
+  <div class="watermark">TransitionCommand</div>
+  <div class="border-outer"></div>
+  <div class="border-inner"></div>
+  <div class="border-corners">
+    <div class="corner tl"><svg viewBox="0 0 60 60"><path d="M0,0 L60,0 L60,8 L8,8 L8,60 L0,60 Z" fill="#C8881A" opacity=".6"/><path d="M0,0 L40,0 L40,4 L4,4 L4,40 L0,40 Z" fill="#1B2B4B" opacity=".3"/><circle cx="10" cy="10" r="5" fill="#C8881A"/></svg></div>
+    <div class="corner tr"><svg viewBox="0 0 60 60"><path d="M0,0 L60,0 L60,0 L60,60 L52,60 L52,8 L0,8 Z" fill="#C8881A" opacity=".6"/><path d="M20,0 L60,0 L60,40 L56,40 L56,4 L20,4 Z" fill="#1B2B4B" opacity=".3"/><circle cx="50" cy="10" r="5" fill="#C8881A"/></svg></div>
+    <div class="corner bl"><svg viewBox="0 0 60 60"><path d="M0,0 L8,0 L8,52 L60,52 L60,60 L0,60 Z" fill="#C8881A" opacity=".6"/><path d="M0,20 L4,20 L4,56 L40,56 L40,60 L0,60 Z" fill="#1B2B4B" opacity=".3"/><circle cx="10" cy="50" r="5" fill="#C8881A"/></svg></div>
+    <div class="corner br"><svg viewBox="0 0 60 60"><path d="M52,0 L60,0 L60,60 L0,60 L0,52 L52,52 Z" fill="#C8881A" opacity=".6"/><path d="M56,20 L60,20 L60,60 L20,60 L20,56 L56,56 Z" fill="#1B2B4B" opacity=".3"/><circle cx="50" cy="50" r="5" fill="#C8881A"/></svg></div>
+  </div>
+  <div class="content">
+    <div class="kibu-brand">KIBU Global Ventures LLC · kibuglobal.com</div>
+    <div class="main-title">Certificate of Completion</div>
+    <div class="subtitle">TransitionCommand · Military Transition Program</div>
+    <div class="presents">This certifies that</div>
+    <div class="name">${u.name||'Service Member'}</div>
+    <div class="branch-icon">${branchIcon}</div>
+    <div class="branch-line">${branchName}</div>
+    <div class="service-line">${u.yos?u.yos+' Years of Honorable Service':'Active Duty Service Member'}${u.rank?' · '+u.rank:''}</div>
+    <div class="has-completed">has successfully completed the</div>
+    <div class="program-name">TransitionCommand Military Transition Program</div>
+    <div class="metrics">
+      <div class="metric"><div class="metric-val">${tDone}</div><div class="metric-lbl">Tasks Completed</div></div>
+      <div class="metric"><div class="metric-val">${pct}%</div><div class="metric-lbl">Program Progress</div></div>
+      <div class="metric"><div class="metric-val">${(S.va&&S.va.claimed&&S.va.claimed.length)||0}</div><div class="metric-lbl">VA Conditions Documented</div></div>
+      <div class="metric"><div class="metric-val">${today.split(',')[1]?.trim().split(' ')[1]||new Date().getFullYear()}</div><div class="metric-lbl">Year Completed</div></div>
+    </div>
+    <div class="description">
+      This service member has demonstrated thorough preparation for military-to-civilian transition including VA claims strategy, financial planning, career development, healthcare transition, and certification roadmap completion through the TransitionCommand digital command center.
+    </div>
+    <div class="signatures">
+      <div class="sig-block">
+        <div class="sig-line">
+          <div class="sig-name">Kirk A. Bucknor</div>
+          <div class="sig-title">SFC (Ret.) · Founder, KIBU Global Ventures LLC</div>
+        </div>
+      </div>
+      <div class="sig-block">
+        <div class="seal"><div class="seal-inner">KIBU<br>GLOBAL<br>VENTURES</div></div>
+        <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A8BECC">Official Seal · ${today}</div>
+      </div>
+      <div class="sig-block">
+        <div class="sig-line">
+          <div class="sig-name">${u.name||'Veteran'}</div>
+          <div class="sig-title">Transition Candidate · ${branchName}</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-line">TransitionCommand · <em>kibuglobal.com</em> · All 6 Branches · Built by Veterans, for Veterans · © 2026 KIBU Global Ventures LLC</div>
+  </div>
+</div>
+<!-- ISO BUILDING MODAL -->
+<div class="iso-bldg-modal" id="iso-bldg-modal"></div>
+</body></html>`;
+  
+  const win = window.open('','_blank','width=1200,height=900');
+  if(win){ win.document.write(certHTML); win.document.close(); }
+  else { toast('Enable popups to view certificate'); }
+}
+
 // ============================================================
 // PWA
 // ============================================================
 if('serviceWorker' in navigator){try{const sw=`self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))});`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});}catch(e){}}
 
 </script>
+
+<!-- PREREQ MODAL -->
+<div class="prereq-modal" id="prereq-modal">
+  <div class="prereq-box">
+    <div class="prereq-title">✅ Before You Mark Complete</div>
+    <div class="prereq-task" id="prereq-task-name"></div>
+    <div id="prereq-link-row"></div>
+    <div id="prereq-items"></div>
+    <div class="prereq-actions">
+      <button class="prereq-skip" onclick="prereqSkip()">Mark Complete Anyway</button>
+      <button class="prereq-confirm" id="prereq-confirm-btn" onclick="prereqDone()">Confirm & Complete ✓</button>
+    </div>
+  </div>
+</div>
+<!-- TEMPLATE POPUP -->
+<div class="tpl-popup" id="tpl-popup">
+  <button class="tpl-close" onclick="closeTpl()">✕</button>
+  <div id="tpl-content"></div>
+</div>
+
+<!-- BUILDING INFO MODAL -->
+<div class="bldg-modal-overlay" id="bldg-modal">
+  <div class="bldg-modal">
+    <div class="bldg-modal-icon" id="bm-icon">🏢</div>
+    <div class="bldg-modal-name" id="bm-name">Building</div>
+    <div class="bldg-modal-type" id="bm-type">Installation Office</div>
+    <div class="bldg-modal-desc" id="bm-desc"></div>
+    <div class="bldg-modal-tips" id="bm-tips"></div>
+    <button class="bldg-modal-close" onclick="document.getElementById('bldg-modal').classList.remove('show')">Close</button>
+  </div>
+</div>
+
+<!-- CERTIFICATE PRINT AREA -->
+<div id="cert-print-area" style="display:none"></div>
 </body>
 </html>
