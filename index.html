@@ -254,9 +254,9 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
 .prereq-task{font-size:13px;color:#C8881A;font-weight:600;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(245,239,224,.08)}
 .prereq-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(245,239,224,.06);cursor:pointer}
 .prereq-item:last-of-type{border-bottom:none}
-.prereq-cb{width:18px;height:18px;border:2px solid rgba(245,239,224,.25);border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.prereq-cb{width:20px;height:20px;border:2px solid rgba(245,239,224,.3);border-radius:4px;flex-shrink:0;margin-top:1px;transition:all .15s;position:relative;background:transparent}
 .prereq-cb.checked{background:#4A7C59;border-color:#4A7C59}
-.prereq-cb.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:800}
+.prereq-cb.checked::after{content:'✓';color:#fff;font-size:12px;font-weight:900;position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);line-height:1}
 .prereq-txt{font-size:13px;color:rgba(245,239,224,.7);line-height:1.5}
 .prereq-actions{display:flex;gap:8px;margin-top:16px}
 .prereq-skip{flex:1;padding:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(245,239,224,.5);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
@@ -405,6 +405,27 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
 .iso-bm-phone{font-size:11px;color:rgba(245,239,224,.4);margin-bottom:14px}
 .iso-bm-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(245,239,224,.6);border-radius:8px;padding:9px;cursor:pointer;font-size:13px;font-weight:600;width:100%}
 .iso-urgent-badge{display:inline-block;background:#B83232;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+
+/* ── CELEBRATION CONFETTI ── */
+.confetti-piece{position:fixed;width:10px;height:10px;top:-10px;pointer-events:none;z-index:9999;opacity:1;border-radius:2px}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg) translateX(0);opacity:1}
+  80%{opacity:1}
+  100%{transform:translateY(105vh) rotate(720deg) translateX(var(--drift));opacity:0}
+}
+.task-complete-flash{animation:taskFlash .6s ease forwards}
+@keyframes taskFlash{
+  0%{background:rgba(74,124,89,.0)}
+  30%{background:rgba(74,124,89,.25)}
+  100%{background:rgba(74,124,89,.0)}
+}
+/* milestone toast */
+.milestone-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);background:linear-gradient(135deg,#1B2B4B,#243860);border:2px solid #C8881A;border-radius:16px;padding:28px 36px;text-align:center;z-index:9998;opacity:0;pointer-events:none;transition:all .4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.milestone-toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+.mt-icon{font-size:52px;margin-bottom:8px}
+.mt-title{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#F5EFE0;margin-bottom:4px}
+.mt-sub{font-size:14px;color:rgba(245,239,224,.6);line-height:1.5}
+.mt-close{background:rgba(200,136,26,.2);border:1px solid rgba(200,136,26,.3);color:#C8881A;border-radius:8px;padding:8px 24px;cursor:pointer;font-size:13px;font-weight:700;margin-top:16px;letter-spacing:.06em;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -1667,11 +1688,31 @@ function taskClick(e,id,row){
 }
 
 function completeTask(id){
+  const tTot=TCATS.reduce((n,c)=>n+c.tasks.length,0);
+  const prevDone=Object.keys(S.tasks||{}).filter(k=>S.tasks[k]).length;
+  const prevPct=Math.round(prevDone/tTot*100);
+  
   S.tasks[id]=true;
+  
+  // Flash the row green before hiding
   const row=document.querySelector('[data-tid="'+id+'"]');
-  if(row)row.classList.add('dn');
-  saveS();upTkProg();bOv();
-  toast('✅ Task marked complete');
+  if(row){
+    row.classList.add('task-complete-flash');
+    setTimeout(()=>row.classList.add('dn'),500);
+  }
+  
+  saveS();upTkProg();
+  
+  const newDone=Object.keys(S.tasks||{}).filter(k=>S.tasks[k]).length;
+  const newPct=Math.round(newDone/tTot*100);
+  const task=TCATS.flatMap(c=>c.tasks).find(t=>t.id===id);
+  
+  setTimeout(()=>{
+    bOv();
+    checkMilestones(prevPct,newPct,task?task.text:'');
+  },300);
+  
+  toast('✅ Task complete — '+newDone+' of '+tTot+' done');
 }
 
 function showTpl(task,btn){
@@ -2795,11 +2836,98 @@ body{background:#F5EFE0;font-family:'EB Garamond',serif;-webkit-print-color-adju
 </div>
 <!-- ISO BUILDING MODAL -->
 <div class="iso-bldg-modal" id="iso-bldg-modal"></div>
+<!-- MILESTONE TOAST -->
+<div class="milestone-toast" id="milestone-toast">
+  <div class="mt-icon" id="mt-icon">🎖️</div>
+  <div class="mt-title" id="mt-title">Mission Complete</div>
+  <div class="mt-sub" id="mt-sub">Outstanding work, Soldier.</div>
+  <button class="mt-close" onclick="closeMilestone()">Acknowledged ✓</button>
+</div>
 </body></html>`;
   
   const win = window.open('','_blank','width=1200,height=900');
   if(win){ win.document.write(certHTML); win.document.close(); }
   else { toast('Enable popups to view certificate'); }
+}
+
+
+// ============================================================
+// CELEBRATION SYSTEM
+// ============================================================
+const CONFETTI_COLORS = ['#C8881A','#F5EFE0','#4A7C59','#1A5FA8','#B83232','#D4AF37','#6EBB85'];
+
+function launchConfetti(intensity='normal'){
+  const count = intensity==='epic' ? 120 : intensity==='big' ? 60 : 30;
+  for(let i=0;i<count;i++){
+    setTimeout(()=>spawnConfettiPiece(),i*18);
+  }
+}
+
+function spawnConfettiPiece(){
+  const el=document.createElement('div');
+  el.className='confetti-piece';
+  const color=CONFETTI_COLORS[Math.floor(Math.random()*CONFETTI_COLORS.length)];
+  const x=Math.random()*100;
+  const drift=(Math.random()-0.5)*200;
+  const duration=1.8+Math.random()*1.4;
+  const size=6+Math.random()*8;
+  const shapes=['2px','50%','0'];
+  const shape=shapes[Math.floor(Math.random()*shapes.length)];
+  el.style.cssText=`
+    left:${x}vw;background:${color};width:${size}px;height:${size}px;
+    border-radius:${shape};--drift:${drift}px;
+    animation:confettiFall ${duration}s ease-in forwards;
+  `;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),duration*1000+100);
+}
+
+function showMilestone(icon,title,sub,intensity='normal'){
+  const t=document.getElementById('milestone-toast');
+  if(!t)return;
+  document.getElementById('mt-icon').textContent=icon;
+  document.getElementById('mt-title').textContent=title;
+  document.getElementById('mt-sub').textContent=sub;
+  t.classList.add('show');
+  launchConfetti(intensity);
+  setTimeout(()=>t.classList.remove('show'),5000);
+}
+
+function closeMilestone(){
+  document.getElementById('milestone-toast').classList.remove('show');
+}
+
+function checkMilestones(prevPct,newPct,taskText){
+  // Single task completion — small burst
+  launchConfetti('normal');
+  
+  // Category completion check
+  const cat=TCATS.find(c=>c.tasks.some(t=>t.text===taskText));
+  if(cat){
+    const allDone=cat.tasks.every(t=>S.tasks[t.id]);
+    if(allDone){
+      setTimeout(()=>showMilestone('🎖️',cat.label+' Complete!',
+        'All '+cat.tasks.length+' tasks in this category completed. Outstanding work.',
+        'big'),400);
+      return;
+    }
+  }
+  
+  // Percentage milestones
+  const milestones=[
+    {pct:25,icon:'⭐',title:'25% Complete',sub:'Strong start. Keep the momentum — your future self will thank you.',intensity:'normal'},
+    {pct:50,icon:'🎯',title:'Halfway There',sub:'50% complete. You are ahead of most transitioning service members.',intensity:'big'},
+    {pct:75,icon:'🏅',title:'75% Complete',sub:'Final stretch. Outstanding execution — you are setting yourself up for success.',intensity:'big'},
+    {pct:100,icon:'🎖️',title:'MISSION COMPLETE',sub:'100% complete. Every task done. You have earned your certificate of completion.',intensity:'epic'},
+  ];
+  
+  for(const m of milestones){
+    if(prevPct<m.pct&&newPct>=m.pct){
+      setTimeout(()=>showMilestone(m.icon,m.title,m.sub,m.intensity),400);
+      if(m.pct===100){setTimeout(()=>launchConfetti('epic'),800);}
+      break;
+    }
+  }
 }
 
 // ============================================================
