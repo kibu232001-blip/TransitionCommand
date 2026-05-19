@@ -568,6 +568,8 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
     <button class="tb" data-t="re" onclick="ot('re')">📄 Resume</button>
     <button class="tb" data-t="rs" onclick="ot('rs')">🔗 Resources</button>
     <button class="tb" data-t="ct" onclick="ot('ct')">🎓 Certifications</button>
+    <button class="tb" data-t="ch" onclick="ot('ch')">📋 Chapters</button>
+    <button class="tb" data-t="mb" onclick="ot('mb')">🏥 Med Board</button>
   </div>
   <div class="content">
     <div class="panel a" id="p-ov"></div>
@@ -583,6 +585,8 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
     <div class="panel" id="p-re"></div>
     <div class="panel" id="p-rs"></div>
     <div class="panel" id="p-ct"></div>
+    <div class="panel" id="p-ch"></div>
+    <div class="panel" id="p-mb"></div>
   </div>
 </div>
 <button class="fab" id="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
@@ -1176,6 +1180,8 @@ function ot(id){
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='ca')renderCal();
   if(id==='ct')bCt();
+  if(id==='ch')bCh();
+  if(id==='mb')bMb();
   if(id==='ov'){bOv();setTimeout(()=>{const c=document.getElementById('iso-canvas');if(c){c.addEventListener('click',isoMapClick);renderIsoMap('iso-canvas');}},100);}
   if(id==='va'){bVA();setTimeout(attachBodyClicks,100);}
 }
@@ -3131,6 +3137,165 @@ function checkMilestones(prevPct,newPct,taskText){
   }
 }
 
+
+
+// ============================================================
+// CHAPTERS TAB (AR 635-200)
+// ============================================================
+function bCh(){
+  G('p-ch').innerHTML=`
+  <div class="ph">Army Chapters — AR 635-200</div>
+  <div class="psub">Administrative separation processes, discharge characterizations, and benefits impact. If you are facing a chapter — act immediately and contact JAG or a civilian military attorney.</div>
+
+  <div class="alert al-w"><span class="ai">⚠️</span><span><strong>If you are being chaptered:</strong> You have rights. Request a hearing if eligible. An OTH discharge can cost you GI Bill, VA healthcare, and disability benefits permanently. Contact JAG within 24 hours of notification.</span></div>
+
+  <div class="card">
+    <div class="ch"><div class="cd"></div>📋 Discharge Characterizations — What's at Stake</div>
+    <div style="display:grid;gap:10px">
+      <div style="background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);border-radius:10px;padding:14px">
+        <div style="font-weight:700;color:#2A6639;margin-bottom:4px">✅ Honorable Discharge</div>
+        <div style="font-size:12px;color:var(--tx2);line-height:1.65">Full access to all VA benefits including GI Bill (Ch.33), VA disability, healthcare, home loan, and burial benefits. The standard discharge for soldiers who meet performance standards.</div>
+      </div>
+      <div style="background:rgba(200,136,26,.08);border:1px solid rgba(200,136,26,.2);border-radius:10px;padding:14px">
+        <div style="font-weight:700;color:#8B5000;margin-bottom:4px">⚠️ General (Under Honorable Conditions)</div>
+        <div style="font-size:12px;color:var(--tx2);line-height:1.65">Most VA benefits preserved including disability and healthcare. <strong>GI Bill is NOT available</strong> under most circumstances. Montgomery GI Bill (Ch.30) requires honorable. Post-9/11 GI Bill (Ch.33) requires honorable or general in some cases — verify with VA.</div>
+      </div>
+      <div style="background:rgba(184,50,50,.08);border:1px solid rgba(184,50,50,.2);border-radius:10px;padding:14px">
+        <div style="font-weight:700;color:#B83232;margin-bottom:4px">🚫 Other Than Honorable (OTH)</div>
+        <div style="font-size:12px;color:var(--tx2);line-height:1.65"><strong>Most VA benefits lost including GI Bill, VA healthcare, and home loan.</strong> VA disability MAY still be available if conditions are service-connected. OTH can be upgraded through the Discharge Review Board (DRB) — consult an attorney.</div>
+      </div>
+      <div style="background:rgba(184,50,50,.12);border:1px solid rgba(184,50,50,.3);border-radius:10px;padding:14px">
+        <div style="font-weight:700;color:#B83232;margin-bottom:4px">❌ Bad Conduct / Dishonorable</div>
+        <div style="font-size:12px;color:var(--tx2);line-height:1.65">Result of court-martial. All VA benefits forfeited. Federal conviction record. Requires civilian attorney — not JAG — for any appeal process.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="cd"></div>📖 Common Chapter Types — AR 635-200</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${[
+        {ch:'Chapter 5',title:'Separation for Convenience of the Government',detail:'Includes hardship, dependency, sole survivor, and other administrative reasons. Typically results in Honorable discharge. Benefits fully preserved.',risk:'low'},
+        {ch:'Chapter 7',title:'Fraudulent Entry / Defective Enlistment',detail:'Concealment of prior service, civil convictions, or medical conditions at enlistment. Characterization varies. Consult JAG immediately.',risk:'med'},
+        {ch:'Chapter 9',title:'Alcohol or Other Drug Rehabilitation Failure',detail:'After failed ASAP program. Can result in General or Honorable. GI Bill may be affected. Complete ASAP program if possible before separation.',risk:'med'},
+        {ch:'Chapter 10',title:'In Lieu of Court-Martial',detail:'Soldier requests administrative discharge to avoid court-martial. Almost always results in OTH. <strong>Do not sign Chapter 10 without consulting a military attorney.</strong>',risk:'high'},
+        {ch:'Chapter 11',title:'Entry Level Performance and Conduct',detail:'Within first 180 days of service. Results in Entry Level Separation (ELS) — not characterized. No GI Bill but VA disability may apply if conditions are service-connected.',risk:'med'},
+        {ch:'Chapter 13',title:'Unsatisfactory Performance',detail:'Failure to meet standards after counseling. Can result in Honorable or General depending on performance record. Document all counseling statements.',risk:'med'},
+        {ch:'Chapter 14',title:'Misconduct',detail:'Pattern of misconduct, commission of serious offense, or drug abuse. High risk of OTH. <strong>Request separation board hearing if eligible (6+ years TIS).</strong>',risk:'high'},
+        {ch:'Chapter 18',title:'Failure to Meet Body Composition Standards',detail:'After failing ABCP and rehabilitation program. Typically Honorable discharge. Full VA benefits preserved.',risk:'low'},
+      ].map(c=>`
+        <div style="background:var(--surf);border:1px solid ${c.risk==='high'?'rgba(184,50,50,.3)':c.risk==='med'?'rgba(200,136,26,.2)':'rgba(74,124,89,.15)'};border-left:3px solid ${c.risk==='high'?'#B83232':c.risk==='med'?'#C8881A':'#4A7C59'};border-radius:0 8px 8px 0;padding:10px 12px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.06em;color:${c.risk==='high'?'#B83232':c.risk==='med'?'#C8881A':'#4A7C59'}">${c.ch}</span>
+            <span style="font-size:12px;font-weight:700;color:var(--tx)">${c.title}</span>
+            ${c.risk==='high'?'<span style="background:#B83232;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;letter-spacing:.06em;margin-left:auto">HIGH RISK</span>':''}
+          </div>
+          <div style="font-size:11px;color:var(--tx2);line-height:1.6">${c.detail}</div>
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="cd"></div>⚖️ Your Rights in Chapter Proceedings</div>
+    <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--tx2);line-height:1.65">
+      <div class="alert al-i"><span class="ai">ℹ️</span><span><strong>If you have 6+ years of service</strong> and face an OTH or General characterization, you are entitled to a <strong>separation board hearing</strong> with a panel of officers. Request this in writing immediately.</span></div>
+      <div style="background:var(--bg2);border-radius:8px;padding:10px 12px">
+        <div style="font-weight:700;color:var(--tx);margin-bottom:6px">Steps to take if notified of chapter:</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          ${['Contact JAG office within 24 hours — free legal assistance','Request all counseling statements and documentation in writing','If 6+ years TIS — immediately request separation board hearing in writing','Do NOT sign anything without legal review — especially Chapter 10','Gather character statements from supervisors and peers','If medical conditions contributed — request MEB referral before chapter completes'].map((s,i)=>`
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="background:var(--ac);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">${i+1}</span><span>${s}</span></div>`).join('')}
+        </div>
+      </div>
+      <div style="background:rgba(27,43,75,.05);border-radius:8px;padding:10px 12px">
+        <div style="font-weight:700;margin-bottom:4px">Discharge Upgrade Options:</div>
+        <div>Discharges can be upgraded through the <strong>Discharge Review Board (DRB)</strong> — up to 15 years after separation — or the <strong>Board for Correction of Military Records (BCMR)</strong>. Veterans Service Organizations (VSOs) can assist with appeals at no cost.</div>
+      </div>
+      <a href="https://legalassistance.law.af.mil" target="_blank" class="btn btn-s btn-o" style="text-decoration:none;text-align:center;margin-top:4px">🔗 Find Your JAG Office</a>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// MED BOARD TAB (IDES / MEB / PEB)
+// ============================================================
+function bMb(){
+  G('p-mb').innerHTML=`
+  <div class="ph">Medical Evaluation Board (MEB)</div>
+  <div class="psub">The Integrated Disability Evaluation System (IDES) — understanding your rights, the process, and how to maximize your outcome if your medical conditions prevent continued service.</div>
+
+  <div class="alert al-i"><span class="ai">ℹ️</span><span>Medical retirement (Chapter 61) is typically characterized as Honorable. You receive <strong>both DoD retirement pay AND VA disability compensation</strong> — one of the most valuable outcomes in the military benefit system.</span></div>
+
+  <div class="card">
+    <div class="ch"><div class="cd"></div>🔄 The IDES Process — Step by Step</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${[
+        {step:'Step 1',title:'MEB Referral',time:'Day 1',desc:'Your physician determines your condition may prevent you from performing your duties. You are referred to the Medical Evaluation Board. This triggers the formal IDES process.',tip:'Request copies of ALL medical documentation. Ensure every service-connected condition is documented — not just the primary one.'},
+        {step:'Step 2',title:'MEB Evaluation',time:'~30–60 days',desc:'MEB documents all medical conditions and determines which are service-connected. The MEB prepares a narrative summary (NARSUM) of your medical history.',tip:'Review your NARSUM carefully before signing. Dispute any inaccurate findings in writing. Add any missed conditions.'},
+        {step:'Step 3',title:'VA Claim (Concurrent)',time:'~90 days',desc:'Under IDES, VA conducts a Compensation & Pension (C&P) exam concurrently with the MEB. This establishes your VA rating at the same time as your DoD rating.',tip:'Treat this C&P exam like your BDD claim — document worst-day symptoms, bring buddy statements, bring STRs.'},
+        {step:'Step 4',title:'Physical Evaluation Board (PEB)',time:'~30 days',desc:'The PEB reviews the MEB findings and determines: (1) Fit for Duty, (2) Unfit — Separated with Severance Pay, or (3) Unfit — Medically Retired. The PEB assigns a DoD disability percentage.',tip:'You can accept or appeal the PEB findings. If you disagree, request a formal PEB hearing with a military attorney present.'},
+        {step:'Step 5',title:'Outcome Decision',time:'Final',desc:'Based on PEB findings: Return to Duty, Medical Separation with Severance Pay, or Medical Retirement (Chapter 61). Each has dramatically different financial outcomes.',tip:'If rated 30%+ by DoD, you qualify for medical retirement — the most valuable outcome. Never accept separation with severance if you qualify for retirement.'},
+      ].map(s=>`
+        <div style="background:var(--surf);border:1px solid var(--b1);border-radius:10px;padding:12px 14px;position:relative">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <span style="background:var(--nav);color:var(--navt);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;padding:2px 10px;border-radius:10px;letter-spacing:.06em">${s.step}</span>
+            <span style="font-size:13px;font-weight:700;color:var(--tx)">${s.title}</span>
+            <span style="font-size:10px;color:var(--tx3);margin-left:auto">${s.time}</span>
+          </div>
+          <div style="font-size:12px;color:var(--tx2);line-height:1.65;margin-bottom:8px">${s.desc}</div>
+          <div style="background:rgba(200,136,26,.08);border-left:2px solid var(--ac);padding:7px 10px;border-radius:0 6px 6px 0;font-size:11px;color:rgba(27,43,75,.7)">💡 <strong>Veteran Tip:</strong> ${s.tip}</div>
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="cd"></div>💰 MEB Outcomes — Financial Impact</div>
+    <div style="display:grid;gap:10px">
+      <div style="background:rgba(184,50,50,.06);border:1px solid rgba(184,50,50,.2);border-radius:10px;padding:14px">
+        <div style="font-weight:700;color:#B83232;margin-bottom:6px">❌ Return to Duty / Fit for Duty</div>
+        <div style="font-size:12px;color:var(--tx2);line-height:1.65">PEB determines you can perform duty with limitations. No disability pay from DoD. You may still file a VA claim separately after separation for service-connected conditions.</div>
+      </div>
+      <div style="background:rgba(200,136,26,.06);border:1px solid rgba(200,136,26,.2);border-radius:10px;padding:14px">
+        <div style="font-weight:700;color:#8B5000;margin-bottom:6px">⚠️ Medical Separation with Severance Pay</div>
+        <div style="font-size:12px;color:var(--tx2);line-height:1.65">DoD rating under 30%. One-time lump sum = 2 months base pay × years of service. <strong>VA disability compensation is offset until severance is recouped.</strong> Character: Honorable. Access to VA healthcare and benefits.</div>
+        <div style="background:rgba(200,136,26,.1);border-radius:6px;padding:6px 10px;margin-top:8px;font-size:11px;color:#8B5000">Example: E-5, 6 years, $3,200/mo base pay = $38,400 severance</div>
+      </div>
+      <div style="background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.25);border-radius:10px;padding:14px">
+        <div style="font-weight:700;color:#2A6639;margin-bottom:6px">✅ Medical Retirement — Chapter 61 (DoD 30%+)</div>
+        <div style="font-size:12px;color:var(--tx2);line-height:1.65"><strong>The most valuable outcome.</strong> Monthly DoD retirement pay for life based on disability percentage OR years of service (whichever is higher). PLUS VA disability compensation. Full TRICARE for life. SBP eligible.</div>
+        <div style="background:rgba(74,124,89,.12);border-radius:6px;padding:6px 10px;margin-top:8px;font-size:11px;color:#2A6639">Example: E-7, 12 years, 60% DoD rating: $1,920/mo DoD + $1,365/mo VA = <strong>$3,285/mo</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="cd"></div>⚖️ CRSC & CRDP — Double Dipping Legally</div>
+    <div style="font-size:12px;color:var(--tx2);line-height:1.65;display:flex;flex-direction:column;gap:10px">
+      <div style="background:var(--bg2);border-radius:8px;padding:12px">
+        <div style="font-weight:700;color:var(--tx);margin-bottom:4px">Combat-Related Special Compensation (CRSC)</div>
+        <div>For retirees with combat-related disabilities. Replaces the VA offset on retirement pay — you receive <strong>full retirement pay + full VA disability</strong> simultaneously. Must apply separately through your branch.</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:8px;padding:12px">
+        <div style="font-weight:700;color:var(--tx);margin-bottom:4px">Concurrent Retirement & Disability Pay (CRDP)</div>
+        <div>For retirees with 20+ years AND 50%+ VA rating. Phases out the VA offset over time — eventually receiving both full retirement pay AND full VA compensation simultaneously. Automatic — no separate application needed.</div>
+      </div>
+      <a href="https://militarypay.defense.gov/Benefits/CRSC/" target="_blank" class="btn btn-s btn-o" style="text-decoration:none;text-align:center">🔗 Apply for CRSC — militarypay.defense.gov</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="cd"></div>🏥 TDRL vs PDRL — Temporary vs Permanent</div>
+    <div style="font-size:12px;color:var(--tx2);line-height:1.65;display:flex;flex-direction:column;gap:8px">
+      <div style="background:rgba(200,136,26,.06);border-radius:8px;padding:12px">
+        <div style="font-weight:700;color:#8B5000;margin-bottom:4px">TDRL — Temporary Disability Retired List</div>
+        <div>Placed on TDRL when condition is unstable or expected to change. Re-evaluated every 18 months. Minimum 50% DoD rating during TDRL period. After stabilization, moved to PDRL or separated.</div>
+      </div>
+      <div style="background:rgba(74,124,89,.06);border-radius:8px;padding:12px">
+        <div style="font-weight:700;color:#2A6639;margin-bottom:4px">PDRL — Permanent Disability Retired List</div>
+        <div>Final placement when condition is stable. Permanent monthly retirement pay for life. Full TRICARE. SBP eligible. The goal outcome for most IDES cases.</div>
+      </div>
+    </div>
+  </div>`;
+}
 
 // ============================================================
 // PWA
