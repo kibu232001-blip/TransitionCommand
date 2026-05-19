@@ -3013,23 +3013,28 @@ function showInstallGate(){
       <div class="ig-step"><div class="ig-step-num">4</div><div class="ig-step-txt">Open it from your home screen and come back here to continue</div></div>
     `;
     btn.textContent = "I've Added It to Home Screen ✓";
-  } else if(isAndroid() && _deferredInstall){
+  } else if(isAndroid()){
     steps.innerHTML = `
-      <div class="ig-step"><div class="ig-step-num">1</div><div class="ig-step-txt">Tap <strong>"Install"</strong> below — takes 2 seconds</div></div>
-      <div class="ig-step"><div class="ig-step-num">2</div><div class="ig-step-txt">The app installs on your home screen like a native app</div></div>
-      <div class="ig-step"><div class="ig-step-num">3</div><div class="ig-step-txt">Works offline, no browser bar, full screen</div></div>
+      <div class="ig-step"><div class="ig-step-num">1</div><div class="ig-step-txt">Tap the <strong>three dots ⋮</strong> menu in the top right of Chrome</div></div>
+      <div class="ig-step"><div class="ig-step-num">2</div><div class="ig-step-txt">Tap <strong>"Add to Home screen"</strong></div></div>
+      <div class="ig-step"><div class="ig-step-num">3</div><div class="ig-step-txt">Tap <strong>"Add"</strong> — TransitionCommand appears on your home screen</div></div>
+      <div class="ig-step"><div class="ig-step-num">4</div><div class="ig-step-txt">Open from your home screen — full screen, no browser bar, works offline</div></div>
     `;
-    btn.textContent = '📲 Install TransitionCommand';
-    btn.onclick = function(){
-      _deferredInstall.prompt();
-      _deferredInstall.userChoice.then(r => {
-        if(r.outcome === 'accepted'){
-          closeInstallGate();
-        }
-      });
-    };
+    // If native prompt available use it
+    if(_deferredInstall){
+      btn.textContent = '📲 Install Now — One Tap';
+      btn.onclick = function(){
+        _deferredInstall.prompt();
+        _deferredInstall.userChoice.then(r => {
+          if(r.outcome==='accepted') closeInstallGate();
+        });
+      };
+    } else {
+      btn.textContent = "I've Added It to Home Screen ✓";
+      btn.onclick = closeInstallGate;
+    }
   } else {
-    // Desktop or unsupported — skip gate
+    // Desktop — skip gate
     S.user && S.user.name ? launchApp() : startWiz();
     return;
   }
