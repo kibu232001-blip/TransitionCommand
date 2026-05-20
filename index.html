@@ -1479,6 +1479,17 @@ function bPl(pl){
   renderPlanBody();
 }
 function openPlan(pl,el){cPlan=pl;document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('a'));el.classList.add('a');renderPlanBody();}
+
+function getTimelineLabel(days){
+  const d = parseInt(days);
+  if(d < 0)  return Math.abs(d)+' days before separation';
+  if(d === 0) return 'Separation day';
+  if(d <= 30) return d+' days after separation';
+  if(d <= 60) return Math.round(d/30)+' months after separation';
+  if(d < 365) return Math.round(d/30)+' months after separation';
+  return '1 year after separation';
+}
+
 function renderPlanBody(){
   const p=S.plans[cPlan]||{steps:[]};
   const planName = cPlan==='A'?'Alpha':cPlan==='B'?'Bravo':'Charlie';
@@ -1487,15 +1498,27 @@ function renderPlanBody(){
       <div class="fg"><label class="lb">Plan Title</label><input type="text" id="pt1" value="${p.title||''}" placeholder="e.g. Federal IT Manager — GS-12" maxlength="80"></div>
       <div class="fg"><label class="lb">Career Track</label><input type="text" id="pt2" value="${p.track||''}" placeholder="e.g. DoD Contractor → Federal GS position in 2 years" maxlength="80"></div>
       <div class="r2"><div class="fg"><label class="lb">Target Employer</label><input type="text" id="pt3" value="${p.employer||''}" placeholder="CISA, Northrop Grumman, VA System..." maxlength="80"></div><div class="fg"><label class="lb">Target Salary</label><input type="text" id="pt4" value="${p.salary||''}" placeholder="$75,000/yr"></div></div>
-      <div class="fg"><label class="lb">Execution Timeline</label><input type="text" id="pt5" value="${p.timeline||''}" placeholder="e.g. Employed within 90 days of separation" maxlength="60"></div>
+      <div class="fg" style="grid-column:1/-1">
+      <label class="lb">Execution Timeline</label>
+      <div style="background:var(--bg2);border:1.5px solid var(--b2);border-radius:var(--r);padding:14px 16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:11px;color:var(--tx3)">60 days before separation</span>
+          <span style="font-family:var(--fd);font-size:16px;font-weight:800;color:var(--ac)" id="pt5-label">${getTimelineLabel(p.timelineDays||0)}</span>
+          <span style="font-size:11px;color:var(--tx3)">1 year after</span>
+        </div>
+        <input type="range" id="pt5" min="-60" max="365" step="15"
+          value="${p.timelineDays||0}"
+          oninput="document.getElementById('pt5-label').textContent=getTimelineLabel(+this.value)"
+          style="width:100%;accent-color:var(--ac);height:6px;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--tx3);font-family:var(--fd);letter-spacing:.06em;text-transform:uppercase">
+          <span>-60d</span><span>Sep Day</span><span>+90d</span><span>+180d</span><span>+1yr</span>
+        </div>
+      </div>
+    </div>
     </div>
     <div class="card"><div class="ch"><div class="cd"></div>Execution Steps</div><div id="pl-steps"></div><button class="btn btn-sm btn-o mt8" onclick="addPlSt()">+ Add Step</button></div>
-    <div class="card"><div class="ch"><div class="cd"></div>Analysis</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div><div class="txxs txm mb8" style="letter-spacing:.08em;text-transform:uppercase">Advantages</div><textarea rows="3" id="pt6" placeholder="Pros of this plan...">${p.pros||''}</textarea></div>
-        <div><div class="txxs txm mb8" style="letter-spacing:.08em;text-transform:uppercase">Risks</div><textarea rows="3" id="pt7" placeholder="Risks / challenges...">${p.cons||''}</textarea></div>
-      </div>
-      <div class="fg mt12"><label class="lb">Notes</label><textarea rows="3" id="pt8" placeholder="Additional notes, contacts, action items..." maxlength="120">${p.notes||''}</textarea></div>
+    <div class="card"><div class="ch"><div class="cd"></div>📝 Notes for AI</div>
+      <div class="fg"><textarea rows="3" id="pt8" placeholder="Any additional context for the AI — certifications in progress, family constraints, preferences... (120 chars max)" maxlength="120" style="font-size:12px">${p.notes||''}</textarea></div>
     </div>
     <div class="ar"><button class="btn btn-g btn-sm" onclick="savePlan()">💾 Save Plan ${planName}</button></div>
     
@@ -1530,7 +1553,7 @@ function renderPlSteps(){
 function addPlSt(){if(!S.plans[cPlan].steps)S.plans[cPlan].steps=[];S.plans[cPlan].steps.push('');saveS();renderPlSteps();}
 function savePlan(){
   const p=S.plans[cPlan];
-  p.title=G('pt1')?.value||'';p.track=G('pt2')?.value||'';p.employer=G('pt3')?.value||'';p.salary=G('pt4')?.value||'';p.timeline=G('pt5')?.value||'';p.pros=G('pt6')?.value||'';p.cons=G('pt7')?.value||'';p.notes=G('pt8')?.value||'';
+  p.title=G('pt1')?.value||'';p.track=G('pt2')?.value||'';p.employer=G('pt3')?.value||'';p.salary=G('pt4')?.value||'';p.timelineDays=parseInt(G('pt5')?.value||0);p.timeline=getTimelineLabel(p.timelineDays);p.pros=G('pt6')?.value||'';p.cons=G('pt7')?.value||'';p.notes=G('pt8')?.value||'';
   saveS();toast('✓ Plan saved');
 }
 
@@ -3570,7 +3593,7 @@ async function runAIAnalysis(planKey) {
 
 SOLDIER: ${profile.rank} ${profile.name} | ${profile.branch} | MOS: ${profile.mos} | ${profile.yos} yrs | Clearance: ${profile.clearance} | GI Bill: ${profile.giBill} | VA: ${profile.vaRate} | Retirement pay: ${profile.retPay||'N/A'} | Target state: ${profile.location} | Sep type: ${profile.sepType}
 
-PLAN ${planName.toUpperCase()}: "${planTitle}" | Track: ${careerTrack} | Employer: ${employer} | Salary goal: ${salary} | Timeline: ${timeline}${notes !== 'Not specified' ? ' | Notes: '+notes : ''}
+PLAN ${planName.toUpperCase()}: "${planTitle}" | Track: ${careerTrack} | Employer: ${employer} | Salary goal: ${salary} | Timeline goal: ${getTimelineLabel(p.timelineDays||0)}${notes !== 'Not specified' ? ' | Notes: '+notes : ''}
 
 Return this exact JSON structure:
 {"feasibilityScore":85,"timelineScore":78,"financialScore":90,"overallVerdict":"One sentence verdict","strengths":["strength 1","strength 2","strength 3"],"roadmap":[{"step":1,"action":"action","timeline":"when","cost":"$0"},{"step":2,"action":"action","timeline":"when","cost":"$0"},{"step":3,"action":"action","timeline":"when","cost":"$0"},{"step":4,"action":"action","timeline":"when","cost":"$0"},{"step":5,"action":"action","timeline":"when","cost":"$0"}],"riskFlags":[{"severity":"high","flag":"risk 1"},{"severity":"medium","flag":"risk 2"},{"severity":"low","flag":"risk 3"}],"benefitsToUse":["benefit with $ amount","benefit with $ amount","benefit with $ amount"],"salaryRange":{"low":60000,"target":75000,"high":95000},"counselorNote":"Two sentences of personal advice for this soldier."}
