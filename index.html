@@ -1484,10 +1484,10 @@ function renderPlanBody(){
   const planName = cPlan==='A'?'Alpha':cPlan==='B'?'Bravo':'Charlie';
   G('plan-body2').innerHTML=`
     <div class="card"><div class="ch"><div class="cd"></div>Plan ${planName} Details</div>
-      <div class="fg"><label class="lb">Plan Title</label><input type="text" id="pt1" value="${p.title||''}" placeholder="e.g. Federal IT Manager — GS-12"></div>
-      <div class="fg"><label class="lb">Career Track</label><input type="text" id="pt2" value="${p.track||''}" placeholder="e.g. DoD Contractor → Federal GS position in 2 years"></div>
-      <div class="r2"><div class="fg"><label class="lb">Target Employer</label><input type="text" id="pt3" value="${p.employer||''}" placeholder="CISA, Northrop Grumman, VA System..."></div><div class="fg"><label class="lb">Target Salary</label><input type="text" id="pt4" value="${p.salary||''}" placeholder="$75,000/yr"></div></div>
-      <div class="fg"><label class="lb">Execution Timeline</label><input type="text" id="pt5" value="${p.timeline||''}" placeholder="e.g. Employed within 90 days of separation"></div>
+      <div class="fg"><label class="lb">Plan Title</label><input type="text" id="pt1" value="${p.title||''}" placeholder="e.g. Federal IT Manager — GS-12" maxlength="80"></div>
+      <div class="fg"><label class="lb">Career Track</label><input type="text" id="pt2" value="${p.track||''}" placeholder="e.g. DoD Contractor → Federal GS position in 2 years" maxlength="80"></div>
+      <div class="r2"><div class="fg"><label class="lb">Target Employer</label><input type="text" id="pt3" value="${p.employer||''}" placeholder="CISA, Northrop Grumman, VA System..." maxlength="80"></div><div class="fg"><label class="lb">Target Salary</label><input type="text" id="pt4" value="${p.salary||''}" placeholder="$75,000/yr"></div></div>
+      <div class="fg"><label class="lb">Execution Timeline</label><input type="text" id="pt5" value="${p.timeline||''}" placeholder="e.g. Employed within 90 days of separation" maxlength="60"></div>
     </div>
     <div class="card"><div class="ch"><div class="cd"></div>Execution Steps</div><div id="pl-steps"></div><button class="btn btn-sm btn-o mt8" onclick="addPlSt()">+ Add Step</button></div>
     <div class="card"><div class="ch"><div class="cd"></div>Analysis</div>
@@ -1495,7 +1495,7 @@ function renderPlanBody(){
         <div><div class="txxs txm mb8" style="letter-spacing:.08em;text-transform:uppercase">Advantages</div><textarea rows="3" id="pt6" placeholder="Pros of this plan...">${p.pros||''}</textarea></div>
         <div><div class="txxs txm mb8" style="letter-spacing:.08em;text-transform:uppercase">Risks</div><textarea rows="3" id="pt7" placeholder="Risks / challenges...">${p.cons||''}</textarea></div>
       </div>
-      <div class="fg mt12"><label class="lb">Notes</label><textarea rows="3" id="pt8" placeholder="Additional notes, contacts, action items...">${p.notes||''}</textarea></div>
+      <div class="fg mt12"><label class="lb">Notes</label><textarea rows="3" id="pt8" placeholder="Additional notes, contacts, action items..." maxlength="120">${p.notes||''}</textarea></div>
     </div>
     <div class="ar"><button class="btn btn-g btn-sm" onclick="savePlan()">💾 Save Plan ${planName}</button></div>
     
@@ -3523,18 +3523,22 @@ async function runAIAnalysis(planKey) {
   const planName = planKey==='A'?'Alpha':planKey==='B'?'Bravo':'Charlie';
 
   // Require at least a plan title
-  if (!p.title && !p.track && !G('pt1')?.value) {
+  const titleVal = G('pt1')?.value?.trim();
+  const trackVal = G('pt2')?.value?.trim();
+  if (!titleVal && !trackVal) {
     toast('📝 Fill in at least a Plan Title and Career Track first');
     return;
   }
 
   // Get latest values from form
-  const planTitle    = G('pt1')?.value || p.title || 'Not specified';
-  const careerTrack  = G('pt2')?.value || p.track || 'Not specified';
-  const employer     = G('pt3')?.value || p.employer || 'Not specified';
-  const salary       = G('pt4')?.value || p.salary || 'Not specified';
-  const timeline     = G('pt5')?.value || p.timeline || 'Not specified';
-  const notes        = G('pt8')?.value || p.notes || '';
+  // Cap all text inputs to prevent oversized prompts
+  const cap = (str, max=80) => (str||'').trim().slice(0, max) || 'Not specified';
+  const planTitle   = cap(G('pt1')?.value || p.title);
+  const careerTrack = cap(G('pt2')?.value || p.track);
+  const employer    = cap(G('pt3')?.value || p.employer);
+  const salary      = cap(G('pt4')?.value || p.salary, 30);
+  const timeline    = cap(G('pt5')?.value || p.timeline, 60);
+  const notes       = cap(G('pt8')?.value || p.notes, 120);
 
   // Build soldier profile for context
   const profile = {
@@ -3562,63 +3566,16 @@ async function runAIAnalysis(planKey) {
   if (loading) loading.style.display = 'flex';
   if (result) { result.classList.remove('show'); result.innerHTML = ''; }
 
-  const prompt = `You are an expert military transition counselor with 20 years of experience helping service members transition to civilian careers. You know VA benefits, GI Bill, COOL funding, DoD hiring, clearance premiums, and civilian career paths for every military MOS.
+  const prompt = `You are a military transition counselor. Analyze this career plan and respond ONLY with valid JSON — no markdown, no backticks, no extra text.
 
-Analyze this service member's career plan and provide a detailed feasibility assessment.
+SOLDIER: ${profile.rank} ${profile.name} | ${profile.branch} | MOS: ${profile.mos} | ${profile.yos} yrs | Clearance: ${profile.clearance} | GI Bill: ${profile.giBill} | VA: ${profile.vaRate} | Retirement pay: ${profile.retPay||'N/A'} | Target state: ${profile.location} | Sep type: ${profile.sepType}
 
-SOLDIER PROFILE:
-- Name: ${profile.name}
-- Rank: ${profile.rank} | Branch: ${profile.branch} | MOS: ${profile.mos}
-- Years of Service: ${profile.yos}
-- Separation Type: ${profile.sepType} | Date: ${profile.sepDate}
-- Security Clearance: ${profile.clearance}
-- GI Bill: ${profile.giBill}
-- VA Rating: ${profile.vaRate}
-- Target Career Track: ${profile.careerTrack}
-- Target Location: ${profile.location}
-- Target Salary: ${profile.salary}
-- TSP Status: ${profile.tsp}
+PLAN ${planName.toUpperCase()}: "${planTitle}" | Track: ${careerTrack} | Employer: ${employer} | Salary goal: ${salary} | Timeline: ${timeline}${notes !== 'Not specified' ? ' | Notes: '+notes : ''}
 
-PLAN ${planName.toUpperCase()} — "${planTitle}":
-- Career Track: ${careerTrack}
-- Target Employer: ${employer}
-- Target Salary: ${salary}
-- Timeline: ${timeline}
-- Additional Notes: ${notes}
+Return this exact JSON structure:
+{"feasibilityScore":85,"timelineScore":78,"financialScore":90,"overallVerdict":"One sentence verdict","strengths":["strength 1","strength 2","strength 3"],"roadmap":[{"step":1,"action":"action","timeline":"when","cost":"$0"},{"step":2,"action":"action","timeline":"when","cost":"$0"},{"step":3,"action":"action","timeline":"when","cost":"$0"},{"step":4,"action":"action","timeline":"when","cost":"$0"},{"step":5,"action":"action","timeline":"when","cost":"$0"}],"riskFlags":[{"severity":"high","flag":"risk 1"},{"severity":"medium","flag":"risk 2"},{"severity":"low","flag":"risk 3"}],"benefitsToUse":["benefit with $ amount","benefit with $ amount","benefit with $ amount"],"salaryRange":{"low":60000,"target":75000,"high":95000},"counselorNote":"Two sentences of personal advice for this soldier."}
 
-Provide your analysis in this EXACT JSON format (no markdown, no backticks, just pure JSON):
-{
-  "feasibilityScore": 85,
-  "timelineScore": 78,
-  "financialScore": 90,
-  "overallVerdict": "Strong plan with achievable timeline",
-  "strengths": [
-    "Specific strength 1 with detail",
-    "Specific strength 2 with detail",
-    "Specific strength 3 with detail"
-  ],
-  "roadmap": [
-    {"step": 1, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"},
-    {"step": 2, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"},
-    {"step": 3, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"},
-    {"step": 4, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"},
-    {"step": 5, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"}
-  ],
-  "riskFlags": [
-    {"severity": "high", "flag": "Specific risk description"},
-    {"severity": "medium", "flag": "Specific risk description"},
-    {"severity": "low", "flag": "Specific risk description"}
-  ],
-  "benefitsToUse": [
-    "Specific benefit with exact dollar amount or value",
-    "Specific benefit with exact dollar amount or value",
-    "Specific benefit with exact dollar amount or value"
-  ],
-  "salaryRange": {"low": 65000, "target": 75000, "high": 95000},
-  "counselorNote": "One paragraph of personal advice from an experienced transition counselor, speaking directly to this soldier about this specific plan."
-}
-
-Be specific to their MOS, branch, clearance level, and situation. Use real numbers. Reference actual programs like COOL, GI Bill chapters, VA BDD, specific job titles and GS grades. Do not be generic.`;
+Be specific to their MOS, clearance, branch, and situation. Use real numbers and real programs (COOL, GI Bill chapters, VA BDD, GS grades).`;
 
   try {
     // ★ REPLACE THIS URL with your Cloudflare Worker URL after deploying tc-ai-proxy-worker.js
