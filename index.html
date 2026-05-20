@@ -444,6 +444,37 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
 .ig-btn{background:#C8881A;color:#fff;border:none;border-radius:10px;padding:14px 32px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;width:100%;max-width:360px;margin-bottom:10px}
 .ig-skip{background:none;border:none;color:rgba(245,239,224,.3);font-size:12px;cursor:pointer;padding:8px}
 .ig-share-icon{display:inline-block;background:rgba(200,136,26,.15);border:1px solid rgba(200,136,26,.3);border-radius:6px;padding:2px 8px;font-size:12px;color:#C8881A;font-weight:700}
+
+/* ── AI PLAN ANALYZER ── */
+.ai-panel{background:linear-gradient(135deg,#1B2B4B,#142040);border:1.5px solid rgba(200,136,26,.3);border-radius:12px;padding:18px;margin-top:16px;position:relative;overflow:hidden}
+.ai-panel::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(200,136,26,.12),transparent 70%);pointer-events:none}
+.ai-panel-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ai-badge{background:rgba(200,136,26,.15);border:1px solid rgba(200,136,26,.3);border-radius:6px;padding:3px 10px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ac)}
+.ai-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#F5EFE0}
+.ai-btn{background:linear-gradient(135deg,var(--ac),#A06A0A);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:8px;width:100%}
+.ai-btn:hover{opacity:.9;transform:translateY(-1px)}
+.ai-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.ai-loading{display:flex;align-items:center;gap:12px;padding:14px 0;color:rgba(245,239,224,.5);font-size:13px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--ac);animation:aiPulse 1.2s ease-in-out infinite}
+.ai-dot:nth-child(2){animation-delay:.2s}
+.ai-dot:nth-child(3){animation-delay:.4s}
+@keyframes aiPulse{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+.ai-result{margin-top:14px;display:none}
+.ai-result.show{display:block}
+.ai-score-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.ai-score-card{flex:1;min-width:80px;background:rgba(255,255,255,.05);border:1px solid rgba(245,239,224,.08);border-radius:8px;padding:10px;text-align:center}
+.ai-score-n{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;line-height:1}
+.ai-score-l{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,239,224,.4);margin-top:2px}
+.ai-section{background:rgba(255,255,255,.04);border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.ai-section-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.ai-section-body{font-size:12px;color:rgba(245,239,224,.7);line-height:1.7}
+.ai-section-body ul{padding-left:16px;margin-top:4px}
+.ai-section-body li{margin-bottom:4px}
+.ai-flag{display:flex;gap:8px;align-items:flex-start;padding:5px 0;font-size:12px;color:rgba(245,239,224,.65);line-height:1.5}
+.ai-flag-icon{flex-shrink:0;font-size:13px}
+.ai-regen{background:rgba(255,255,255,.06);border:1px solid rgba(245,239,224,.1);color:rgba(245,239,224,.5);border-radius:6px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:8px}
+.ai-regen:hover{border-color:var(--ac);color:var(--ac)}
+
 </style>
 </head>
 <body>
@@ -1281,7 +1312,11 @@ function bPl(pl){
   cPlan=pl||cPlan;const p=S.plans[cPlan]||{steps:[]};
   G('p-pl').innerHTML=`<div class="ph">Career Plans</div><div class="psub">Develop three contingency career tracks — Alpha is primary, Bravo and Charlie are backup plans</div>
     <div style="display:flex;gap:6px;margin-bottom:16px" id="plan-tabs">
-      ${['A','B','C'].map((l,i)=>`<div class="ptab${cPlan===l?' a':''}" onclick="openPlan('${l}',this)">Plan ${['Alpha','Bravo','Charlie'][i]}</div>`).join('')}
+      ${['A','B','C'].map((l,i)=>{
+      const score=S.plans[l]?.aiScore;
+      const scoreHtml=score?`<span style="font-size:9px;color:${score>=80?'#6EBB85':score>=60?'#C8881A':'#FF6B6B'};margin-left:4px">${score}%</span>`:'';
+      return`<div class="ptab${cPlan===l?' a':''}" onclick="openPlan('${l}',this)">Plan ${['Alpha','Bravo','Charlie'][i]}${scoreHtml}</div>`;
+    }).join('')}
     </div>
     <div id="plan-body2"></div>`;
   renderPlanBody();
@@ -1289,8 +1324,9 @@ function bPl(pl){
 function openPlan(pl,el){cPlan=pl;document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('a'));el.classList.add('a');renderPlanBody();}
 function renderPlanBody(){
   const p=S.plans[cPlan]||{steps:[]};
+  const planName = cPlan==='A'?'Alpha':cPlan==='B'?'Bravo':'Charlie';
   G('plan-body2').innerHTML=`
-    <div class="card"><div class="ch"><div class="cd"></div>Plan ${cPlan==='A'?'Alpha':cPlan==='B'?'Bravo':'Charlie'} Details</div>
+    <div class="card"><div class="ch"><div class="cd"></div>Plan ${planName} Details</div>
       <div class="fg"><label class="lb">Plan Title</label><input type="text" id="pt1" value="${p.title||''}" placeholder="e.g. Federal IT Manager — GS-12"></div>
       <div class="fg"><label class="lb">Career Track</label><input type="text" id="pt2" value="${p.track||''}" placeholder="e.g. DoD Contractor → Federal GS position in 2 years"></div>
       <div class="r2"><div class="fg"><label class="lb">Target Employer</label><input type="text" id="pt3" value="${p.employer||''}" placeholder="CISA, Northrop Grumman, VA System..."></div><div class="fg"><label class="lb">Target Salary</label><input type="text" id="pt4" value="${p.salary||''}" placeholder="$75,000/yr"></div></div>
@@ -1304,9 +1340,31 @@ function renderPlanBody(){
       </div>
       <div class="fg mt12"><label class="lb">Notes</label><textarea rows="3" id="pt8" placeholder="Additional notes, contacts, action items...">${p.notes||''}</textarea></div>
     </div>
-    <div class="ar"><button class="btn btn-g btn-sm" onclick="savePlan()">💾 Save Plan ${cPlan==='A'?'Alpha':cPlan==='B'?'Bravo':'Charlie'}</button></div>`;
+    <div class="ar"><button class="btn btn-g btn-sm" onclick="savePlan()">💾 Save Plan ${planName}</button></div>
+    
+    <!-- AI PLAN ANALYZER -->
+    <div class="ai-panel">
+      <div class="ai-panel-header">
+        <div class="ai-badge">✨ AI</div>
+        <div class="ai-title">Plan ${planName} — AI Feasibility Analysis</div>
+      </div>
+      <div style="font-size:12px;color:rgba(245,239,224,.5);line-height:1.6;margin-bottom:12px">
+        AI analyzes your plan against your profile — MOS, years of service, GI Bill, VA rating, clearance, separation timeline — and gives you a real feasibility score with specific steps and risk flags.
+      </div>
+      <button class="ai-btn" id="ai-analyze-btn" onclick="runAIAnalysis('${cPlan}')">
+        ✨ Analyze Plan ${planName} with AI
+      </button>
+      <div class="ai-loading" id="ai-loading" style="display:none">
+        <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
+        <span>Analyzing your plan against your profile...</span>
+      </div>
+      <div class="ai-result" id="ai-result-${cPlan}">
+        ${p.aiAnalysis||''}
+      </div>
+    </div>`;
   renderPlSteps();
 }
+
 function renderPlSteps(){
   const steps=(S.plans[cPlan]||{}).steps||[];
   const el=G('pl-steps');if(!el)return;
@@ -3295,6 +3353,243 @@ function bMb(){
       </div>
     </div>
   </div>`;
+}
+
+
+// ============================================================
+// AI PLAN ANALYZER
+// ============================================================
+async function runAIAnalysis(planKey) {
+  const p = S.plans[planKey] || {};
+  const u = S.user || {};
+  const planName = planKey==='A'?'Alpha':planKey==='B'?'Bravo':'Charlie';
+
+  // Require at least a plan title
+  if (!p.title && !p.track && !G('pt1')?.value) {
+    toast('📝 Fill in at least a Plan Title and Career Track first');
+    return;
+  }
+
+  // Get latest values from form
+  const planTitle    = G('pt1')?.value || p.title || 'Not specified';
+  const careerTrack  = G('pt2')?.value || p.track || 'Not specified';
+  const employer     = G('pt3')?.value || p.employer || 'Not specified';
+  const salary       = G('pt4')?.value || p.salary || 'Not specified';
+  const timeline     = G('pt5')?.value || p.timeline || 'Not specified';
+  const notes        = G('pt8')?.value || p.notes || '';
+
+  // Build soldier profile for context
+  const profile = {
+    name:       u.name       || 'Service Member',
+    rank:       u.rank       || 'Unknown',
+    branch:     u.branch     || 'Army',
+    mos:        u.mos        || 'Unknown',
+    yos:        u.yos        || 'Unknown',
+    sepType:    u.sepType    || 'ETS',
+    sepDate:    u.sepDate    || 'Unknown',
+    clearance:  u.clr        || 'None',
+    giBill:     u.giBill     || 'Unknown',
+    vaRate:     u.vaRate     || '0%',
+    careerTrack:u.careerTrack|| 'Not specified',
+    salary:     u.salary     || 'Not specified',
+    location:   u.loc        || 'Not specified',
+    tsp:        u.tsp        || 'Unknown',
+  };
+
+  // Show loading
+  const btn = G('ai-analyze-btn');
+  const loading = G('ai-loading');
+  const result = G('ai-result-' + planKey);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Analyzing...'; }
+  if (loading) loading.style.display = 'flex';
+  if (result) { result.classList.remove('show'); result.innerHTML = ''; }
+
+  const prompt = `You are an expert military transition counselor with 20 years of experience helping service members transition to civilian careers. You know VA benefits, GI Bill, COOL funding, DoD hiring, clearance premiums, and civilian career paths for every military MOS.
+
+Analyze this service member's career plan and provide a detailed feasibility assessment.
+
+SOLDIER PROFILE:
+- Name: ${profile.name}
+- Rank: ${profile.rank} | Branch: ${profile.branch} | MOS: ${profile.mos}
+- Years of Service: ${profile.yos}
+- Separation Type: ${profile.sepType} | Date: ${profile.sepDate}
+- Security Clearance: ${profile.clearance}
+- GI Bill: ${profile.giBill}
+- VA Rating: ${profile.vaRate}
+- Target Career Track: ${profile.careerTrack}
+- Target Location: ${profile.location}
+- Target Salary: ${profile.salary}
+- TSP Status: ${profile.tsp}
+
+PLAN ${planName.toUpperCase()} — "${planTitle}":
+- Career Track: ${careerTrack}
+- Target Employer: ${employer}
+- Target Salary: ${salary}
+- Timeline: ${timeline}
+- Additional Notes: ${notes}
+
+Provide your analysis in this EXACT JSON format (no markdown, no backticks, just pure JSON):
+{
+  "feasibilityScore": 85,
+  "timelineScore": 78,
+  "financialScore": 90,
+  "overallVerdict": "Strong plan with achievable timeline",
+  "strengths": [
+    "Specific strength 1 with detail",
+    "Specific strength 2 with detail",
+    "Specific strength 3 with detail"
+  ],
+  "roadmap": [
+    {"step": 1, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"},
+    {"step": 2, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"},
+    {"step": 3, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"},
+    {"step": 4, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"},
+    {"step": 5, "action": "Specific action", "timeline": "When to do it", "cost": "$0 or cost"}
+  ],
+  "riskFlags": [
+    {"severity": "high", "flag": "Specific risk description"},
+    {"severity": "medium", "flag": "Specific risk description"},
+    {"severity": "low", "flag": "Specific risk description"}
+  ],
+  "benefitsToUse": [
+    "Specific benefit with exact dollar amount or value",
+    "Specific benefit with exact dollar amount or value",
+    "Specific benefit with exact dollar amount or value"
+  ],
+  "salaryRange": {"low": 65000, "target": 75000, "high": 95000},
+  "counselorNote": "One paragraph of personal advice from an experienced transition counselor, speaking directly to this soldier about this specific plan."
+}
+
+Be specific to their MOS, branch, clearance level, and situation. Use real numbers. Reference actual programs like COOL, GI Bill chapters, VA BDD, specific job titles and GS grades. Do not be generic.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || '';
+    
+    // Parse JSON response
+    let analysis;
+    try {
+      const clean = text.replace(/```json|```/g, '').trim();
+      analysis = JSON.parse(clean);
+    } catch(e) {
+      throw new Error('Could not parse AI response');
+    }
+
+    // Build the result HTML
+    const scoreColor = (n) => n >= 80 ? '#6EBB85' : n >= 60 ? '#C8881A' : '#FF6B6B';
+    const riskIcon = (s) => s === 'high' ? '🔴' : s === 'medium' ? '🟡' : '🟢';
+    
+    const html = `
+      <div class="ai-score-row">
+        <div class="ai-score-card">
+          <div class="ai-score-n" style="color:${scoreColor(analysis.feasibilityScore)}">${analysis.feasibilityScore}%</div>
+          <div class="ai-score-l">Feasibility</div>
+        </div>
+        <div class="ai-score-card">
+          <div class="ai-score-n" style="color:${scoreColor(analysis.timelineScore)}">${analysis.timelineScore}%</div>
+          <div class="ai-score-l">Timeline</div>
+        </div>
+        <div class="ai-score-card">
+          <div class="ai-score-n" style="color:${scoreColor(analysis.financialScore)}">${analysis.financialScore}%</div>
+          <div class="ai-score-l">Financial</div>
+        </div>
+        <div class="ai-score-card">
+          <div class="ai-score-n" style="color:#5BA3F5;font-size:18px">$${(analysis.salaryRange?.target||0).toLocaleString()}</div>
+          <div class="ai-score-l">Target Salary</div>
+        </div>
+      </div>
+
+      <div class="ai-section">
+        <div class="ai-section-title">💬 Counselor Assessment</div>
+        <div class="ai-section-body">${analysis.overallVerdict}</div>
+      </div>
+
+      <div class="ai-section">
+        <div class="ai-section-title">✅ Strengths</div>
+        <div class="ai-section-body"><ul>${(analysis.strengths||[]).map(s=>`<li>${s}</li>`).join('')}</ul></div>
+      </div>
+
+      <div class="ai-section">
+        <div class="ai-section-title">🗺️ Your 5-Step Roadmap</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${(analysis.roadmap||[]).map(r=>`
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--ac);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;display:grid;place-items:center;flex-shrink:0;margin-top:1px">${r.step}</div>
+            <div style="flex:1">
+              <div style="font-size:12px;color:rgba(245,239,224,.85);font-weight:600">${r.action}</div>
+              <div style="font-size:11px;color:rgba(245,239,224,.4);margin-top:1px">${r.timeline}${r.cost && r.cost !== '$0' ? ' · '+r.cost : ''}</div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="ai-section">
+        <div class="ai-section-title">💰 Benefits to Leverage</div>
+        <div class="ai-section-body"><ul>${(analysis.benefitsToUse||[]).map(b=>`<li>${b}</li>`).join('')}</ul></div>
+      </div>
+
+      <div class="ai-section">
+        <div class="ai-section-title">⚠️ Risk Flags</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          ${(analysis.riskFlags||[]).map(r=>`
+          <div class="ai-flag">
+            <span class="ai-flag-icon">${riskIcon(r.severity)}</span>
+            <span>${r.flag}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="ai-section">
+        <div class="ai-section-title">🎖️ Personal Note from Your AI Counselor</div>
+        <div class="ai-section-body" style="font-style:italic">${analysis.counselorNote}</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="ai-regen" onclick="runAIAnalysis('${planKey}')">↺ Re-analyze</button>
+        <button class="ai-regen" onclick="saveAIAnalysis('${planKey}')" style="border-color:rgba(74,124,89,.4);color:#6EBB85">💾 Save Analysis</button>
+      </div>`;
+
+    if (result) {
+      result.innerHTML = html;
+      result.classList.add('show');
+    }
+
+    // Cache the analysis
+    if (!S.plans[planKey]) S.plans[planKey] = {steps:[]};
+    S.plans[planKey].aiAnalysis = html;
+    S.plans[planKey].aiScore = analysis.feasibilityScore;
+    saveS();
+
+    toast('✅ AI analysis complete');
+
+  } catch(err) {
+    console.error('AI analysis error:', err);
+    if (result) {
+      result.innerHTML = `<div style="color:rgba(245,239,224,.5);font-size:12px;padding:10px 0">⚠️ Analysis unavailable right now. Check your connection and try again.<br><small>${err.message}</small></div>`;
+      result.classList.add('show');
+    }
+    toast('⚠️ Analysis failed — try again');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '✨ Re-analyze with AI'; }
+    if (loading) loading.style.display = 'none';
+  }
+}
+
+function saveAIAnalysis(planKey) {
+  if (S.plans[planKey]?.aiAnalysis) {
+    saveS();
+    toast('💾 Analysis saved to your plan');
+  }
 }
 
 // ============================================================
