@@ -651,6 +651,78 @@ console.log('✅ Firebase connected — transitioncommand project');
 // ============================================================
 // DATA
 // ============================================================
+
+const RANKS_ENLISTED = ['E-1 PVT','E-2 PV2','E-3 PFC','E-4 SPC','E-4 CPL','E-5 SGT','E-6 SSG','E-7 SFC','E-8 MSG','E-8 1SG','E-9 SGM','E-9 CSM','E-9 SMA'];
+const RANKS_WARRANT  = ['W-1 WO1','W-2 CW2','W-3 CW3','W-4 CW4','W-5 CW5'];
+const RANKS_OFFICER  = ['O-1 2LT','O-2 1LT','O-3 CPT','O-4 MAJ','O-5 LTC','O-6 COL','O-7 BG','O-8 MG','O-9 LTG','O-10 GEN'];
+const ALL_RANKS      = [...RANKS_ENLISTED, ...RANKS_WARRANT, ...RANKS_OFFICER];
+
+const US_STATES = [
+  'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut',
+  'Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa',
+  'Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan',
+  'Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire',
+  'New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio',
+  'Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota',
+  'Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia',
+  'Wisconsin','Wyoming','Washington DC','Remote / Undecided'
+];
+
+const ARMY_MOS_LIST = [
+  '11A - Infantry Officer','11B - Infantryman','11C - Indirect Fire Infantryman',
+  '12A - Engineer Officer','12B - Combat Engineer','12C - Bridge Crewmember',
+  '13A - Field Artillery Officer','13B - Cannon Crewmember','13F - Fire Support Specialist',
+  '14A - Air Defense Artillery Officer','14T - Patriot Launching Station Operator',
+  '15A - Aviation Officer','15T - UH-60 Helicopter Repairer','15U - CH-47 Helicopter Repairer',
+  '17A - Cyber Warfare Officer','17C - Cyber Operations Specialist',
+  '18A - Special Forces Officer','18B - SF Weapons Sergeant','18C - SF Engineer Sergeant',
+  '18D - SF Medical Sergeant','18E - SF Communications Sergeant','18F - SF Intelligence Sergeant','18Z - Special Forces Senior Sergeant',
+  '25A - Signal Officer','25B - IT Specialist','25C - Radio Operator-Maintainer','25U - Signal Support Systems Specialist',
+  '27A - Judge Advocate','27D - Paralegal Specialist',
+  '31A - Military Police Officer','31B - Military Police',
+  '35A - Military Intelligence Officer','35F - All-Source Intelligence Analyst','35L - Counterintelligence Agent','35M - HUMINT Collector',
+  '36A - Financial Management Officer','36B - Financial Management Technician',
+  '38A - Civil Affairs Officer','38B - Civil Affairs Specialist',
+  '42A - Human Resources Specialist','42B - Human Resources Officer',
+  '46A - Public Affairs Officer','46Q - Public Affairs Specialist',
+  '51A - Acquisition Corps Officer','51C - Acquisition NCO',
+  '56A - Chaplain','56M - Chaplain Assistant',
+  '63A - General Engineering Supervisor','63B - Wheeled Vehicle Mechanic',
+  '68A - Biomedical Equipment Specialist','68B - Orthopedic Specialist','68D - Operating Room Specialist',
+  '68E - Dental Specialist','68J - Medical Logistics Specialist','68K - Medical Laboratory Specialist',
+  '68L - Occupational Therapy Specialist','68M - Nutrition Care Specialist','68P - Radiology Specialist',
+  '68Q - Pharmacy Specialist','68R - Veterinary Food Inspection Specialist','68S - Preventive Medicine Specialist',
+  '68T - Animal Care Specialist','68V - Respiratory Specialist','68W - Combat Medic Specialist','68X - Mental Health Specialist',
+  '74A - Chemical Officer','74D - Chemical Operations Specialist',
+  '79S - Career Counselor',
+  '88A - Transportation Officer','88H - Cargo Specialist','88K - Watercraft Operator','88M - Motor Transport Operator','88N - Transportation Management Coordinator',
+  '89A - Ammunition Stock Control & Accounting Specialist','89B - Ammunition Specialist','89D - Explosive Ordnance Disposal',
+  '91A - M1 Abrams Tank System Maintainer','91B - Wheeled Vehicle Mechanic','91C - Utilities Equipment Repairer',
+  '91D - Power Generation Equipment Repairer','91E - Allied Trade Specialist','91F - Small Arms/Artillery Repairer',
+  '91H - Track Vehicle Repairer','91L - Construction Equipment Repairer','91M - Bradley Fighting Vehicle Systems Maintainer',
+  '91P - Artillery Mechanic','91S - Stryker Systems Maintainer','91X - M60A3 Tank Turret Mechanic',
+  '92A - Automated Logistical Specialist','92F - Petroleum Supply Specialist','92G - Culinary Specialist',
+  '92L - Petroleum Laboratory Specialist','92M - Mortuary Affairs Specialist','92R - Parachute Rigger',
+  '92S - Shower/Laundry & Clothing Repair Specialist','92W - Water Treatment Specialist','92Y - Unit Supply Specialist','92Z - Senior Noncommissioned Logistician',
+  '94A - Land Combat Electronic Missile Systems Repairer','94D - Air Traffic Control Equipment Repairer',
+  '94E - Radio & Communications Security Repairer','94F - Special Electronic Devices Repairer',
+  '94H - Test Measurement & Diagnostic Equipment Maintainer','94M - Radar Repairer',
+  '94P - Multiple Launch Rocket System Repairer','94R - Avionic and Survivability Equipment Repairer',
+  '94S - PATRIOT System Repairer','94T - AVENGER System Repairer','94W - Electronic Maintenance Chief','94X - Special Weapons Systems Maintainer',
+  'Other / Not Listed'
+];
+
+const SALARY_RANGES = [
+  'Under $40,000','$40,000 – $50,000','$50,000 – $60,000','$60,000 – $70,000',
+  '$70,000 – $80,000','$80,000 – $90,000','$90,000 – $100,000','$100,000 – $120,000',
+  '$120,000 – $150,000','$150,000+','Undecided'
+];
+
+const RET_PAY_RANGES = [
+  'Under $1,000/mo','$1,000 – $2,000/mo','$2,000 – $3,000/mo','$3,000 – $4,000/mo',
+  '$4,000 – $5,000/mo','$5,000 – $6,000/mo','Over $6,000/mo','Not Retiring / ETS'
+];
+
 const BRANCHES=[
   {id:'army',label:'Army',icon:'⭐'},
   {id:'navy',label:'Navy',icon:'⚓'},
@@ -1098,12 +1170,45 @@ function sPri(el){const sel=document.querySelectorAll('#pc .chip.s');if(!el.clas
 
 function w0(c){
   c.innerHTML=`<div class="wt">Who are you?</div><div class="ws">We'll build your personalized command center from this</div>
-  <div class="fg"><label class="lb">Full Name (include rank if desired)</label><input type="text" id="wn" value="${S.user.name||''}" placeholder="SFC Jane Smith"></div>
+  <div class="fg"><label class="lb">Full Name</label><input type="text" id="wn" value="${S.user.name||''}" placeholder="SFC Jane Smith"></div>
   <div class="fg"><label class="lb">Branch of Service</label><div class="bgrid">${BRANCHES.map(b=>`<div class="bb${S.user.branch===b.id?' s':''}" onclick="document.querySelectorAll('.bb').forEach(x=>x.classList.remove('s'));this.classList.add('s');"><span class="bi">${b.icon}</span>${b.label}</div>`).join('')}</div></div>
-  <div class="r2"><div class="fg"><label class="lb">Pay Grade / Rank</label><input type="text" id="wrk" value="${S.user.rank||''}" placeholder="E-7, O-3, W-2..."></div><div class="fg"><label class="lb">MOS / Rate / AFSC</label><input type="text" id="wmos" value="${S.user.mos||''}" placeholder="25U, BM, 3D0X2..."></div></div>
-  <div class="r2"><div class="fg"><label class="lb">Component</label><select id="wcomp"><option value="active"${S.user.comp==='active'?' selected':''}>Active Duty</option><option value="reserve"${S.user.comp==='reserve'?' selected':''}>Reserve</option><option value="guard"${S.user.comp==='guard'?' selected':''}>National Guard</option></select></div><div class="fg"><label class="lb">Security Clearance</label><select id="wclr"><option value="">None / N/A</option><option value="Secret"${S.user.clr==='Secret'?' selected':''}>Secret</option><option value="Top Secret"${S.user.clr==='Top Secret'?' selected':''}>Top Secret</option><option value="TS/SCI"${S.user.clr==='TS/SCI'?' selected':''}>TS/SCI</option></select></div></div>`;
+  <div class="r2">
+    <div class="fg"><label class="lb">Pay Grade / Rank</label>
+      <select id="wrk" style="width:100%;background:var(--bg2);border:1.5px solid var(--b2);border-radius:var(--r);padding:9px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);outline:none;cursor:pointer">
+        <option value="">Select rank...</option>
+        <optgroup label="Enlisted">${RANKS_ENLISTED.map(r=>`<option value="${r}"${S.user.rank===r?' selected':''}>${r}</option>`).join('')}</optgroup>
+        <optgroup label="Warrant Officer">${RANKS_WARRANT.map(r=>`<option value="${r}"${S.user.rank===r?' selected':''}>${r}</option>`).join('')}</optgroup>
+        <optgroup label="Officer">${RANKS_OFFICER.map(r=>`<option value="${r}"${S.user.rank===r?' selected':''}>${r}</option>`).join('')}</optgroup>
+      </select>
+    </div>
+    <div class="fg"><label class="lb">Years of Service</label><input type="number" id="wyos" min="1" max="40" value="${S.user.yos||''}" placeholder="8"></div>
+  </div>
+  <div class="fg"><label class="lb">MOS / Rate / AFSC</label>
+    <input type="text" id="wmosSearch" value="${S.user.mos||''}" placeholder="Type MOS or job title to search..." oninput="filterMOS(this.value)" style="width:100%;background:var(--bg2);border:1.5px solid var(--b2);border-radius:var(--r) var(--r) 0 0;padding:9px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);outline:none">
+    <select id="wmos" size="4" style="width:100%;background:var(--bg2);border:1.5px solid var(--b2);border-top:none;border-radius:0 0 var(--r) var(--r);color:var(--tx);font-size:12px;font-family:var(--fb);outline:none;display:block" onchange="document.getElementById('wmosSearch').value=this.value">
+      ${ARMY_MOS_LIST.map(m=>`<option value="${m}"${S.user.mos===m?' selected':''}>${m}</option>`).join('')}
+    </select>
+  </div>
+  <div class="fg"><label class="lb">Security Clearance</label>
+    <select id="wclr" style="width:100%;background:var(--bg2);border:1.5px solid var(--b2);border-radius:var(--r);padding:9px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);outline:none;cursor:pointer">
+      <option value="">Select clearance level...</option>
+      ${['None / Confidential','Secret','Top Secret','TS/SCI','TS/SCI with Polygraph'].map(cl=>`<option value="${cl}"${S.user.clr===cl?' selected':''}>${cl}</option>`).join('')}
+    </select>
+  </div>`;
   wNav(c);
 }
+
+function filterMOS(query){
+  const sel = document.getElementById('wmos');
+  if(!sel) return;
+  const q = query.toLowerCase();
+  sel.innerHTML = ARMY_MOS_LIST
+    .filter(m => m.toLowerCase().includes(q))
+    .map(m=>`<option value="${m}">${m}</option>`)
+    .join('');
+}
+
+
 function w1(c){
   c.innerHTML=`<div class="wt">Separation Details</div><div class="ws">When, how, and the nature of your transition</div>
   <div class="fg"><label class="lb">Separation / ETS / Retirement Date</label><input type="date" id="wsd" value="${S.user.sepDate||''}"></div>
@@ -1121,14 +1226,36 @@ function w2(c){
   wNav(c);
 }
 function w3(c){
-  c.innerHTML=`<div class="wt">Career Track</div><div class="ws">Where are you headed? This shapes your task list.</div>
+  c.innerHTML=`<div class="wt">Career Track</div><div class="ws">Where are you headed? This shapes your task list and AI plan analysis.</div>
   <div class="fg"><label class="lb">Primary Post-Service Goal</label><div class="chips" id="ctc">${CAREER_TRACKS.map(s=>`<div class="chip${S.user.careerTrack===s?' s':''}" onclick="sSel('ctc',this)">${s}</div>`).join('')}</div></div>
   <div class="fg"><label class="lb">Target Industry / Field</label><input type="text" id="wind" value="${S.user.industry||''}" placeholder="Cybersecurity, Healthcare, Logistics, Law Enforcement..."></div>
-  <div class="r2"><div class="fg"><label class="lb">Target Location</label><input type="text" id="wloc" value="${S.user.loc||''}" placeholder="State / City / Remote"></div><div class="fg"><label class="lb">Target Salary</label><input type="text" id="wsal" value="${S.user.salary||''}" placeholder="$65,000"></div></div>
-  <div class="fg"><label class="lb">GI Bill Plans</label><div class="chips" id="gic">${GI_OPTS.map(s=>`<div class="chip${S.user.giBill===s?' s':''}" onclick="sSel('gic',this)">${s}</div>`).join('')}</div></div>
+  <div class="r2">
+    <div class="fg"><label class="lb">Desired State After Service</label>
+      <select id="wloc" style="width:100%;background:var(--bg2);border:1.5px solid var(--b2);border-radius:var(--r);padding:9px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);outline:none;cursor:pointer">
+        <option value="">Select state...</option>
+        ${US_STATES.map(s=>`<option value="${s}"${S.user.loc===s?' selected':''}>${s}</option>`).join('')}
+      </select>
+    </div>
+    <div class="fg"><label class="lb">Target Civilian Salary</label>
+      <select id="wsal" style="width:100%;background:var(--bg2);border:1.5px solid var(--b2);border-radius:var(--r);padding:9px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);outline:none;cursor:pointer">
+        <option value="">Select range...</option>
+        ${SALARY_RANGES.map(s=>`<option value="${s}"${S.user.salary===s?' selected':''}>${s}</option>`).join('')}
+      </select>
+    </div>
+  </div>
+  <div class="r2">
+    <div class="fg"><label class="lb">Expected Military Retirement Pay</label>
+      <select id="wretpay" style="width:100%;background:var(--bg2);border:1.5px solid var(--b2);border-radius:var(--r);padding:9px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);outline:none;cursor:pointer">
+        <option value="">Select range...</option>
+        ${RET_PAY_RANGES.map(s=>`<option value="${s}"${S.user.retPay===s?' selected':''}>${s}</option>`).join('')}
+      </select>
+    </div>
+    <div class="fg"><label class="lb">GI Bill Plans</label><div class="chips" id="gic">${GI_OPTS.map(s=>`<div class="chip${S.user.giBill===s?' s':''}" onclick="sSel('gic',this)">${s}</div>`).join('')}</div></div>
+  </div>
   <div class="fg"><label class="lb">LinkedIn Profile URL (optional)</label><input type="text" id="wli" value="${S.user.linkedin||''}" placeholder="linkedin.com/in/yourname"></div>`;
   wNav(c);
 }
+
 function w4(c){
   c.innerHTML=`<div class="wt">Benefits & Claims</div><div class="ws">What you've earned — don't leave anything behind</div>
   <div class="fg"><label class="lb">VA Disability Claim Status</label><div class="chips" id="vcc">${['Already Filed','Planning to File — BDD','Considering It','Not Planning to File','Unsure'].map(s=>`<div class="chip${S.user.vaClaim===s?' s':''}" onclick="sSel('vcc',this)">${s}</div>`).join('')}</div></div>
@@ -1151,7 +1278,10 @@ function wAdv(){
     const br=document.querySelector('.bb.s');if(!br){alert('Please select your branch of service.');return;}
     S.user.name=n;S.user.branch=br.dataset.id||BRANCHES.find(b=>br.textContent.includes(b.label))?.id||'army';
     document.querySelectorAll('.bb').forEach((b,i)=>{if(b.classList.contains('s'))S.user.branch=BRANCHES[i]?.id||'army';});
-    S.user.rank=G('wrk')?.value.trim();S.user.mos=G('wmos')?.value.trim();S.user.comp=G('wcomp')?.value;S.user.clr=G('wclr')?.value;
+    S.user.rank=G('wrk')?.value||'';
+    S.user.yos=G('wyos')?.value||'';
+    S.user.mos=G('wmosSearch')?.value||G('wmos')?.value||'';
+    S.user.clr=G('wclr')?.value||'';S.user.mos=G('wmos')?.value.trim();S.user.comp=G('wcomp')?.value;S.user.clr=G('wclr')?.value;
   }
   if(wSt===1){S.user.sepDate=G('wsd')?.value;S.user.sepType=document.querySelector('#stc .chip.s')?.textContent||'';S.user.yos=G('wyos')?.value;S.user.base=G('wbase')?.value.trim();S.user.phone=G('wph')?.value.trim();S.user.email=G('wem')?.value.trim();}
   if(wSt===2){S.user.famStatus=document.querySelector('#fsc .chip.s')?.textContent||'';S.user.deps=G('wdeps')?.value||0;S.user.youngest=G('wyng')?.value;S.user.spEmp=G('wspe')?.value;S.user.housing=G('whou')?.value;}
