@@ -476,6 +476,30 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
 .ai-regen:hover{border-color:var(--ac);color:var(--ac)}
 
 </style>
+<!-- ══ FIREBASE SDK ══ -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDXZKaAofA_8jM2Ohl95_Urk7T7x6Rgp-E",
+  authDomain: "transitioncommand.firebaseapp.com",
+  projectId: "transitioncommand",
+  storageBucket: "transitioncommand.firebasestorage.app",
+  messagingSenderId: "1035476182942",
+  appId: "1:1035476182942:web:cadcfc51e89eb49be5188f",
+  measurementId: "G-FLRX62QY27"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db   = getFirestore(fbApp);
+window._db      = db;
+window._doc     = doc;
+window._setDoc  = setDoc;
+window._getDoc  = getDoc;
+window._fbReady = true;
+console.log('✅ Firebase connected — transitioncommand project');
+</script>
 </head>
 <body>
 
@@ -1022,6 +1046,8 @@ async function submitKey(){
     G('paywall').style.display='none';
     err.style.display='none';
     toast('✅ License activated — welcome!');
+    localStorage.setItem('tc-key',k);
+    _currentKey=k;
     showInstallGate();
   }else{
     err.textContent='Invalid license key. Check your purchase email and try again.';
@@ -1139,6 +1165,7 @@ function wAdv(){
 // LAUNCH
 // ============================================================
 function launchApp(){
+  initFirebaseSync(localStorage.getItem('tc-key')||'');
   G('onboard').classList.remove('on');G('app').classList.add('on');
   startDemoTimer();
   setTimeout(()=>{
@@ -1785,6 +1812,7 @@ function completeTask(id){
   const prevPct=Math.round(prevDone/tTot*100);
   
   S.tasks[id]=true;
+  syncProgressToFirebase();
   
   // Flash the row green before hiding
   const row=document.querySelector('[data-tid="'+id+'"]');
@@ -3463,7 +3491,10 @@ Provide your analysis in this EXACT JSON format (no markdown, no backticks, just
 Be specific to their MOS, branch, clearance level, and situation. Use real numbers. Reference actual programs like COOL, GI Bill chapters, VA BDD, specific job titles and GS grades. Do not be generic.`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // ★ REPLACE THIS URL with your Cloudflare Worker URL after deploying tc-ai-proxy-worker.js
+      // Example: https://tc-ai-proxy.YOUR-SUBDOMAIN.workers.dev
+      const AI_PROXY_URL = 'https://tc-ai-proxy.kibuglobalventures.workers.dev';
+      const response = await fetch(AI_PROXY_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -3590,6 +3621,63 @@ function saveAIAnalysis(planKey) {
     saveS();
     toast('💾 Analysis saved to your plan');
   }
+}
+
+
+// ============================================================
+// FIREBASE SYNC
+// ============================================================
+let _syncTimeout = null;
+let _currentKey  = '';
+
+async function initFirebaseSync(licenseKey) {
+  if (!window._fbReady || !licenseKey || licenseKey.startsWith('KIBU-')) return;
+  _currentKey = licenseKey;
+  try {
+    const soldierRef = window._doc(window._db, 'soldiers', licenseKey);
+    const snap = await window._getDoc(soldierRef);
+    if (!snap.exists()) {
+      await window._setDoc(soldierRef, {
+        name:         S.user.name     || 'Unknown',
+        rank:         S.user.rank     || '',
+        mos:          S.user.mos      || '',
+        branch:       S.user.branch   || '',
+        ets:          S.user.sepDate  || '',
+        licenseKey:   licenseKey,
+        progress:     0,
+        tasksDone:    0,
+        tasksTotal:   TCATS ? TCATS.reduce((n,c)=>n+c.tasks.length,0) : 44,
+        lastLogin:    new Date().toISOString(),
+        enrolled:     new Date().toISOString(),
+        installation: '21st TSC Panzer Kaserne'
+      });
+      console.log('✅ Soldier profile created in Firebase');
+    } else {
+      await window._setDoc(soldierRef, { lastLogin: new Date().toISOString() }, { merge: true });
+    }
+  } catch(e) { console.log('Firebase sync skipped:', e.message); }
+}
+
+function syncProgressToFirebase() {
+  if (!window._fbReady || !_currentKey || _currentKey.startsWith('KIBU-')) return;
+  clearTimeout(_syncTimeout);
+  _syncTimeout = setTimeout(async () => {
+    try {
+      const done  = Object.keys(S.tasks||{}).filter(k=>S.tasks[k]).length;
+      const total = TCATS ? TCATS.reduce((n,c)=>n+c.tasks.length,0) : 44;
+      const pct   = Math.round(done/total*100);
+      await window._setDoc(
+        window._doc(window._db,'soldiers',_currentKey),
+        { progress:pct, tasksDone:done, tasksTotal:total,
+          lastSync:new Date().toISOString(),
+          name:S.user.name||'', rank:S.user.rank||'',
+          mos:S.user.mos||'', branch:S.user.branch||'',
+          ets:S.user.sepDate||'' },
+        { merge:true }
+      );
+      console.log('✅ Progress synced: '+pct+'%');
+    } catch(e) { console.log('Sync error:', e.message); }
+  }, 2000);
 }
 
 // ============================================================
