@@ -3494,17 +3494,24 @@ Be specific to their MOS, branch, clearance level, and situation. Use real numbe
     // ★ REPLACE THIS URL with your Cloudflare Worker URL after deploying tc-ai-proxy-worker.js
       // Example: https://tc-ai-proxy.YOUR-SUBDOMAIN.workers.dev
       const AI_PROXY_URL = 'https://tc-ai-proxy.kibuglobalventures.workers.dev';
+      console.log('🤖 Calling AI Worker:', AI_PROXY_URL);
       const response = await fetch(AI_PROXY_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
 
-    const data = await response.json();
+      console.log('📡 Worker response status:', response.status);
+      if (!response.ok) {
+        const errText = await response.text();
+        console.error('Worker error:', errText);
+        throw new Error('Worker returned ' + response.status + ': ' + errText);
+      }
+
+      const data = await response.json();
+      console.log('✅ AI response received');
     const text = data.content?.[0]?.text || '';
     
     // Parse JSON response
