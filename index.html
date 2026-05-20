@@ -475,6 +475,19 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
 .ai-regen{background:rgba(255,255,255,.06);border:1px solid rgba(245,239,224,.1);color:rgba(245,239,224,.5);border-radius:6px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:8px}
 .ai-regen:hover{border-color:var(--ac);color:var(--ac)}
 
+
+/* ── AI RESUME REWRITER ── */
+.ai-re-panel{background:linear-gradient(135deg,#1B2B4B,#142040);border:1.5px solid rgba(200,136,26,.3);border-radius:12px;padding:18px;margin-top:16px}
+.ai-re-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ai-re-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.ai-re-tab{background:rgba(255,255,255,.06);border:1px solid rgba(245,239,224,.1);border-radius:6px;padding:5px 12px;font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,239,224,.5);cursor:pointer;transition:.15s}
+.ai-re-tab:hover{border-color:rgba(200,136,26,.4);color:var(--ac)}
+.ai-re-tab.on{background:rgba(200,136,26,.15);border-color:var(--ac);color:var(--ac)}
+.ai-re-output{background:rgba(255,255,255,.04);border:1px solid rgba(245,239,224,.08);border-radius:8px;padding:14px;margin-top:10px;font-size:12px;color:rgba(245,239,224,.8);line-height:1.7;display:none;white-space:pre-wrap}
+.ai-re-output.show{display:block}
+.ai-re-copy{background:rgba(74,124,89,.15);border:1px solid rgba(74,124,89,.3);color:#6EBB85;border-radius:6px;padding:5px 12px;font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:8px;transition:.15s}
+.ai-re-copy:hover{background:rgba(74,124,89,.25)}
+
 </style>
 <!-- ══ FIREBASE SDK ══ -->
 <script type="module">
@@ -1840,6 +1853,31 @@ function bRe(){
       </div>
     </div>`;
   renderExpList();updRp();
+  // Inject AI panel after the split layout
+  const aiPanel = document.createElement('div');
+  aiPanel.innerHTML = `
+    <div class="ai-re-panel" style="margin-top:16px">
+      <div class="ai-re-header">
+        <div class="ai-badge">✨ AI</div>
+        <div style="font-family:var(--fd);font-size:16px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#F5EFE0">Resume AI Rewriter</div>
+      </div>
+      <div style="font-size:12px;color:rgba(245,239,224,.5);margin-bottom:12px;line-height:1.6">Select what you want AI to write — it uses your profile, MOS, and career goals to generate civilian-ready content.</div>
+      <div class="ai-re-tabs">
+        <div class="ai-re-tab on" onclick="selectReTab(this,'summary')">📝 Professional Summary</div>
+        <div class="ai-re-tab" onclick="selectReTab(this,'bullets')">🎯 Experience Bullets</div>
+        <div class="ai-re-tab" onclick="selectReTab(this,'skills')">💡 Skills Section</div>
+        <div class="ai-re-tab" onclick="selectReTab(this,'linkedin')">💼 LinkedIn Headline</div>
+        <div class="ai-re-tab" onclick="selectReTab(this,'cover')">✉️ Cover Letter Opener</div>
+      </div>
+      <button class="ai-btn" id="ai-re-btn" onclick="runResumeAI()" style="width:100%">✨ Generate with AI</button>
+      <div class="ai-loading" id="ai-re-loading" style="display:none">
+        <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
+        <span style="color:rgba(245,239,224,.5);font-size:12px">Writing your civilian resume content...</span>
+      </div>
+      <div class="ai-re-output" id="ai-re-output"></div>
+      <button class="ai-re-copy" id="ai-re-copy-btn" onclick="copyResumeAI()" style="display:none">📋 Copy to Resume</button>
+    </div>`;
+  G('p-re').appendChild(aiPanel);
 }
 function renderExpList(){
   const l=G('exp-list');if(!l)return;
@@ -3795,6 +3833,96 @@ function syncProgressToFirebase() {
       console.log('✅ Progress synced: '+pct+'%');
     } catch(e) { console.log('Sync error:', e.message); }
   }, 2000);
+}
+
+
+// ============================================================
+// AI RESUME REWRITER
+// ============================================================
+let _reTab = 'summary';
+
+function selectReTab(el, tab){
+  document.querySelectorAll('.ai-re-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  _reTab = tab;
+  // Hide previous output when switching tabs
+  const out = document.getElementById('ai-re-output');
+  const copyBtn = document.getElementById('ai-re-copy-btn');
+  if(out){ out.classList.remove('show'); out.textContent=''; }
+  if(copyBtn) copyBtn.style.display='none';
+}
+
+async function runResumeAI(){
+  const u = S.user || {};
+  const btn = document.getElementById('ai-re-btn');
+  const loading = document.getElementById('ai-re-loading');
+  const out = document.getElementById('ai-re-output');
+  const copyBtn = document.getElementById('ai-re-copy-btn');
+
+  if(!u.name && !u.mos && !u.rank){
+    toast('📝 Complete your profile first — we need your rank, MOS, and career goal');
+    return;
+  }
+
+  if(btn) { btn.disabled=true; btn.textContent='⏳ Writing...'; }
+  if(loading) loading.style.display='flex';
+  if(out) { out.classList.remove('show'); out.textContent=''; }
+  if(copyBtn) copyBtn.style.display='none';
+
+  const tabPrompts = {
+    summary: `Write a 3-sentence professional summary for a civilian resume. The person is a ${u.rank||'veteran'} transitioning from ${u.branch||'military'} service after ${u.yos||'several'} years. MOS/specialty: ${u.mos||'not specified'}. Target career: ${u.careerTrack||u.industry||'civilian sector'}. Target location: ${u.loc||'undecided'}. Security clearance: ${u.clr||'none'}. Write in first person, civilian-friendly language. No military jargon. Start with a strong opening sentence. Include key transferable skills. End with career goal. 3 sentences max, 80 words max.`,
+
+    bullets: `Write 4 strong civilian resume bullet points for a ${u.rank||'veteran'} with MOS ${u.mos||'military background'} from the ${u.branch||'US military'} with ${u.yos||'several'} years of service. Each bullet must: start with a strong action verb, include a quantified achievement (use realistic numbers for the MOS), translate military language to civilian terms. Target role: ${u.careerTrack||'civilian professional'}. Format: one bullet per line starting with •`,
+
+    skills: `List 10 civilian-relevant skills for a resume. The person is a ${u.rank||'veteran'} with MOS ${u.mos||'military background'} from the ${u.branch||'US military'}. Security clearance: ${u.clr||'none'}. Target career: ${u.careerTrack||'civilian sector'}. Mix hard skills and soft skills. Format: comma-separated list, civilian terminology only, no military jargon.`,
+
+    linkedin: `Write 3 LinkedIn headline options for a ${u.rank||'veteran'} transitioning from ${u.branch||'military'} service. MOS: ${u.mos||'military professional'}. Target career: ${u.careerTrack||'civilian sector'}. Each headline should be under 120 characters, civilian-friendly, and include a value proposition. Format: numbered list 1. 2. 3.`,
+
+    cover: `Write a 2-paragraph cover letter opener for a ${u.rank||'veteran'} applying to ${u.careerTrack||'civilian'} roles. Background: ${u.branch||'military'} service, ${u.yos||'several'} years, MOS ${u.mos||'not specified'}. Target location: ${u.loc||'flexible'}. Paragraph 1: strong opening hook about military-to-civilian transition. Paragraph 2: connect military experience to the target role. Civilian language only. Under 100 words total.`
+  };
+
+  const prompt = tabPrompts[_reTab] || tabPrompts.summary;
+
+  try {
+    const AI_PROXY_URL = 'https://tc-ai-proxy.kibuglobalventures.workers.dev';
+    const response = await fetch(AI_PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if(!response.ok) throw new Error('Worker returned '+response.status);
+    const data = await response.json();
+    const text = data.content?.[0]?.text || '';
+
+    if(out){
+      out.textContent = text;
+      out.classList.add('show');
+    }
+    if(copyBtn) copyBtn.style.display='block';
+    toast('✅ Resume content ready — review and copy');
+
+  } catch(err) {
+    if(out){
+      out.textContent = '⚠️ Could not generate content. Check your connection and try again.';
+      out.classList.add('show');
+    }
+    toast('⚠️ AI unavailable — try again');
+  } finally {
+    if(btn){ btn.disabled=false; btn.textContent='✨ Generate with AI'; }
+    if(loading) loading.style.display='none';
+  }
+}
+
+function copyResumeAI(){
+  const out = document.getElementById('ai-re-output');
+  if(!out) return;
+  const text = out.textContent;
+  navigator.clipboard?.writeText(text)
+    .then(()=>toast('📋 Copied — paste into your resume'))
+    .catch(()=>toast('Select the text above and copy manually'));
 }
 
 // ============================================================
