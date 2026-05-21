@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.kibuglobal.transitioncomman",
+    "sha256_cert_fingerprints": ["F8:D6:FD:86:E9:EB:D8:80:C6:80:7B:24:FF:F8:AC:B1:27:CB:C2:41:A5:D0:3A:D3:CA:00:84:36:8A:B4:C8:03"]
+  }
+}]
