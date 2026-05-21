@@ -1041,9 +1041,35 @@ async function validateKey(key){
     return true;
   }
   // ── DEMO KEY — 30 minute expiration ──
-  if(k.startsWith(DEMO_PREFIX)){
+  // ── DEMO KEY — 30 minute ──
+  if(k.startsWith(DEMO_PREFIX) && !k.startsWith('KIBU-BETA-')){
     const expiry=Date.now()+(30*60*1000);
     localStorage.setItem(LIC_KEY,JSON.stringify({key:k,valid:true,demo:true,demoExpiry:expiry,date:new Date().toISOString()}));
+    return true;
+  }
+  // ── BETA KEY — 24 hour ──
+  if(k.startsWith('KIBU-BETA-')){
+    // Check if already activated and not expired
+    const stored=localStorage.getItem(LIC_KEY);
+    if(stored){
+      try{
+        const p=JSON.parse(stored);
+        if(p.key===k && p.betaExpiry && Date.now()<p.betaExpiry) return true;
+        if(p.key===k && p.betaExpiry && Date.now()>=p.betaExpiry){
+          localStorage.removeItem(LIC_KEY);
+          return false;
+        }
+      }catch(e){}
+    }
+    // First time activation — set 24hr expiry
+    const expiry=Date.now()+(24*60*60*1000);
+    localStorage.setItem(LIC_KEY,JSON.stringify({
+      key:k,valid:true,beta:true,
+      betaExpiry:expiry,
+      date:new Date().toISOString()
+    }));
+    // Track activation in Firebase
+    trackBetaKey(k,'activated');
     return true;
   }
   // ── STANDARD TC KEY ──
@@ -1149,24 +1175,52 @@ function isLicensed(){
 }
 
 function startDemoTimer(){
-  const s=localStorage.getItem(LIC_KEY);
-  if(!s)return;
-  const p=JSON.parse(s);
-  if(!p||!p.key||!p.key.startsWith(DEMO_PREFIX))return;
-  const banner=document.getElementById('demo-banner');
-  if(banner)banner.classList.add('show');
-  if(demoInterval)clearInterval(demoInterval);
-  demoInterval=setInterval(()=>{
-    const remaining=Math.max(0,p.demoExpiry-Date.now());
-    const mins=Math.floor(remaining/60000);
-    const secs=Math.floor((remaining%60000)/1000);
-    const el=document.getElementById('demo-timer');
-    if(el)el.textContent=mins+':'+(secs<10?'0':'')+secs;
-    if(remaining<=0){
-      clearInterval(demoInterval);
-      showDemoExpired();
+  try{
+    const s=localStorage.getItem(LIC_KEY);
+    if(!s) return;
+    const p=JSON.parse(s);
+    
+    // Beta key countdown
+    if(p.beta && p.betaExpiry){
+      const banner=document.getElementById('demo-banner');
+      if(banner){
+        demoInterval=setInterval(()=>{
+          const left=p.betaExpiry-Date.now();
+          if(left<=0){
+            clearInterval(demoInterval);
+            localStorage.removeItem(LIC_KEY);
+            toast('⏰ Beta access expired');
+            setTimeout(()=>location.reload(),2000);
+            return;
+          }
+          const hrs=Math.floor(left/3600000);
+          const mins=Math.floor((left%3600000)/60000);
+          const secs=Math.floor((left%60000)/1000);
+          banner.innerHTML=`⏱ Beta Access: ${hrs}h ${mins}m ${secs}s remaining`;
+          banner.classList.add('show');
+        },1000);
+      }
+      return;
     }
-  },1000);
+    
+    // Original 30-min demo timer
+    if(!p.demo||!p.demoExpiry) return;
+    const banner=document.getElementById('demo-banner');
+    if(!banner) return;
+    demoInterval=setInterval(()=>{
+      const left=p.demoExpiry-Date.now();
+      if(left<=0){
+        clearInterval(demoInterval);
+        localStorage.removeItem(LIC_KEY);
+        toast('⏰ Demo expired — get full access at kibuglobal.com');
+        setTimeout(()=>location.reload(),2500);
+        return;
+      }
+      const m=Math.floor(left/60000),s=Math.floor((left%60000)/1000);
+      banner.innerHTML=`⏱ Demo: ${m}:${s.toString().padStart(2,'0')} — <a href="https://buy.stripe.com/dRm3co7HlgOc6dk2HEgYU00" style="color:inherit">Get Full Access $39</a>`;
+      banner.classList.add('show');
+    },1000);
+  }catch(e){}
 }
 
 function showDemoExpired(){
@@ -3996,6 +4050,45 @@ function copyResumeAI(){
     .then(()=>toast('📋 Copied — paste into your resume'))
     .catch(()=>toast('Select the text above and copy manually'));
 }
+
+
+// ============================================================
+// BETA KEY TRACKING
+// ============================================================
+async function trackBetaKey(key, event){
+  if(!window._fbReady) return;
+  try{
+    const ref = window._doc(window._db, 'beta_keys', key);
+    const snap = await window._getDoc(ref);
+    const now = new Date().toISOString();
+    if(!snap.exists()){
+      await window._setDoc(ref,{
+        key, event,
+        activatedAt: now,
+        lastSeen: now,
+        activationCount: 1,
+        userAgent: navigator.userAgent.slice(0,100),
+        expiresAt: new Date(Date.now()+(24*60*60*1000)).toISOString()
+      });
+    } else {
+      await window._setDoc(ref,{
+        lastSeen: now,
+        lastEvent: event,
+        activationCount: (snap.data().activationCount||0)+1
+      },{merge:true});
+    }
+  }catch(e){ console.log('Beta track error:',e.message); }
+}
+
+// Track page activity every 5 minutes for beta keys
+setInterval(()=>{
+  try{
+    const s=localStorage.getItem('tc_license');
+    if(!s) return;
+    const p=JSON.parse(s);
+    if(p.beta && p.key) trackBetaKey(p.key,'active');
+  }catch(e){}
+}, 5*60*1000);
 
 // ============================================================
 // PWA
