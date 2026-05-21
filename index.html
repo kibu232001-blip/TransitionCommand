@@ -1059,6 +1059,72 @@ const DEV_KEY = 'KIBU-DEV-KIRK-2026';
 const DEMO_PREFIX = 'KIBU-DEMO-';
 let demoInterval = null;
 
+
+// ============================================================
+// STORE PURCHASE DETECTION
+// Auto-unlocks for Google Play and Apple App Store buyers
+// ============================================================
+
+// Special store license key constants
+const STORE_KEY_GOOGLE = 'KIBU-STORE-GOOGLE-PLAY';
+const STORE_KEY_APPLE  = 'KIBU-STORE-APPLE-IOS';
+
+function detectStorePurchase(){
+  // Check if already store-licensed
+  const existing = localStorage.getItem(LIC_KEY);
+  if(existing){
+    try{
+      const p = JSON.parse(existing);
+      if(p.store) return true; // Already store-unlocked
+    }catch(e){}
+  }
+
+  // ── GOOGLE PLAY DETECTION ──
+  // TWA apps installed from Play Store have android-app:// referrer
+  // OR display-mode is standalone with no manual key set
+  const isAndroid = /android/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+  const referrer = document.referrer || '';
+  const fromPlayStore = referrer.includes('android-app://') ||
+    (isAndroid && isStandalone && window.navigator.standalone !== false);
+
+  // ── APPLE APP STORE DETECTION ──
+  // iOS standalone means added to home screen via App Store
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const fromAppStore = isIOS && (
+    window.navigator.standalone === true ||
+    isStandalone
+  );
+
+  if(fromPlayStore){
+    console.log('✅ Google Play purchase detected — auto-unlocking');
+    grantStoreLicense(STORE_KEY_GOOGLE, 'google');
+    return true;
+  }
+
+  if(fromAppStore){
+    console.log('✅ App Store purchase detected — auto-unlocking');
+    grantStoreLicense(STORE_KEY_APPLE, 'apple');
+    return true;
+  }
+
+  return false;
+}
+
+function grantStoreLicense(key, store){
+  // Write a permanent store license to localStorage
+  localStorage.setItem(LIC_KEY, JSON.stringify({
+    key:   key,
+    valid: true,
+    store: store,
+    date:  new Date().toISOString(),
+    auto:  true
+  }));
+  localStorage.setItem('tc-key', key);
+  _currentKey = key;
+  console.log('✅ Store license granted:', store);
+}
+
 function isLicensed(){
   try{
     // Check permanent dev key
@@ -1149,7 +1215,10 @@ window.addEventListener('DOMContentLoaded',()=>{
     setTimeout(()=>{
       G('splash').style.display='none';
       try{
-        if(isLicensed()){S.user&&S.user.name?launchApp():startWiz();}
+        // Check store purchase first (Google Play / Apple App Store)
+        if(detectStorePurchase() || isLicensed()){
+          S.user&&S.user.name?launchApp():startWiz();
+        }
         else{showPaywall();}
       }catch(e){
         console.error('Launch error:',e);
@@ -3238,6 +3307,9 @@ body{background:#F5EFE0;font-family:'EB Garamond',serif;-webkit-print-color-adju
     <button class="ios-install-close" onclick="closeIosInstall()">Got it — I'll add it now</button>
   </div>
 </div>
+
+
+
 </body></html>`;
   
   const win = window.open('','_blank','width=1200,height=900');
@@ -3965,5 +4037,20 @@ if('serviceWorker' in navigator){try{const sw=`self.addEventListener('fetch',e=>
 
 <!-- CERTIFICATE PRINT AREA -->
 <div id="cert-print-area" style="display:none"></div>
+
+
+
+<script>
+if('serviceWorker' in navigator){
+  const h = window.location.hostname;
+  if(h.includes('kibuglobal') || h === 'localhost' || h === '127.0.0.1'){
+    window.addEventListener('load',()=>{
+      navigator.serviceWorker.register('/sw.js')
+        .then(r=>console.log('✅ SW:',r.scope))
+        .catch(e=>console.log('SW skip:',e.message));
+    });
+  }
+}
+</script>
 </body>
 </html>
