@@ -1,8 +1,11 @@
 [{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.kibuglobal.transitioncommand",
-        "sha256_cert_fingerprints": ["F8:D6:FD:86:E9:EB:D8:80:C6:80:7B:24:FF:F8:AC:B1:27:CB:C2:41:A5:D0:3A:D3:CA:00:84:36:8A:B4:C8:03"]
-      }
-    }]
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.kibuglobal.transitioncommand",
+    "sha256_cert_fingerprints": [
+      "F8:D6:FD:86:E9:EB:D8:80:C6:80:7B:24:FF:F8:AC:B1:27:CB:C2:41:A5:D0:3A:D3:CA:00:84:36:8A:B4:C8:03",
+      "3B:B5:74:E5:0F:72:71:72:9C:7E:B4:52:5F:99:31:FF:11:05:E2:18:93:5E:86:D1:61:2A:23:17:D2:F6:1A:CE"
+    ]
+  }
+}]
