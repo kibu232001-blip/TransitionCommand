@@ -295,6 +295,40 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
 .cert-btn-secondary{background:var(--bg2);border:1px solid var(--b2);color:var(--tx2)}
 .cert-btn-secondary:hover{border-color:var(--ac);color:var(--ac)}
 
+/* ── AI CERT LOOKUP ── */
+.ai-cert-panel{background:linear-gradient(135deg,rgba(27,43,75,.04) 0%,rgba(200,136,26,.06) 100%);border:1.5px solid rgba(200,136,26,.25);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+.ai-cert-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.ai-cert-title{font-family:var(--fd);font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--nav)}
+.ai-cert-badge{font-size:9px;font-weight:700;letter-spacing:.1em;background:var(--ac);color:#fff;padding:2px 7px;border-radius:6px}
+.ai-cert-sub{font-size:12px;color:var(--tx2);margin-bottom:12px}
+.ai-cert-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.ai-cert-result{margin-top:14px;display:none}
+.ai-cert-result.show{display:block}
+.ai-result-card{background:var(--surf);border:1px solid var(--b1);border-radius:10px;padding:14px 16px;margin-bottom:8px;position:relative;overflow:hidden}
+.ai-result-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gr)}
+.ai-result-primary{font-size:15px;font-weight:700;color:var(--nav);margin-bottom:2px}
+.ai-result-vendor{font-size:11px;color:var(--tx3);margin-bottom:8px}
+.ai-result-why{font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:10px}
+.ai-result-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.ai-meta-chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:8px}
+.ai-chip-cool{background:rgba(74,124,89,.12);color:#2A6639}
+.ai-chip-cost{background:rgba(200,136,26,.1);color:#8B5000}
+.ai-chip-salary{background:rgba(26,95,168,.1);color:#1A5FA8}
+.ai-chip-time{background:rgba(27,43,75,.07);color:var(--tx2)}
+.ai-roadmap{background:var(--bg2);border-radius:8px;padding:10px 12px;margin-bottom:10px}
+.ai-sec-header{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin:12px 0 8px}
+.ai-sec-card{background:var(--surf);border:1px solid var(--b1);border-radius:8px;padding:10px 12px;position:relative;overflow:hidden}
+.ai-sec-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--bl)}
+.ai-loading{display:none;align-items:center;gap:10px;padding:14px 0;font-size:12px;color:var(--tx2)}
+.ai-loading.show{display:flex}
+.ai-spinner{width:16px;height:16px;border:2px solid var(--b2);border-top-color:var(--ac);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-error{font-size:12px;color:var(--re);padding:8px 0;display:none}
+.ai-error.show{display:block}
+.cert-section-divider{display:flex;align-items:center;gap:10px;margin:18px 0 12px}
+.cert-section-divider span{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);white-space:nowrap}
+.cert-section-divider::before,.cert-section-divider::after{content:'';flex:1;height:1px;background:var(--b1)}
+
 /* ── GEOLOCATION ── */
 .geo-section{background:rgba(26,95,168,.08);border:1px solid rgba(26,95,168,.18);border-radius:10px;padding:12px 14px;margin-top:12px}
 .geo-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,239,224,.5);margin-bottom:8px;display:flex;align-items:center;gap:7px}
@@ -2491,10 +2525,49 @@ function renderCertTab(){
   const branches=['army','navy','airforce','marines','coastguard','spacefore','allbranches'];
   const branchLabels={army:'⭐ Army',navy:'⚓ Navy',airforce:'✈️ Air Force',marines:'🦅 Marines',coastguard:'🛡️ Coast Guard',spacefore:'🚀 Space Force',allbranches:'🌐 All Branches'};
   const certs=(CERT_DB[certBranch]||[]).concat(CERT_DB.allbranches||[]);
-  
+  const u=S.user||{};
+  const prefillMos=(u.mos||'').toUpperCase();
+  const prefillBranch=(u.branch||'army');
+  const prefillRank=(u.rank||'');
+  const sepDate=u.sepDate||u.etsDate||'';
+  let monthsLeft=18;
+  if(sepDate){const d=new Date(sepDate);const now=new Date();monthsLeft=Math.max(1,Math.ceil((d-now)/(1000*60*60*24*30)));}
+
   G('p-ct').innerHTML=`
     <div class="ph">Certification Roadmaps</div>
     <div class="psub">MOS/Rate/AFSC-specific certification paths — including which certifications your branch will pay for through COOL before you separate</div>
+
+    <!-- ── AI LOOKUP PANEL ── -->
+    <div class="ai-cert-panel">
+      <div class="ai-cert-header">
+        <span class="ai-cert-title">✨ AI Certification Advisor</span>
+        <span class="ai-cert-badge">ANY MOS</span>
+      </div>
+      <div class="ai-cert-sub">Enter any MOS, Rate, or AFSC — AI generates a personalized roadmap with COOL funding details and a month-by-month plan based on your ETS timeline.</div>
+      <div class="ai-cert-inputs">
+        <div>
+          <label class="lb" style="margin-bottom:5px">Branch</label>
+          <select id="aci-branch" style="font-size:13px">
+            ${['Army','Air Force','Navy','Marines','Coast Guard','Space Force'].map(b=>`<option${b.toLowerCase().replace(' ','')===prefillBranch.toLowerCase().replace(' ','')||b.toLowerCase()===prefillBranch.toLowerCase()?' selected':''}>${b}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label class="lb" style="margin-bottom:5px">MOS / Rate / AFSC</label>
+          <input id="aci-mos" type="text" value="${prefillMos}" placeholder="e.g. 25B, HM, 3D0X2" style="font-size:13px">
+        </div>
+        <div>
+          <label class="lb" style="margin-bottom:5px">Months to ETS</label>
+          <input id="aci-months" type="number" value="${monthsLeft}" min="1" max="36" style="font-size:13px">
+        </div>
+      </div>
+      <button class="btn btn-a btn-sm" onclick="runAiCertLookup()" id="aci-btn">✨ Generate My Roadmap</button>
+      <div class="ai-loading" id="aci-loading"><div class="ai-spinner"></div>Analyzing your MOS — generating personalized roadmap...</div>
+      <div class="ai-error" id="aci-error"></div>
+      <div class="ai-cert-result" id="aci-result"></div>
+    </div>
+
+    <!-- ── STATIC DATABASE ── -->
+    <div class="cert-section-divider"><span>Browse All — Select Branch</span></div>
     <div class="cert-branch-tabs">
       ${branches.map(b=>`<button class="cert-btab${b===certBranch?' a':''}" onclick="certBranch='${b}';renderCertTab()">${branchLabels[b]}</button>`).join('')}
     </div>
@@ -2524,6 +2597,125 @@ function renderCertTab(){
         </div>`:''}
       </div>`).join('')}
   `;
+}
+
+async function runAiCertLookup(){
+  const branch=document.getElementById('aci-branch')?.value||'Army';
+  const mos=(document.getElementById('aci-mos')?.value||'').trim();
+  const months=parseInt(document.getElementById('aci-months')?.value)||18;
+  const btn=document.getElementById('aci-btn');
+  const loading=document.getElementById('aci-loading');
+  const result=document.getElementById('aci-result');
+  const error=document.getElementById('aci-error');
+
+  if(!mos){error.textContent='⚠️ Enter your MOS, Rate, or AFSC first.';error.classList.add('show');return;}
+  error.classList.remove('show');
+  result.classList.remove('show');
+  result.innerHTML='';
+  loading.classList.add('show');
+  if(btn){btn.disabled=true;btn.textContent='Generating...';}
+
+  const prompt=`You are a military transition certification expert. A ${branch} service member with MOS/Rate/AFSC "${mos}" has ${months} months until ETS/separation.
+
+Respond ONLY with valid JSON — no markdown fences, no preamble:
+{
+  "mos_title": "official job title for this MOS",
+  "civilian_crosswalk": "civilian job equivalent",
+  "primary": {
+    "name": "certification name",
+    "vendor": "issuing body",
+    "why": "one sentence — why this cert specifically for this MOS",
+    "cost": "$X exam fee",
+    "study_weeks": "X weeks",
+    "cool_funded": true or false,
+    "funding_path": "COOL / Tuition Assistance / GI Bill / Self-pay",
+    "salary_impact": "+$X,000/yr average",
+    "cool_url": "branch COOL portal URL",
+    "cert_url": "official cert page URL",
+    "roadmap": [
+      {"mo": "Month 1–2", "act": "specific action"},
+      {"mo": "Month 3–4", "act": "specific action"},
+      {"mo": "Month 5–${Math.min(months,6)}", "act": "specific action"}
+    ]
+  },
+  "secondary": {
+    "name": "second best cert name",
+    "vendor": "issuing body",
+    "why": "one sentence",
+    "cost": "$X",
+    "cool_funded": true or false
+  },
+  "cool_warning": "one sentence about COOL approval timing for this branch"
+}`;
+
+  try{
+    const AI_PROXY_URL='https://tc-ai-proxy.kibuglobalventures.workers.dev';
+    const response=await fetch(AI_PROXY_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'user',content:prompt}]})
+    });
+    if(!response.ok) throw new Error('Worker returned '+response.status);
+    const data=await response.json();
+    const text=data.content?.[0]?.text||'';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const d=JSON.parse(clean);
+    renderAiCertResult(d, branch, mos, months);
+  }catch(e){
+    error.textContent='⚠️ Could not generate roadmap. Check your connection and try again.';
+    error.classList.add('show');
+  }finally{
+    loading.classList.remove('show');
+    if(btn){btn.disabled=false;btn.textContent='✨ Generate My Roadmap';}
+  }
+}
+
+function renderAiCertResult(d, branch, mos, months){
+  const result=document.getElementById('aci-result');
+  if(!result) return;
+  const p=d.primary||{};
+  const s=d.secondary||{};
+  const steps=(p.roadmap||[]).map(r=>`<div class="cert-rm-step"><span class="cert-rm-mo">${r.mo}</span><span>${r.act}</span></div>`).join('');
+
+  result.innerHTML=`
+    <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;margin-top:4px">
+      ✅ ${mos} · ${d.mos_title||''} → ${d.civilian_crosswalk||'Civilian Role'}
+    </div>
+
+    <!-- PRIMARY CERT -->
+    <div class="ai-result-card">
+      <div class="ai-result-primary">🥇 ${p.name||'—'}</div>
+      <div class="ai-result-vendor">${p.vendor||''}</div>
+      <div class="ai-result-why">${p.why||''}</div>
+      <div class="ai-result-meta">
+        ${p.cool_funded?`<span class="ai-meta-chip ai-chip-cool">✅ COOL Funded — $0 Out of Pocket</span>`:`<span class="ai-meta-chip ai-chip-cost">💰 ${p.cost||'—'}</span>`}
+        <span class="ai-meta-chip ai-chip-salary">📈 ${p.salary_impact||'—'}</span>
+        <span class="ai-meta-chip ai-chip-time">📚 ${p.study_weeks||'—'} study</span>
+        <span class="ai-meta-chip ai-chip-cost">💳 ${p.funding_path||'—'}</span>
+      </div>
+      <div class="ai-roadmap">
+        <div class="cert-rm-title">📅 Your ${months}-Month Roadmap</div>
+        ${steps||'<div style="font-size:12px;color:var(--tx2)">Roadmap not available</div>'}
+      </div>
+      <div class="cert-actions">
+        ${p.cert_url?`<a href="${p.cert_url}" target="_blank" class="cert-btn cert-btn-primary">↗ Official Cert Site</a>`:''}
+        ${p.cool_url?`<a href="${p.cool_url}" target="_blank" class="cert-btn cert-btn-secondary">🎯 Apply for COOL Funding</a>`:''}
+      </div>
+      ${d.cool_warning?`<div style="font-size:10px;color:#B83232;font-weight:600;margin-top:10px;padding-top:8px;border-top:1px solid var(--b1)">⚠️ ${d.cool_warning}</div>`:''}
+    </div>
+
+    <!-- SECONDARY CERT -->
+    <div class="ai-sec-header">Also Consider</div>
+    <div class="ai-sec-card">
+      <div class="cert-name">🥈 ${s.name||'—'}</div>
+      <div class="cert-provider">${s.vendor||''}</div>
+      <div class="cert-desc">${s.why||''}</div>
+      <div class="cert-meta">
+        ${s.cool_funded?`<span class="cert-tag ct-cool">✅ COOL Eligible</span>`:`<span class="cert-tag ct-cost">💰 ${s.cost||'—'}</span>`}
+      </div>
+    </div>
+  `;
+  result.classList.add('show');
 }
 
 
