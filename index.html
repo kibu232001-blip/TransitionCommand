@@ -310,7 +310,22 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
 .cert-btn-secondary{background:var(--bg2);border:1px solid var(--b2);color:var(--tx2)}
 .cert-btn-secondary:hover{border-color:var(--ac);color:var(--ac)}
 
-/* ── GEOLOCATION ── */
+/* ── AUTH MODAL ── */
+.auth-overlay{display:none;position:fixed;inset:0;background:rgba(11,16,28,.7);z-index:9995;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.auth-overlay.show{display:flex}
+.auth-box{background:var(--surf);border-radius:var(--rxl);padding:28px 24px;width:100%;max-width:380px;box-shadow:0 24px 80px rgba(0,0,0,.35);animation:popIn .25s ease}
+.auth-title{font-family:var(--fd);font-size:22px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--nav);margin-bottom:4px}
+.auth-sub{font-size:12px;color:var(--tx2);margin-bottom:18px;line-height:1.5}
+.auth-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;background:var(--nav);color:var(--navt);border:none;border-radius:var(--r);font-family:var(--fd);font-size:14px;font-weight:700;letter-spacing:.06em;cursor:pointer;margin-bottom:14px;transition:var(--tr)}
+.auth-google:hover{background:var(--nav2)}
+.auth-divider{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--b1)}
+.auth-divider span{font-size:11px;color:var(--tx3)}
+.auth-err{font-size:12px;color:var(--re);margin-bottom:10px;display:none;line-height:1.4}
+.auth-row{display:flex;gap:8px;margin-top:10px}
+.auth-link{background:none;border:none;font-size:12px;color:var(--ac);cursor:pointer;padding:0;text-decoration:underline}
+.auth-skip{background:none;border:none;font-size:12px;color:var(--tx3);cursor:pointer;margin-top:12px;width:100%;text-align:center;padding:6px}
+.auth-skip:hover{color:var(--tx)}
 .geo-section{background:rgba(26,95,168,.08);border:1px solid rgba(26,95,168,.18);border-radius:10px;padding:12px 14px;margin-top:12px}
 .geo-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,239,224,.5);margin-bottom:8px;display:flex;align-items:center;gap:7px}
 .geo-btn{background:#1A5FA8;color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
@@ -508,6 +523,7 @@ textarea{min-height:76px;resize:vertical;line-height:1.5}
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
 import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDXZKaAofA_8jM2Ohl95_Urk7T7x6Rgp-E",
@@ -520,13 +536,142 @@ const firebaseConfig = {
 };
 
 const fbApp = initializeApp(firebaseConfig);
-const db   = getFirestore(fbApp);
-window._db      = db;
-window._doc     = doc;
-window._setDoc  = setDoc;
-window._getDoc  = getDoc;
-window._fbReady = true;
-console.log('✅ Firebase connected — transitioncommand project');
+const db    = getFirestore(fbApp);
+const auth  = getAuth(fbApp);
+const gProvider = new GoogleAuthProvider();
+
+window._db       = db;
+window._doc      = doc;
+window._setDoc   = setDoc;
+window._getDoc   = getDoc;
+window._auth     = auth;
+window._fbReady  = true;
+
+// ── Auth state listener ───────────────────────────────────────
+onAuthStateChanged(auth, async (user) => {
+  window._currentUser = user || null;
+  if(user){
+    // Update topbar avatar
+    const av = document.getElementById('tbav');
+    if(av){ av.textContent = (user.displayName||user.email||'U')[0].toUpperCase(); av.style.background='var(--gr)'; }
+    // Inject sign-out into menu
+    const menuSignIn = document.getElementById('menu-auth-row');
+    if(menuSignIn){ menuSignIn.innerHTML = `<span style="font-size:11px;color:var(--tx3);padding:4px 12px;display:block">${user.email}</span><button onclick="toggleMenu();tcSignOut()" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fb);font-size:13px;color:var(--re);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--rel)'" onmouseout="this.style.background='none'">🔓 Sign Out</button>`; }
+    // Check Firestore for license
+    await _checkFirestoreLicense(user);
+  } else {
+    const av = document.getElementById('tbav');
+    if(av){ av.textContent='TC'; av.style.background=''; }
+    const menuSignIn = document.getElementById('menu-auth-row');
+    if(menuSignIn){ menuSignIn.innerHTML = `<button onclick="toggleMenu();showAuthModal()" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fb);font-size:13px;color:var(--ac);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--acl)'" onmouseout="this.style.background='none'">🔐 Sign In · Sync License</button>`; }
+  }
+});
+
+// ── Firestore license check ───────────────────────────────────
+async function _checkFirestoreLicense(user){
+  try{
+    const snap = await getDoc(doc(db, 'users', user.uid, 'data', 'license'));
+    if(snap.exists()){
+      const data = snap.data();
+      if(data && data.valid){
+        const existing = localStorage.getItem('tc_license');
+        if(!existing || JSON.parse(existing).key !== data.key){
+          localStorage.setItem('tc_license', JSON.stringify({...data, syncedFrom:'firestore'}));
+          localStorage.setItem('tc-key', data.key||'');
+          window._currentKey = data.key||'';
+          console.log('✅ License restored from Firestore');
+          // If paywall is showing, close it
+          const pw = document.getElementById('paywall');
+          if(pw && pw.style.display==='flex'){
+            pw.style.display='none';
+            if(typeof showInstallGate === 'function') showInstallGate();
+          }
+        }
+      }
+    }
+  }catch(e){ console.log('Firestore license check skipped:', e.message); }
+}
+
+// ── Write license to Firestore ────────────────────────────────
+async function _writeCurrentLicenseToFirestore(user, licData){
+  try{
+    await setDoc(doc(db, 'users', user.uid, 'data', 'license'), {
+      ...licData,
+      uid:         user.uid,
+      email:       user.email||'',
+      displayName: user.displayName||'',
+      syncedAt:    new Date().toISOString()
+    });
+    console.log('✅ License synced to Firestore');
+  }catch(e){ console.log('Firestore write skipped:', e.message); }
+}
+
+// ── Expose to global scope ────────────────────────────────────
+window._checkFirestoreLicense       = _checkFirestoreLicense;
+window._writeCurrentLicenseToFirestore = _writeCurrentLicenseToFirestore;
+
+// ── Google Sign-In ────────────────────────────────────────────
+window.tcSignInGoogle = async function(){
+  try{
+    const result = await signInWithPopup(auth, gProvider);
+    closeAuthModal();
+    // Write any existing local license to Firestore
+    const lic = localStorage.getItem('tc_license');
+    if(lic){
+      try{ await _writeCurrentLicenseToFirestore(result.user, JSON.parse(lic)); }catch(e){}
+    }
+  }catch(e){
+    if(e.code !== 'auth/popup-closed-by-user'){
+      document.getElementById('auth-err').textContent = 'Sign-in failed: ' + e.message;
+      document.getElementById('auth-err').style.display = 'block';
+    }
+  }
+};
+
+// ── Email Sign-Up ─────────────────────────────────────────────
+window.tcSignUp = async function(){
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-pass').value;
+  const err   = document.getElementById('auth-err');
+  if(!email||!pass){ err.textContent='Enter email and password.'; err.style.display='block'; return; }
+  try{
+    const result = await createUserWithEmailAndPassword(auth, email, pass);
+    closeAuthModal();
+    const lic = localStorage.getItem('tc_license');
+    if(lic){ try{ await _writeCurrentLicenseToFirestore(result.user, JSON.parse(lic)); }catch(e){} }
+  }catch(e){ err.textContent = e.message; err.style.display='block'; }
+};
+
+// ── Email Sign-In ─────────────────────────────────────────────
+window.tcSignIn = async function(){
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-pass').value;
+  const err   = document.getElementById('auth-err');
+  if(!email||!pass){ err.textContent='Enter email and password.'; err.style.display='block'; return; }
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+    closeAuthModal();
+  }catch(e){ err.textContent = e.message; err.style.display='block'; }
+};
+
+// ── Forgot Password ───────────────────────────────────────────
+window.tcForgotPassword = async function(){
+  const email = document.getElementById('auth-email').value.trim();
+  if(!email){ document.getElementById('auth-err').textContent='Enter your email first.'; document.getElementById('auth-err').style.display='block'; return; }
+  try{
+    await sendPasswordResetEmail(auth, email);
+    document.getElementById('auth-err').style.color='var(--gr)';
+    document.getElementById('auth-err').textContent='Reset email sent — check your inbox.';
+    document.getElementById('auth-err').style.display='block';
+  }catch(e){ document.getElementById('auth-err').textContent=e.message; document.getElementById('auth-err').style.display='block'; }
+};
+
+// ── Sign Out ──────────────────────────────────────────────────
+window.tcSignOut = async function(){
+  await signOut(auth);
+};
+
+console.log('✅ Firebase Auth ready — transitioncommand project');
 </script>
 </head>
 <body>
@@ -558,6 +703,29 @@ console.log('✅ Firebase connected — transitioncommand project');
   <div class="sp-ver">v1.0 · © 2026 KIBU Global Ventures LLC · All Rights Reserved</div>
 </div>
 
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="auth-modal">
+  <div class="auth-box">
+    <div class="auth-title">Sync Your License</div>
+    <div class="auth-sub">Sign in to access TransitionCommand on any device. We only store your license status — your transition data stays on your device.</div>
+    <button class="auth-google" onclick="tcSignInGoogle()">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+      Continue with Google
+    </button>
+    <div class="auth-divider"><span>or use email</span></div>
+    <div id="auth-err" class="auth-err"></div>
+    <div class="fg"><input type="email" id="auth-email" placeholder="your@email.com" autocomplete="email"></div>
+    <div class="fg"><input type="password" id="auth-pass" placeholder="Password" autocomplete="current-password"></div>
+    <button class="btn btn-a btn-fw" onclick="tcSignIn()" style="margin-bottom:8px">Sign In</button>
+    <div class="auth-row">
+      <button class="auth-link" onclick="tcSignUp()">Create account</button>
+      <span style="color:var(--tx3);font-size:12px">·</span>
+      <button class="auth-link" onclick="tcForgotPassword()">Forgot password</button>
+    </div>
+    <button class="auth-skip" onclick="closeAuthModal()">Skip for now — stay on this device only</button>
+  </div>
+</div>
+
 <!-- FINAL COUNTDOWN OVERLAY -->
 <div class="final-countdown" id="final-countdown">
   <div class="fc-number" id="fc-number">10</div>
@@ -574,6 +742,7 @@ console.log('✅ Firebase connected — transitioncommand project');
       <div class="pw-price">
         <div class="pw-amt">$39.99</div>
         <div class="pw-once">One-time purchase · Lifetime access · No subscription. Ever.</div>
+        <div style="font-size:11px;color:var(--tx3);margin-top:6px;letter-spacing:.04em">One device · Sign in with Google to access on all devices</div>
       </div>
       <ul class="pw-feats">
         <li class="pw-feat">12-tab command center</li>
@@ -634,6 +803,8 @@ console.log('✅ Firebase connected — transitioncommand project');
             <div style="font-size:11px;color:var(--tx3)" id="menu-branch">—</div>
           </div>
           <div style="padding:6px">
+            <div id="menu-auth-row"><button onclick="toggleMenu();showAuthModal()" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fb);font-size:13px;color:var(--ac);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--acl)'" onmouseout="this.style.background='none'">🔐 Sign In · Sync License</button></div>
+            <div style="height:1px;background:var(--b1);margin:4px 0"></div>
             <button onclick="toggleMenu();goProfile()" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fb);font-size:13px;color:var(--tx);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--surf2)'" onmouseout="this.style.background='none'">✏️ Edit Profile</button>
             <button onclick="toggleMenu();exportData()" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fb);font-size:13px;color:var(--tx);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--surf2)'" onmouseout="this.style.background='none'">💾 Export My Data</button>
             <div style="height:1px;background:var(--b1);margin:4px 0"></div>
@@ -1168,38 +1339,29 @@ function detectStorePurchase(){
 }
 
 function grantStoreLicense(key, store){
-  // Write a permanent store license to localStorage
-  localStorage.setItem(LIC_KEY, JSON.stringify({
-    key:   key,
-    valid: true,
-    store: store,
-    date:  new Date().toISOString(),
-    auto:  true
-  }));
+  const licData = { key, valid:true, store, source:store, date:new Date().toISOString(), auto:true };
+  localStorage.setItem(LIC_KEY, JSON.stringify(licData));
   localStorage.setItem('tc-key', key);
   _currentKey = key;
   console.log('✅ Store license granted:', store);
+  // Sync to Firestore if signed in
+  if(window._currentUser && window._writeCurrentLicenseToFirestore){
+    window._writeCurrentLicenseToFirestore(window._currentUser, licData).catch(()=>{});
+  }
 }
 
 function isLicensed(){
   try{
-    // Check permanent dev key
     const s=localStorage.getItem(LIC_KEY);
     if(!s)return false;
     const p=JSON.parse(s);
     if(!p||!p.key)return false;
-    // Dev key — never expires
     if(p.key===DEV_KEY)return true;
-    // Demo key — check expiration
     if(p.key.startsWith(DEMO_PREFIX)){
       if(!p.demoExpiry)return false;
-      if(Date.now()>p.demoExpiry){
-        showDemoExpired();
-        return false;
-      }
+      if(Date.now()>p.demoExpiry){ showDemoExpired(); return false; }
       return true;
     }
-    // Regular license key
     return p.valid===true;
   }catch(e){return false;}
 }
@@ -1220,6 +1382,10 @@ function showKeyEntry(){
   G('pw-key').style.display='block';
 }
 
+// ── Auth modal helpers ────────────────────────────────────────
+function showAuthModal(){ document.getElementById('auth-modal').classList.add('show'); }
+function closeAuthModal(){ document.getElementById('auth-modal').classList.remove('show'); document.getElementById('auth-err').style.display='none'; }
+
 async function submitKey(){
   const k=G('lic-input')?.value?.trim();
   const err=G('lic-err');
@@ -1233,6 +1399,13 @@ async function submitKey(){
     toast('✅ License activated — welcome!');
     localStorage.setItem('tc-key',k);
     _currentKey=k;
+    // Sync to Firestore if signed in, otherwise nudge
+    const licData = JSON.parse(localStorage.getItem(LIC_KEY)||'{}');
+    if(window._currentUser && window._writeCurrentLicenseToFirestore){
+      window._writeCurrentLicenseToFirestore(window._currentUser, licData).catch(()=>{});
+    } else {
+      setTimeout(()=>showAuthModal(), 3000);
+    }
     showInstallGate();
   }else{
     err.textContent='Invalid license key. Check your purchase email and try again.';
