@@ -1469,6 +1469,48 @@ function cpTxt(t){navigator.clipboard.writeText(t).then(()=>toast('✓ Copied to
 const LIC_KEY='tc_license';
 const LIC_SECRET='KIBU2026TC';
 
+// ── Server-side license enforcement (Phase 1) ──
+const LICENSE_API='https://tc-license.kibuglobalventures.workers.dev';
+function tcDeviceId(){
+  let d=localStorage.getItem('tc_device');
+  if(!d){const b=new Uint8Array(16);crypto.getRandomValues(b);d=Array.from(b).map(x=>x.toString(16).padStart(2,'0')).join('');localStorage.setItem('tc_device',d);}
+  return d;
+}
+async function serverValidate(key){
+  try{
+    const r=await fetch(LICENSE_API+'/validate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:key,device:tcDeviceId()})});
+    return await r.json(); // {valid, reason?, exp?}
+  }catch(e){ return null; } // network error -> caller decides (offline grace)
+}
+function licenseReasonMsg(res){
+  const m={not_found:'That key was not found. Check your purchase email.',revoked:'This license has been revoked. Contact support if this is a mistake.',seat_limit:'This key is already in use on another device. Each license covers one device.',inactive:'This license is not active.'};
+  return (res&&m[res.reason])||'We could not verify that key. Check your connection and try again.';
+}
+function tcLockOut(msg){
+  try{localStorage.removeItem(LIC_KEY);localStorage.removeItem('tc-key');}catch(e){}
+  try{_currentKey=null;}catch(e){}
+  try{G('app').classList.remove('on');G('onboard').classList.remove('on');}catch(e){}
+  if(typeof showPaywall==='function')showPaywall();
+  if(msg)setTimeout(()=>{try{toast('\uD83D\uDD12 '+msg);}catch(e){}},300);
+}
+// Re-validate a stored paid key against the server on launch. Locks if rejected.
+// Owner/beta/demo/enterprise keys stay local. Everything else must pass the server,
+// which also closes the old "standalone PWA = paid" auto-unlocks (server returns not_found).
+async function serverRecheck(){
+  const s=localStorage.getItem(LIC_KEY); if(!s) return;
+  let p; try{p=JSON.parse(s);}catch(e){return;}
+  if(!p||!p.key) return;
+  const k=p.key;
+  if(k===DEV_KEY||k.startsWith('KIBU-DEMO-')||k.startsWith('KIBU-BETA-')||k.startsWith('KIBU-ENT-')) return;
+  const res=await serverValidate(k);
+  if(res===null){ // offline: allow within the grace window, otherwise lock
+    if(p.exp && (Date.now()/1000)>p.exp) tcLockOut('Could not verify your license. Connect to the internet to continue.');
+    return;
+  }
+  if(!res.valid){ tcLockOut(licenseReasonMsg(res)); return; }
+  if(res.exp){ p.exp=res.exp; p.server=true; try{localStorage.setItem(LIC_KEY,JSON.stringify(p));}catch(e){} }
+}
+
 async function hashKey(orderPart){
   const raw=LIC_SECRET+'-'+orderPart.toUpperCase();
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));
@@ -1514,12 +1556,16 @@ async function validateKey(key){
     trackBetaKey(k,'activated');
     return true;
   }
-  // ── STANDARD TC KEY ──
-  if(!/^TC-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}$/.test(k))return false;
-  const stored=localStorage.getItem(LIC_KEY);
-  if(stored){const p=JSON.parse(stored);if(p.key===k&&p.valid)return true;}
-  localStorage.setItem(LIC_KEY,JSON.stringify({key:k,valid:true,date:new Date().toISOString()}));
-  return true;
+  // ── STANDARD TC KEY -> server validated ──
+  if(!/^TC-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}$/.test(k)) return false;
+  const res=await serverValidate(k);
+  if(res===null){ window._lastKeyError='offline'; return false; } // cannot verify -> do NOT unlock
+  if(res&&res.valid){
+    localStorage.setItem(LIC_KEY,JSON.stringify({key:k,valid:true,server:true,exp:res.exp||0,date:new Date().toISOString()}));
+    return true;
+  }
+  window._lastKeyError=(res&&res.reason)||'invalid';
+  return false;
 }
 
 // ── DEV + DEMO KEY CONSTANTS ──
@@ -1538,6 +1584,10 @@ const STORE_KEY_GOOGLE = 'KIBU-STORE-GOOGLE-PLAY';
 const STORE_KEY_APPLE  = 'KIBU-STORE-APPLE-IOS';
 
 function detectStorePurchase(){
+  // DISABLED: a standalone PWA is NOT proof of purchase. Real store entitlements
+  // will be verified by receipt later (Phase 2). Until then, unlock only via a
+  // server-validated key. This closes the free-unlock-on-install hole.
+  return false;
   // Check if already store-licensed
   const existing = localStorage.getItem(LIC_KEY);
   if(existing){
@@ -1649,7 +1699,13 @@ async function submitKey(){
     }
     showInstallGate();
   }else{
-    err.textContent='Invalid license key. Check your purchase email and try again.';
+    err.textContent = window._lastKeyError==='offline'
+      ? 'Could not reach the license server. Check your internet connection and try again.'
+      : window._lastKeyError==='revoked'
+      ? 'This license has been revoked. Contact support if this is a mistake.'
+      : window._lastKeyError==='seat_limit'
+      ? 'This key is already active on another device. Each license covers one device.'
+      : 'Invalid license key. Check your purchase email and try again.';
     err.style.display='block';
     btn.textContent='Activate License';
     btn.disabled=false;
@@ -1979,9 +2035,10 @@ window.addEventListener('DOMContentLoaded',()=>{
           return;
         }
 
-        // 2. Already fully licensed
-        if(detectStorePurchase() || isLicensed()){
+        // 2. Already fully licensed (local check for fast launch)
+        if(isLicensed()){
           S.user&&S.user.name ? launchApp() : startWiz();
+          serverRecheck(); // background: locks if the server says revoked / not-found / seat-limit
           return;
         }
 
