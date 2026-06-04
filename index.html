@@ -2051,10 +2051,13 @@ window.addEventListener('DOMContentLoaded',()=>{
           return;
         }
 
-        // 2. Already fully licensed (local check for fast launch)
-        if(isLicensed()){
+        // 2. Already fully licensed OR running inside the Play Store / store build.
+        // Store build: Play controls who can install (closed beta = approved testers only).
+        // No key required. serverRecheck only runs for server-validated web keys.
+        // Production path: replace tcIsStoreBuild() bypass with Play Billing receipt verify.
+        if(isLicensed() || tcIsStoreBuild()){
           S.user&&S.user.name ? launchApp() : startWiz();
-          serverRecheck(); // background: locks if the server says revoked / not-found / seat-limit
+          if(isLicensed()) serverRecheck();
           return;
         }
 
