@@ -62,3 +62,5 @@ To reset/start fresh: open browser DevTools → Application → Local Storage �
 
 ## Version
 TransitionCommand v1.0 — Built for Those Who Served
+
+
