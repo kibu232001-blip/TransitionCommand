@@ -1445,7 +1445,9 @@ const RESOURCES=[
 let S={user:{},tasks:{},plans:{A:{steps:[]},B:{steps:[]},C:{steps:[]}},goals:[],cal:[],calOff:0,resume:{exp:[],summary:'',edu:'',certs:'',skills:''},va:{},fin:{},fam:{},notes:{}};
 
 function loadS(){try{const d=localStorage.getItem('tc2');if(d){const p=JSON.parse(d);S={...S,...p};if(!S.plans)S.plans={A:{steps:[]},B:{steps:[]},C:{steps:[]}};['A','B','C'].forEach(k=>{if(!S.plans[k])S.plans[k]={steps:[]};if(!S.plans[k].steps)S.plans[k].steps=[];});if(!S.resume)S.resume={exp:[],summary:'',edu:'',certs:'',skills:''};if(!S.resume.exp)S.resume.exp=[];if(!S.goals)S.goals=[];if(!S.cal)S.cal=[];}}catch(e){}}
-function saveS(){try{localStorage.setItem('tc2',JSON.stringify(S));}catch(e){}}
+function saveS(){try{localStorage.setItem('tc2',JSON.stringify(S));}catch(e){}applyExitVisibility();}
+// Retirement has no admin chapter and no med board, hide those tabs for retirees.
+function applyExitVisibility(){try{const ret=((S.user&&S.user.sepType)||'').toLowerCase().includes('retirement');document.querySelectorAll('[data-t="ch"],[data-t="mb"]').forEach(b=>{b.style.display=ret?'none':'';});}catch(e){}}
 
 // ============================================================
 // HELPERS
@@ -1965,6 +1967,7 @@ function _onTrialExpired(){
 
 window.addEventListener('DOMContentLoaded',()=>{
   loadS();
+  applyExitVisibility();
   setTimeout(()=>{
     G('splash').classList.add('out');
     setTimeout(()=>{
