@@ -2289,7 +2289,6 @@ function launchApp(){
   try{bRe();}catch(e){console.error('bRe error:',e);}
   try{bRs();}catch(e){console.error('bRs error:',e);}
   window.addEventListener('scroll',()=>G('fab').classList.toggle('on',window.scrollY>180));
-  try{jcLaunch();}catch(e){console.error('Jessica launch error:',e);}
 }
 function goProfile(){wSt=0;G('onboard').classList.add('on');G('app').classList.remove('on');renderWiz();}
 
@@ -2862,8 +2861,9 @@ function jessReply(mountId,i){
     :'<a class="jess-btn" style="margin-top:6px;display:inline-block;text-decoration:none" href="'+r.route.href+'" target="_blank">'+r.route.l+' \u2197</a>';
     html+='<div>'+btn+'</div>';}
   if(r.next){JESS_NODE=r.next;if(r.next.t)html+=jessBub(r.next.t,'j');if(box)box.innerHTML=jessChips(mountId,r.next.r);}
-  else if(box)box.innerHTML=(JESS_CI.length>1?'<div class="jess-next" onclick="jessNext(\''+mountId+'\')">another check\u2011in \u2192</div>':'');
+  else if(box)box.innerHTML='<div class="jc-ask"><input id="jca-'+mountId+'" placeholder="Ask Jessica anything..." autocomplete="off" onkeydown="if(event.key===\'Enter\')jcaAskFree(\''+mountId+'\')"><button onclick="jcaAskFree(\''+mountId+'\')">⏎</button></div>'+(JESS_CI.length>1?'<div class="jess-next" onclick="jessNext(\''+mountId+'\')">another check\u2011in \u2192</div>':'');
   if(th){th.innerHTML=html;th.scrollTop=0;}
+  try{jcaAugment(mountId,JESS_ROOT?JESS_ROOT.t:'',r.l,r.x);}catch(e){}
 }
 function jessNext(mountId){JESS_CI_I=(JESS_CI_I+1)%JESS_CI.length;drawCheckin(mountId);}
 
@@ -5704,209 +5704,154 @@ if('serviceWorker' in navigator){
 }
 </script>
 
-<style id="jc-style">
-#jc-orb{position:fixed;bottom:20px;right:16px;z-index:1000;display:none;align-items:center;gap:9px;background:#1B2B4B;border:none;border-radius:28px;padding:10px 16px 10px 11px;cursor:pointer;box-shadow:0 4px 18px rgba(27,43,75,.32);transition:.2s;animation:jcBounceIn .45s cubic-bezier(.34,1.56,.64,1) both}
-@keyframes jcBounceIn{from{opacity:0;transform:scale(.6) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
-#jc-orb.jc-pulse{animation:jcGlow 2s ease-in-out 4}
-@keyframes jcGlow{0%,100%{box-shadow:0 4px 18px rgba(27,43,75,.32)}50%{box-shadow:0 4px 28px rgba(200,136,26,.55)}}
-#jc-orb .jc-av{width:30px;height:30px;border-radius:50%;background:#C8881A;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;color:#fff;flex-shrink:0}
-#jc-orb .jc-lbl{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#F5EFE0}
-#jc-orb .jc-dot{width:8px;height:8px;border-radius:50%;background:#6EBB85;flex-shrink:0}
-#jc-ov{position:fixed;inset:0;z-index:1001;display:flex;flex-direction:column;pointer-events:none;opacity:0;transition:opacity .25s}
-#jc-ov.open{pointer-events:all;opacity:1}
-#jc-bd{position:absolute;inset:0;background:rgba(27,43,75,.38)}
-#jc-pn{position:absolute;bottom:0;left:0;right:0;max-height:88vh;background:#fff;border-radius:20px 20px 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1);box-shadow:0 -4px 32px rgba(27,43,75,.18)}
-#jc-ov.open #jc-pn{transform:translateY(0)}
-#jc-hd{background:#1B2B4B;border-radius:20px 20px 0 0;padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-#jc-hd .jc-hdav{width:32px;height:32px;border-radius:50%;background:#C8881A;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:900;color:#fff;flex-shrink:0}
-#jc-hd .jc-info{flex:1}
-#jc-hd .jc-hn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:#F5EFE0;line-height:1.2}
-#jc-hd .jc-hs{font-size:10px;color:rgba(245,239,224,.5);letter-spacing:.06em}
-.jc-cls{background:rgba(245,239,224,.1);border:none;color:#F5EFE0;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-#jc-th{flex:1;overflow-y:auto;padding:14px 14px 6px;display:flex;flex-direction:column;gap:10px;min-height:120px}
-.jcm{max-width:86%;line-height:1.55;font-size:14px;border-radius:12px;padding:10px 14px;font-family:'Plus Jakarta Sans',sans-serif;animation:jcMsgIn .2s ease}
-@keyframes jcMsgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.jcm.j{background:#1B2B4B;color:#F5EFE0;align-self:flex-start;border-bottom-left-radius:3px}
-.jcm.u{background:#FEF3E0;color:#1B2B4B;align-self:flex-end;border-bottom-right-radius:3px;font-weight:500}
-#jc-tp{display:flex;gap:4px;padding:2px;align-items:center}
-#jc-tp span{width:7px;height:7px;border-radius:50%;background:rgba(245,239,224,.45);animation:jcDot 1.2s ease-in-out infinite}
-#jc-tp span:nth-child(2){animation-delay:.2s}
-#jc-tp span:nth-child(3){animation-delay:.4s}
-@keyframes jcDot{0%,80%,100%{opacity:.3;transform:scale(.85)}40%{opacity:1;transform:scale(1)}}
-#jc-cps{padding:8px 14px 4px;display:flex;gap:7px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
-#jc-cps::-webkit-scrollbar{display:none}
-.jcp{background:#FEF3E0;border:1.5px solid rgba(200,136,26,.3);border-radius:20px;padding:5px 13px;font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;color:#C8881A;cursor:pointer;transition:.15s;white-space:nowrap;flex-shrink:0}
-.jcp:hover,.jcp:active{background:#C8881A;color:#fff;border-color:#C8881A}
-#jc-ir{padding:10px 14px 14px;display:flex;gap:8px;flex-shrink:0;border-top:1px solid rgba(27,43,75,.08)}
-#jc-in{flex:1;padding:10px 14px;border:1.5px solid rgba(27,43,75,.15);border-radius:24px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1B2B4B;background:#F7F3EE;outline:none;transition:.15s}
-#jc-in:focus{border-color:#C8881A;background:#fff;box-shadow:0 0 0 3px rgba(200,136,26,.1)}
-#jc-snd{width:42px;height:42px;border-radius:50%;background:#1B2B4B;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
-#jc-snd:hover{background:#C8881A}
+<style id="jc-aug-style">
+.jc-addendum{background:rgba(200,136,26,.08);border:1px solid rgba(200,136,26,.18);
+  border-radius:13px;border-top-left-radius:3px;padding:10px 13px;font-size:13px;
+  line-height:1.55;color:var(--navt);margin-top:8px;animation:jcFadeIn .4s ease both}
+@keyframes jcFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.jc-typing-sm{display:flex;gap:4px;padding:8px 10px;align-items:center;opacity:.55}
+.jc-typing-sm span{width:6px;height:6px;border-radius:50%;background:rgba(200,136,26,.6);
+  animation:jcDotSm 1.2s ease-in-out infinite}
+.jc-typing-sm span:nth-child(2){animation-delay:.2s}
+.jc-typing-sm span:nth-child(3){animation-delay:.4s}
+@keyframes jcDotSm{0%,80%,100%{opacity:.3;transform:scale(.85)}40%{opacity:1;transform:scale(1)}}
+.jc-ask{display:flex;gap:7px;margin-top:10px;align-items:center}
+.jc-ask input{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(245,239,224,.2);
+  border-radius:20px;padding:9px 14px;font-family:var(--fb);font-size:13px;color:var(--navt);
+  outline:none;transition:.15s}
+.jc-ask input:focus{border-color:var(--ac);background:rgba(200,136,26,.07)}
+.jc-ask input::placeholder{color:rgba(245,239,224,.35)}
+.jc-ask button{width:36px;height:36px;border-radius:50%;background:var(--ac);border:none;
+  color:#1a1206;font-size:16px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;transition:.15s}
+.jc-ask button:hover{background:var(--ac2)}
 </style>
-<button id="jc-orb" onclick="tcJessOpen()" aria-label="Chat with Jessica">
-  <span class="jc-av">J</span>
-  <span class="jc-lbl" id="jc-orb-lbl">Meet Jessica</span>
-  <span class="jc-dot" id="jc-ondot"></span>
-</button>
-<div id="jc-ov" role="dialog" aria-modal="true">
-  <div id="jc-bd" onclick="tcJessClose()"></div>
-  <div id="jc-pn">
-    <div id="jc-hd">
-      <span class="jc-hdav">J</span>
-      <div class="jc-info">
-        <div class="jc-hn">Jessica</div>
-        <div class="jc-hs" id="jc-hs">Your transition guide</div>
-      </div>
-      <button class="jc-cls" onclick="tcJessClose()" aria-label="Close">&#x2715;</button>
-    </div>
-    <div id="jc-th"></div>
-    <div id="jc-cps"></div>
-    <div id="jc-ir">
-      <input id="jc-in" type="text" placeholder="Ask Jessica..." autocomplete="off">
-      <button id="jc-snd" onclick="tcJessSend()" aria-label="Send">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#F5EFE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-</div>
-<script id="jc-script">
-/* ===== JESSICA ·TransitionCommand companion ===== */
-const JC_BRAIN = 'https://kibu-jess.kibuglobalventures.workers.dev';
-const JC_CHIPS = ['What should I do first?','Explain my VA benefits','Help with my resume','GI Bill options','How long does the process take?'];
-let JC_HIST = [], JC_BOOTED = false;
+<script id="jc-aug-script">
+/* ===== Brain augmentation for TC Jessica nodes ===== */
+const JCA_URL = 'https://kibu-jess.kibuglobalventures.workers.dev';
 
-function jcUID(){
-  var u = (window._currentUser && window._currentUser.uid) ? window._currentUser.uid : '';
-  if(!u && S && S.user) u = S.user.email || S.user.name || '';
-  if(!u){ try{ var d=localStorage.getItem('tc_jid'); u = d||(function(){ var id='j'+Date.now().toString(36); localStorage.setItem('tc_jid',id); return id; })(); }catch(e){ u='guest'; } }
+function jcaUID(){
+  var u=(window._currentUser&&window._currentUser.uid)||'';
+  if(!u&&S&&S.user) u=S.user.email||S.user.name||'';
+  if(!u){try{var d=localStorage.getItem('tc_jid');u=d||(function(){var id='j'+Date.now().toString(36);localStorage.setItem('tc_jid',id);return id;})();}catch(e){u='guest';}}
   return u;
 }
 
-function jcCtx(){
-  var u = (S && S.user) || {}, parts = [];
-  if(u.name) parts.push('Name: '+u.name);
-  if(u.rank) parts.push('Rank: '+u.rank);
-  if(u.branch) parts.push('Branch: '+u.branch);
-  if(u.mos) parts.push('MOS: '+u.mos);
-  if(u.yos) parts.push('Years of service: '+u.yos);
-  if(u.sepDate) parts.push('Separation date: '+u.sepDate);
-  if(u.sepType) parts.push('Separation type: '+u.sepType);
-  if(u.clr) parts.push('Clearance: '+u.clr);
-  if(u.giBill) parts.push('GI Bill: '+u.giBill);
-  if(u.vaRate) parts.push('VA rating: '+u.vaRate);
-  if(u.retPay) parts.push('Retirement pay estimate: '+u.retPay);
-  if(u.loc) parts.push('Target location: '+u.loc);
-  return parts.join(' | ') || 'Profile not yet completed';
-}
-
-function jcFirstName(){
-  var name = ((S && S.user && S.user.name) || '');
-  var fn = name.split(' ').find(function(w){ return !/^(sfc|sgt|cpl|pfc|pvt|spc|ssgt|msgt|csm|col|maj|cpt|ltc|cwo|wo|gen|adm|cdr|capt)/i.test(w); });
-  return fn || null;
-}
-
-function jcAddMsg(who, text){
-  var th = document.getElementById('jc-th'); if(!th) return;
-  var d = document.createElement('div'); d.className = 'jcm ' + who;
-  d.textContent = text; th.appendChild(d); th.scrollTop = th.scrollHeight;
-}
-
-function jcTyping(on){
-  var th = document.getElementById('jc-th'); if(!th) return;
-  var t = document.getElementById('jc-tp');
-  if(on){ if(!t){ t=document.createElement('div'); t.id='jc-tp'; t.className='jcm j'; t.innerHTML='<span></span><span></span><span></span>'; th.appendChild(t); th.scrollTop=th.scrollHeight; } }
-  else if(t) t.remove();
-}
-
-function jcChips(){
-  var c = document.getElementById('jc-cps'); if(!c) return;
-  c.innerHTML = JC_CHIPS.map(function(l){ return '<button class="jcp" onclick="tcJessAsk(\''+l.replace(/'/g,'\\')+'\')">'+l+'</button>'; }).join('');
-}
-
-async function tcJessAsk(text){
-  if(!text || !text.trim()) return;
-  var inp = document.getElementById('jc-in'); if(inp) inp.value = '';
-  var cps = document.getElementById('jc-cps'); if(cps) cps.innerHTML = '';
-  jcAddMsg('u', text);
-  JC_HIST.push({role:'user', content:text});
-  jcTyping(true);
-  var hs = document.getElementById('jc-hs');
+/* Rich context: profile + in-app progress the brain uses to personalise */
+function jcaCtx(){
+  var u=(S&&S.user)||{}, parts=[];
+  // Profile
+  if(u.name)  parts.push('Name: '+u.name);
+  if(u.rank)  parts.push('Rank: '+u.rank);
+  if(u.branch)parts.push('Branch: '+u.branch);
+  if(u.mos)   parts.push('MOS: '+u.mos);
+  if(u.yos)   parts.push('Years of service: '+u.yos);
+  if(u.sepType)parts.push('Sep type: '+u.sepType);
+  if(u.clr)   parts.push('Clearance: '+u.clr);
+  if(u.giBill)parts.push('GI Bill: '+u.giBill);
+  if(u.vaRate)parts.push('VA rating: '+u.vaRate);
+  if(u.retPay)parts.push('Retirement pay: '+u.retPay);
+  if(u.loc)   parts.push('Target location: '+u.loc);
+  // Days to separation
+  if(u.sepDate){
+    var days=Math.ceil((new Date(u.sepDate)-new Date())/86400000);
+    parts.push('Days until separation: '+(days>0?days+' days':'separated '+Math.abs(days)+' days ago'));
+  }
+  // Steer gate progress
   try{
-    var r = await fetch(JC_BRAIN, {method:'POST', headers:{'content-type':'application/json'},
-      body: JSON.stringify({app:'tc', user:jcUID(), context:jcCtx(), messages:JC_HIST})});
-    jcTyping(false);
-    if(r.status === 429){
-      jcAddMsg('j','You have reached your smart message limit for the month. Your checklist, plans, and all other tools still work normally. Smart messages reset at the start of next month.');
+    if(typeof GATES!=='undefined'&&typeof currentGateIdx==='function'){
+      var gi=currentGateIdx(),gt=GATES.length;
+      parts.push('Steer gates cleared: '+gi+' of '+gt);
+      if(gi<gt)parts.push('Current gate: '+GATES[gi].title);
+    }
+  }catch(e){}
+  // Task progress
+  try{
+    var td=Object.keys(S.tasks||{}).filter(function(k){return S.tasks[k];}).length;
+    if(td)parts.push('Tasks completed: '+td);
+  }catch(e){}
+  // VA conditions
+  try{
+    var conds=(S.va&&S.va.claimed)||[];
+    if(conds.length){
+      parts.push('Tracked conditions: '+conds.map(function(c){return c.name+(c.severity?' ('+c.severity+')':'');}).join(', '));
+    }
+  }catch(e){}
+  // Mood trend (last 3 entries)
+  try{
+    var mt=(S.history&&S.history.moodTrend)||[];
+    if(mt.length)parts.push('Recent mood: '+mt.slice(-3).join(', '));
+  }catch(e){}
+  // Days checked in
+  try{
+    var ci=(S.history&&S.history.daysCheckedIn)||0;
+    if(ci>1)parts.push('Check-in streak: '+ci+' days');
+  }catch(e){}
+  return parts.join(' | ')||'Profile not completed yet';
+}
+
+/* After the scripted chip exchange, brain adds a personalised follow-up */
+async function jcaAugment(mountId, question, chipLabel, scriptedReply){
+  var th=document.getElementById('jt-'+mountId); if(!th)return;
+  var tid='jcat-'+mountId;
+  var tEl=document.createElement('div'); tEl.id=tid; tEl.className='jc-typing-sm';
+  tEl.innerHTML='<span></span><span></span><span></span>';
+  th.appendChild(tEl); th.scrollTop=th.scrollHeight;
+  try{
+    var msgs=[
+      {role:'assistant',content:question},
+      {role:'user',content:chipLabel},
+      {role:'assistant',content:scriptedReply},
+      {role:'user',content:'[One short personal follow-up that uses their actual situation from the context. Warm and specific. Two sentences max. No em dashes.]'}
+    ];
+    var r=await fetch(JCA_URL,{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({app:'tc',user:jcaUID(),context:jcaCtx(),messages:msgs})});
+    var tel=document.getElementById(tid); if(tel)tel.remove();
+    if(!r.ok||r.status===429)return;
+    var data=await r.json();
+    var reply=(data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('').trim();
+    if(!reply||reply.length<5)return;
+    var th2=document.getElementById('jt-'+mountId); if(!th2)return;
+    var d=document.createElement('div'); d.className='jc-addendum'; d.textContent=reply;
+    th2.appendChild(d); th2.scrollTop=th2.scrollHeight;
+  }catch(e){var tel2=document.getElementById(tid); if(tel2)tel2.remove();}
+}
+
+/* Free-text: user types anything, brain responds with full context */
+var jcaHist={};
+async function jcaAskFree(mountId){
+  var inp=document.getElementById('jca-'+mountId);
+  var text=inp?inp.value.trim():''; if(!text)return;
+  inp.value='';
+  var th=document.getElementById('jt-'+mountId); if(!th)return;
+  var ub=document.createElement('div'); ub.className='jess-youreply';
+  ub.innerHTML='\u201C'+text.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'\u201D';
+  th.appendChild(ub); th.scrollTop=th.scrollHeight;
+  var tid='jcaft-'+mountId;
+  var tEl=document.createElement('div'); tEl.id=tid; tEl.className='jc-typing-sm';
+  tEl.innerHTML='<span></span><span></span><span></span>';
+  th.appendChild(tEl); th.scrollTop=th.scrollHeight;
+  if(!jcaHist[mountId])jcaHist[mountId]=[];
+  jcaHist[mountId].push({role:'user',content:text});
+  try{
+    var r=await fetch(JCA_URL,{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({app:'tc',user:jcaUID(),context:jcaCtx(),messages:jcaHist[mountId]})});
+    var tel=document.getElementById(tid); if(tel)tel.remove();
+    if(r.status===429){
+      var eb=document.createElement('div'); eb.className='jc-addendum';
+      eb.textContent='You have reached your smart message limit for the month. Check-ins and all other features still work normally.';
+      var th4=document.getElementById('jt-'+mountId); if(th4)th4.appendChild(eb);
       return;
     }
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    var data = await r.json();
-    var reply = (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n').trim()||'I did not catch that. Try again?';
-    JC_HIST.push({role:'assistant', content:reply});
-    jcAddMsg('j', reply);
-    if(hs) hs.textContent = 'online';
-  }catch(e){
-    jcTyping(false);
-    jcAddMsg('j','Having trouble connecting right now. Check your signal and try again. I will be right here.');
-    if(hs) hs.textContent = 'offline';
-  }
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var data=await r.json();
+    var reply=(data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('').trim()||'Try again in a moment.';
+    jcaHist[mountId].push({role:'assistant',content:reply});
+    var th3=document.getElementById('jt-'+mountId); if(!th3)return;
+    var rb=document.createElement('div'); rb.className='jc-addendum'; rb.textContent=reply;
+    th3.appendChild(rb); th3.scrollTop=th3.scrollHeight;
+  }catch(e){var tel3=document.getElementById(tid); if(tel3)tel3.remove();}
 }
-
-function tcJessSend(){
-  var v = (document.getElementById('jc-in')||{}).value; if(v&&v.trim()) tcJessAsk(v.trim());
-}
-
-function tcJessOpen(){
-  var ov = document.getElementById('jc-ov'); if(ov) ov.classList.add('open');
-  var orb = document.getElementById('jc-orb'); if(orb) orb.style.display='none';
-  var inp = document.getElementById('jc-in'); if(inp) setTimeout(function(){inp.focus();},320);
-  if(!JC_BOOTED){
-    JC_BOOTED = true;
-    var met = localStorage.getItem('tc_jess_met');
-    if(!met){
-      localStorage.setItem('tc_jess_met','1');
-      var lbl = document.getElementById('jc-orb-lbl'); if(lbl) lbl.textContent='Jessica';
-      var fn = jcFirstName();
-      var u = (S&&S.user)||{};
-      var intro;
-      if(fn && u.sepDate){
-        intro = 'Hey '+fn+'. I am Jessica, your guide inside TransitionCommand. That separation date on your profile is real, and I want to help you make the most of the time you have. You do not have to figure this out alone. What is weighing on you most right now?';
-      } else if(fn){
-        intro = 'Hey '+fn+'. I am Jessica. I have crossed this transition myself, so I am not going to give you a brochure. Tell me where you are in the process and what feels most uncertain, and let us work through it.';
-      } else {
-        intro = 'Hey. I am Jessica, your transition guide inside TransitionCommand. I have been through this myself, and I know how heavy it can feel when the checklist seems endless and the future looks fuzzy. Tell me where you are and what is on your mind, and let us work through it together.';
-      }
-      setTimeout(function(){ jcAddMsg('j', intro); JC_HIST.push({role:'assistant',content:intro}); jcChips(); }, 450);
-    } else {
-      localStorage.setItem('tc_jess_met','1');
-      var lbl2 = document.getElementById('jc-orb-lbl'); if(lbl2) lbl2.textContent='Jessica';
-      var fn2 = jcFirstName();
-      var ret = fn2 ? 'Hey '+fn2+'. Good to see you. What do you need today?' : 'Good to see you. What do you need today?';
-      setTimeout(function(){ jcAddMsg('j', ret); JC_HIST.push({role:'assistant',content:ret}); jcChips(); }, 450);
-    }
-  }
-}
-
-function tcJessClose(){
-  var ov = document.getElementById('jc-ov'); if(ov) ov.classList.remove('open');
-  var orb = document.getElementById('jc-orb'); if(orb) orb.style.display='flex';
-}
-
-function jcLaunch(){
-  var orb = document.getElementById('jc-orb'); if(!orb) return;
-  orb.style.display='flex';
-  if(!localStorage.getItem('tc_jess_met')){
-    orb.classList.add('jc-pulse');
-    setTimeout(function(){ tcJessOpen(); }, 2800);
-  }
-}
-
-document.addEventListener('DOMContentLoaded', function(){
-  var inp = document.getElementById('jc-in');
-  if(inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();tcJessSend();} });
-});
 </script>
 </body>
 </html>
