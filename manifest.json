@@ -1,7 +1,7 @@
 {
   "name": "TransitionCommand",
   "short_name": "TC",
-  "description": "Military-to-civilian transition planning \u2014 all branches, all paths.",
+  "description": "Military-to-civilian transition planning \u00b7 all branches, all paths.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -1,43 +1,46 @@
-{
-  "name": "TransitionCommand",
-  "short_name": "TC",
-  "description": "Military-to-civilian transition command center — all branches, all paths. © 2026 KIBU Global Ventures LLC.",
-  "developer": {
-    "name": "KIBU Global Ventures LLC",
-    "url": "https://kibuglobal.com"
-  },
-  "start_url": "/index.html",
-  "scope": "/",
-  "display": "standalone",
-  "orientation": "any",
-  "background_color": "#F7F3EE",
-  "theme_color": "#1B2B4B",
-  "categories": ["productivity", "utilities", "lifestyle"],
-  "icons": [
-    {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [],
-  "shortcuts": [
-    {
-      "name": "Tasks",
-      "url": "/index.html#tasks",
-      "description": "Open task checklist"
-    },
-    {
-      "name": "Resume Builder",
-      "url": "/index.html#resume",
-      "description": "Build your civilian resume"
-    }
-  ]
-}
+// TransitionCommand service worker
+// Purpose:
+//   1. Satisfy PWA installability so Chrome fires beforeinstallprompt
+//      (a registered SW with a fetch handler controlling the site scope).
+//   2. Provide a safe offline fallback.
+// Strategy: network-first for every GET so the HTML shell is never served
+// stale. Cache is only used when the network is unavailable. This avoids the
+// stale-shell splash loop that bit Going Out.
+
+const CACHE = 'tc-cache-v1';
+const CORE = ['/', '/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
+
+self.addEventListener('install', event => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE).then(cache => cache.addAll(CORE).catch(() => {}))
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', event => {
+  const req = event.request;
+  if (req.method !== 'GET') return; // never touch POSTs (license, Jessica, etc.)
+
+  event.respondWith(
+    fetch(req)
+      .then(res => {
+        // Cache a copy of successful same-origin responses for offline use.
+        if (res && res.status === 200 && res.type === 'basic') {
+          const copy = res.clone();
+          caches.open(CACHE).then(cache => cache.put(req, copy)).catch(() => {});
+        }
+        return res;
+      })
+      .catch(() =>
+        caches.match(req).then(hit => hit || caches.match('/index.html'))
+      )
+  );
+});

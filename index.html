@@ -5649,9 +5649,9 @@ setInterval(()=>{
 }, 5*60*1000);
 
 // ============================================================
-// PWA
+// PWA · service worker is registered from /sw.js further below
+// (a real script file, required for the install prompt to fire)
 // ============================================================
-if('serviceWorker' in navigator){try{const sw=`self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))});`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});}catch(e){}}
 
 </script>
 
